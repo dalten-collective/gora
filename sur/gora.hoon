@@ -29,7 +29,8 @@
       :: :gora &gora-man [%send-request 1.701.667.182 ~dev]
       [%send-request =gora-id =ship]
       :: :gora &gora-man [%approve %req [~ ~sef] 1.701.667.182]
-      [%approve type=?(%req %giv) requester=(unit ship) =gora-id]
+      [%approve-give =gora-id]
+      [%approve-request =gora-id =ship]
   ==
 ::
 :: Manage Interstellar Activity
@@ -53,4 +54,10 @@
 +$  request-log  (jug ship gora-id)
 +$  offer-log    (set gora-id)
 +$  sent-log     (jug gora-id [ship ?(%ask %giv)])
+::
+::
+::+$  webpage
+::  $_  ^|
+::  |_  [bowl:gall pita request-log offer-log sent-log]
+::  ++  
 --
