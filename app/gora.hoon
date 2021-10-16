@@ -160,33 +160,33 @@
   :~  :*  %pass   /transact/send-req/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
           %agent  [ship.v %gora]
           %poke   %gora-transact  !>((transact %receive-request gora-id.v))  ==  ==
-    %approve
-  ?-  type.v
-      %req
-    ~&  >  !=(requester.v ~)
-    ~&  >>  (~(has ju request-log) +.requester.v gora-id.v)
-    ~&  >>>  (~(has by pita) gora-id.v)
-    ?>  &(!=(requester.v ~) (~(has ju request-log) +.requester.v gora-id.v) (~(has by pita) gora-id.v))
-    =.  request-log  (~(del ju request-log) +.requester.v gora-id.v)
-    =/  act-gora=gora  (~(got by pita) gora-id.v)
-    =.  pita  (~(put by pita) gora-id.v act-gora(hodl-list (~(put in hodl-list.act-gora) +.requester.v)))
-    :_  state
-    :~  :*  %give
-        %fact
-      ~[/updates/(scot %ud gora-id.v)]
-    [%gora-transact !>((transact %update %upd act-gora(hodl-list (~(put in hodl-list.act-gora) +.requester.v))))]  ==  ==
-      %giv
-    ?>  (~(has in offer-log) gora-id.v)
-    =.  offer-log  (~(del in offer-log) gora-id.v)
-    =+  (~(got by pita) gora-id.v)
-    :_  state
-    :~  :*  %pass   /transact/give-ack/(scot %ud gora-id.v)/(scot %p host.-)/(scot %da now.bol)
-            %agent  [host.- %gora]
-            %poke   %gora-transact  !>((transact %giv-ack gora-id.v))  ==
-      :*  %pass   /updates/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
-          %agent  [host.- %gora]
-          %watch  /updates/(scot %ud gora-id.v)  ==  ==
+    %approve-request
+  ?>  &((~(has ju request-log) ship.v gora-id.v) (~(has by pita) gora-id.v))
+  =.  request-log  (~(del ju request-log) ship.v gora-id.v)
+  =/  act-gora=gora  (~(got by pita) gora-id.v)
+  =.  pita  (~(put by pita) gora-id.v act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v)))
+  :_  state
+  :~  :*  
+    %give  %fact
+    ~[/updates/(scot %ud gora-id.v)]
+    [%gora-transact !>((transact %update %upd act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v))))]
   ==  ==
+    %approve-give
+  ?>  (~(has in offer-log) gora-id.v)
+  =.  offer-log  (~(del in offer-log) gora-id.v)
+  =+  (~(got by pita) gora-id.v)
+  :_  state
+  :~  :*
+    %pass   /transact/give-ack/(scot %ud gora-id.v)/(scot %p host.-)/(scot %da now.bol)
+    %agent  [host.- %gora]
+    %poke   %gora-transact  !>((transact %giv-ack gora-id.v))
+      ==
+      :* 
+    %pass   /updates/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+    %agent  [host.- %gora]
+    %watch  /updates/(scot %ud gora-id.v)
+  ==  ==
+  ==
   ++  mkgora-id
     :: This is a false hash and needs to be replaced
     |=  in=@t
