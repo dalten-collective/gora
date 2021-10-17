@@ -4,7 +4,7 @@
     :: replace with site+ - let's figure out how to handle this as raw http
     ::
     glob-ames+[~dev 0v0]
-    base+'pita/gora'
+    base+'gora'
     ::       M m P
     ::
     version+[0 0 1]

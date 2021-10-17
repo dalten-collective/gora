@@ -11,5 +11,14 @@
 ++  grab
   |%
   ++  noun  manage-gora
+  ++  json
+    |=  jon=^json
+    %-  manage-gora
+    =<  (man-noun jon)
+    |%
+    ++  man-noun
+      %-  of
+      :~  [%send-request (ot :~(['gora-id' (ni)] ['ship' (se %p)]))]
+      ==
   --
 --

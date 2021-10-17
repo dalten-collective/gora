@@ -46,7 +46,7 @@
 :: Defining Gora
 +$  pita       (map gora-id gora)
 +$  gora       [=gora-id name=@t =gora-img host=ship =hodl-list]
-+$  gora-id    @
++$  gora-id    @uv
 +$  gora-img   cord
 +$  hodl-list  (set ship)
 ::

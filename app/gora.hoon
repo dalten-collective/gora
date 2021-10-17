@@ -41,10 +41,12 @@
   ^-  (quip card _this)
   ~&  >  '%gora loaded'
   =/  state-ver  !<(versioned-state incoming-state)
-  ?-  -.state-ver
-    %0
-  `this(state state-ver)
-  ==
+   =.  state
+    ?-  -.state-ver
+        %0
+      state-ver
+    ==
+   `this
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
@@ -60,23 +62,31 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
-  ~&  >>>  [-.path path]
-  ~&  >  (~(get by pita) +:(scan (trip +<.path) bisk:so))
-  ?+  i.-.path  (on-watch:def path)
-    %updates
-  =+  (~(got by pita) +:(scan (trip +<.path) bisk:so))
-  :_  this
-  :~  :*  %give
+  ?+  path  (on-watch:def path)
+      [%website ~]
+    :_  this
+    :~  :*  %give
         %fact
       ~
-    [%gora-transact !>((transact %update %upd -))]
-  ==  ==
+      [%json !>((json json-hndl:hc))]
+    ==  ==
+  ::
+      [%updates @ *]
+    =+  (~(got by pita) +:(slaw %uv i.t.path))
+    :_  this
+    :~  :*  %give
+          %fact
+        ~
+      [%gora-transact !>((transact %update %upd -))]
+    ==  ==
   ==
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)
   ?+  -.sign  (on-agent:def wire sign)
       %fact
+    ~?  !=(%gora-transact p.cage.sign)
+      [%unexpected-mark-pls-crash p.cage.sign]
     =/  transaction=transact  !<(transact q.cage.sign)
     =^  cards  state
     (trans-hndl transaction)
@@ -88,6 +98,35 @@
 --
 ::!.
 |_  bol=bowl:gall
+++  json-hndl
+  |^
+  =+  [p=(~(rep by pita) pita-filter) q=(roll ~(tap in offer-log) offer-map)]
+  %-  pairs:enjs:format
+  :~  ['ownd' `json`a/(~(rep by out.p) hedl)]
+      ['offd' `json`a/(~(rep by q) hedl)]
+  ==
+  ++  hedl
+    |=  [[key=@ [gora-id=@ name=@t gora-img=cord host=ship hodl-list=(set ship)]] out=(list json)]
+    :-  %-  pairs:enjs:format
+    :~  ['gora-id' [%s (scot %uv gora-id)]]
+        ['name' [%s name]]
+        ['gora-img' [%s gora-img]]
+        ['host' [%s (scot %p host)]]
+        ['hodl-list' [%a (turn ~(tap in hodl-list) ship:enjs:format)]]
+    ==
+    out
+  ++  offer-map
+    |=  [in=gora-id out=^pita]
+    ?:  (~(has by pita) in)
+      (~(put by out) in (~(got by pita) in))
+    ~&  >>>  "Somehow missing a sub for an offer - should write function to delete offer"
+    out
+  ++  pita-filter
+  |=  [[p=gora-id q=gora] out=^pita]
+  ?:  (~(has in hodl-list.q) our.bol)
+    (~(put by out) p q)
+  out
+  --
 ++  trans-hndl
 |=  transaction=transact
 ?-  -.transaction
@@ -110,9 +149,10 @@
       %receive-gora
     =.  offer-log  (~(put in offer-log) gora-id.gora.transaction)
     :_  state
-    :~  :*  %pass   /updates/(scot %ud gora-id.gora.transaction)/(scot %p our.bol)/(scot %da now.bol)
+    :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)/(scot %da now.bol)
             %agent  [src.bol %gora]
-            %watch  /updates/(scot %ud gora-id.gora.transaction)  ==  ==
+            %watch  /updates/(scot %uv gora-id.gora.transaction)
+    ==  ==
       %giv-ack
     ?>  &((~(has by pita) gora-id.transaction) (~(has ju sent-log) gora-id.transaction [src.bol %giv]))
     =+  (~(got by pita) gora-id.transaction)
@@ -121,9 +161,10 @@
     :_  state
     :~  :*  %give
         %fact
-      ~[/updates/(scot %ud gora-id.transaction)]
-    [%gora-transact !>((transact %update %upd -(hodl-list (~(put in hodl-list.-) src.bol))))]  ==  ==
-    ==
+      ~[/updates/(scot %uv gora-id.transaction)]
+    [%gora-transact !>(`transact`(transact %update %upd -(hodl-list (~(put in hodl-list.-) src.bol))))]
+    ==  ==
+  ==
 ++  manag-hndl
   |=  v=manage-gora
   |^
@@ -142,22 +183,23 @@
     :_  state
     :~  :*  %give
         %fact
-      ~[/updates/(scot %ud gora-id.v)]
-    [%gora-transact !>((transact %update %del -))]  ==  ==
+      ~[/updates/(scot %uv gora-id.v)]
+    [%gora-transact !>((transact %update %del -))]
+    ==  ==
   =.  pita  (~(del by pita) gora-id.v)
   `state
     %send-give
   ?<  &((~(has ju sent-log) gora-id.v [ship.v %giv]) !(~(has by pita) gora-id.v))
   =.  sent-log  (~(put ju sent-log) gora-id.v [ship.v %giv])
   :_  state
-  :~  :*  %pass   /transact/send-giv/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+  :~  :*  %pass   /transact/send-giv/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
           %agent  [ship.v %gora]
           %poke   %gora-transact  !>((transact %receive-gora (~(got by pita) gora-id.v)))  ==  ==
     %send-request
   ?<  (~(has ju sent-log) gora-id.v [ship.v %ask])
   =.  sent-log  (~(put ju sent-log) gora-id.v [ship.v %ask])
   :_  state
-  :~  :*  %pass   /transact/send-req/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+  :~  :*  %pass   /transact/send-req/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
           %agent  [ship.v %gora]
           %poke   %gora-transact  !>((transact %receive-request gora-id.v))  ==  ==
     %approve-request
@@ -168,7 +210,7 @@
   :_  state
   :~  :*  
     %give  %fact
-    ~[/updates/(scot %ud gora-id.v)]
+    ~[/updates/(scot %uv gora-id.v)]
     [%gora-transact !>((transact %update %upd act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v))))]
   ==  ==
     %approve-give
@@ -177,19 +219,19 @@
   =+  (~(got by pita) gora-id.v)
   :_  state
   :~  :*
-    %pass   /transact/give-ack/(scot %ud gora-id.v)/(scot %p host.-)/(scot %da now.bol)
+    %pass   /transact/give-ack/(scot %uv gora-id.v)/(scot %p host.-)/(scot %da now.bol)
     %agent  [host.- %gora]
     %poke   %gora-transact  !>((transact %giv-ack gora-id.v))
       ==
       :* 
-    %pass   /updates/(scot %ud gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+    %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
     %agent  [host.- %gora]
-    %watch  /updates/(scot %ud gora-id.v)
+    %watch  /updates/(scot %uv gora-id.v)
   ==  ==
   ==
   ++  mkgora-id
     :: This is a false hash and needs to be replaced
     |=  in=@t
-    `@`in
+    (sham our.bol now.bol in)
   --
 --
