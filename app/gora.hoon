@@ -137,11 +137,13 @@
       ?.  (~(has in hodl-list.gora.transaction) our.bol)
         `state
       =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
-      `state
+      :_  state
+      ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
         %del
       =.  pita  (~(del by pita) gora-id.gora.transaction gora.transaction)
       =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
-      `state
+      :_  state
+      ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
     ==
       %receive-request
     =.  request-log  (~(put ju request-log) src.bol gora-id.transaction)
