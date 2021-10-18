@@ -106,13 +106,14 @@
       ['offd' `json`a/(~(rep by q) hedl)]
   ==
   ++  hedl
-    |=  [[key=@ [gora-id=@ name=@t gora-img=cord host=ship hodl-list=(set ship)]] out=(list json)]
+    |=  [[key=@ val=gora] out=(list json)]
     :-  %-  pairs:enjs:format
-    :~  ['gora-id' [%s (scot %uv gora-id)]]
-        ['name' [%s name]]
-        ['gora-img' [%s gora-img]]
-        ['host' [%s (scot %p host)]]
-        ['hodl-list' [%a (turn ~(tap in hodl-list) ship:enjs:format)]]
+    :~  ['gora-id' [%s (scot %uv gora-id.val)]]
+        ['name' [%s name.val]]
+        ['gora-img' [%s gora-img.val]]
+        ['host' [%s (scot %p host.val)]]
+        ['date' (date-parse issue-date.val)]
+        ['hodl-list' [%a (turn ~(tap in hodl-list.val) ship:enjs:format)]]
     ==
     out
   ++  offer-map
@@ -122,10 +123,18 @@
     ~&  >>>  "Somehow missing a sub for an offer - should write function to delete offer"
     out
   ++  pita-filter
-  |=  [[p=gora-id q=gora] out=^pita]
-  ?:  (~(has in hodl-list.q) our.bol)
-    (~(put by out) p q)
-  out
+    |=  [[p=gora-id q=gora] out=^pita]
+    ?:  (~(has in hodl-list.q) our.bol)
+      (~(put by out) p q)
+    out
+  ++  date-parse
+    |=  [y=@ud m=@ud d=@ud]
+^-  json
+%-  pairs:enjs:format
+:~  ['year' (numb:enjs:format y)]
+    ['month' (numb:enjs:format)]
+    ['day' (numb:enjs:format d)]
+==
   --
 ++  trans-hndl
 |=  transaction=transact
@@ -174,9 +183,9 @@
   ?-  -.v
     %mkgora
   ~|  'Failed to %make-gora {<name.v>} - Identical gora-hash found.'
-  =+  (mkgora-id name.v)
-  ?<  (~(has by pita) -)
-  =.  pita  (~(put by pita) - `gora`[- name.v gora-img.v our.bol ~])
+  =+  [id=(mkgora-id name.v) date=(yore now.bol)]
+  ?<  (~(has by pita) id)
+  =.  pita  (~(put by pita) id `gora`[id name.v gora-img.v our.bol [y.date m.date d.t.date] ~])
   `state
     %delgora
   ?>  (team:title src.bol our.bol)
