@@ -28,7 +28,7 @@
       [%send-give =gora-id =ship]
       :: :gora &gora-man [%send-request 1.701.667.182 ~dev]
       [%send-request =gora-id =ship]
-      :: :gora &gora-man [%approve %req [~ ~sef] 1.701.667.182]
+      :: :gora &gora-man [%approve-give 1.701.667.182]
       [%approve-give =gora-id]
       [%approve-request =gora-id =ship]
   ==
