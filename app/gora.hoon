@@ -108,12 +108,12 @@
   ++  hedl
     |=  [[key=@ val=gora] out=(list json)]
     :-  %-  pairs:enjs:format
-    :~  ['gora-id' [%s (scot %uv gora-id.val)]]
-        ['name' [%s name.val]]
-        ['gora-img' [%s gora-img.val]]
+    :~  ['id' [%s (scot %uv gora-id.val)]]
+        ['goraName' [%s name.val]]
+        ['url' [%s gora-img.val]]
         ['host' [%s (scot %p host.val)]]
         ['date' (date-parse issue-date.val)]
-        ['hodl-list' [%a (turn ~(tap in hodl-list.val) ship:enjs:format)]]
+        ['owners' [%a (turn ~(tap in hodl-list.val) ship:enjs:format)]]
     ==
     out
   ++  offer-map
@@ -129,52 +129,56 @@
     out
   ++  date-parse
     |=  [y=@ud m=@ud d=@ud]
-^-  json
-%-  pairs:enjs:format
-:~  ['year' (numb:enjs:format y)]
-    ['month' (numb:enjs:format)]
-    ['day' (numb:enjs:format d)]
-==
+    ^-  json
+    %-  pairs:enjs:format
+    :~  ['year' (numb:enjs:format y)]
+        ['month' (numb:enjs:format)]
+        ['day' (numb:enjs:format d)]
+    ==
   --
 ++  trans-hndl
-|=  transaction=transact
-?-  -.transaction
-      %update
-    ?-  act.transaction
-        %upd
-      =.  pita  (~(put by pita) gora-id.gora.transaction gora.transaction)
-      ?.  (~(has in hodl-list.gora.transaction) our.bol)
-        `state
-      =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
-      :_  state
-      ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
-        %del
-      =.  pita  (~(del by pita) gora-id.gora.transaction gora.transaction)
-      =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
-      :_  state
-      ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
-    ==
-      %receive-request
-    =.  request-log  (~(put ju request-log) src.bol gora-id.transaction)
-    `state
-      %receive-gora
-    =.  offer-log  (~(put in offer-log) gora-id.gora.transaction)
+  |=  transaction=transact
+  ?-  -.transaction
+    %update
+  ?-  act.transaction
+      %upd
+    =.  pita  (~(put by pita) gora-id.gora.transaction gora.transaction)
+    ?.  (~(has in hodl-list.gora.transaction) our.bol)
+      `state
+    =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
     :_  state
-    :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)/(scot %da now.bol)
-            %agent  [src.bol %gora]
-            %watch  /updates/(scot %uv gora-id.gora.transaction)
-    ==  ==
-      %giv-ack
-    ?>  &((~(has by pita) gora-id.transaction) (~(has ju sent-log) gora-id.transaction [src.bol %giv]))
-    =+  (~(got by pita) gora-id.transaction)
-    =.  pita  (~(put by pita) gora-id.transaction -(hodl-list (~(put in hodl-list.-) src.bol)))
-    =.  sent-log  (~(del ju sent-log) gora-id.transaction [src.bol %giv])
+    ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
+      %del
+    =.  pita  (~(del by pita) gora-id.gora.transaction gora.transaction)
+    =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
     :_  state
-    :~  :*  %give
-        %fact
-      ~[/updates/(scot %uv gora-id.transaction)]
-    [%gora-transact !>(`transact`(transact %update %upd -(hodl-list (~(put in hodl-list.-) src.bol))))]
-    ==  ==
+    ~[[%give %fact ~[/website] [%json !>((json json-hndl))]]]
+  ==
+    %receive-request
+  =.  request-log  (~(put ju request-log) src.bol gora-id.transaction)
+  `state
+    %receive-gora
+  =.  offer-log  (~(put in offer-log) gora-id.gora.transaction)
+  :_  state
+  :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)/(scot %da now.bol)
+          %agent  [src.bol %gora]
+          %watch  /updates/(scot %uv gora-id.gora.transaction)
+      ==
+    [%give %fact ~[/website] [%json !>((json json-hndl))]]  
+  ==
+    %giv-ack
+  ?>  &((~(has by pita) gora-id.transaction) (~(has ju sent-log) gora-id.transaction [src.bol %giv]))
+  =+  (~(got by pita) gora-id.transaction)
+  =.  pita  (~(put by pita) gora-id.transaction -(hodl-list (~(put in hodl-list.-) src.bol)))
+  =.  sent-log  (~(del ju sent-log) gora-id.transaction [src.bol %giv])
+  :_  state
+  :~  :*  %give
+      %fact
+    ~[/updates/(scot %uv gora-id.transaction)]
+  [%gora-transact !>(`transact`(transact %update %upd -(hodl-list (~(put in hodl-list.-) src.bol))))]
+      ==
+    [%give %fact ~[/website] [%json !>((json json-hndl))]]    
+  ==
   ==
 ++  manag-hndl
   |=  v=manage-gora
