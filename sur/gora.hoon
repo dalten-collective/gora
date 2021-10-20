@@ -18,10 +18,9 @@
 ::
 :: Block List:
 ::
-+$  blacklist  (set ship)
++$  blacklist  (set gora-id)
 ::
-:: Used Pokes:
-:: Manage Your Goras
+:: Manage Your Goras:
 ::
 +$  manage-gora
       :: e.g. :gora &gora-man [%mkgora 'name' '/test/path/to/img']
@@ -33,9 +32,11 @@
       :: :gora &gora-man [%approve-give 1.701.667.182]
       [%approve-give =gora-id]
       [%approve-request =gora-id =ship]
+      [%reject-give =gora-id]
+      [%reject-request =gora-id =ship]
   ==
 ::
-:: Manage Inter-cosmic Activity
+:: Manage Interstellar Activity
 ::
 +$  transact
   $%  [%receive-request =gora-id]
@@ -57,4 +58,11 @@
 +$  request-log  (jug ship gora-id)
 +$  offer-log    (set gora-id)
 +$  sent-log     (jug gora-id [ship ?(%ask %giv)])
+::
+::
++$  webpage
+  $_  ^|
+  |_  [bowl:gall pita request-log offer-log sent-log blacklist]
+  ++  build  |~([(list [k=@t v=@t]) (unit [? @t])] *manx)
+  --
 --

@@ -1,13 +1,11 @@
 :~  title+'Gora - ピタゴラ装置'
     info+'A Proof of Attendance Protocol for Urbit'
     color+0xff.d966
-    :: replace with site+ - let's figure out how to handle this as raw http
-    ::
-    glob-ames+[~dev 0v0]
-    base+'gora'
+    site+/gora
+    base+'pitagora'
     ::       M m P
     ::
-    version+[0 0 1]
+    version+[9 9 9]
     website+'https://dalten.org/'
     license+'Get Rekt'
 ==
