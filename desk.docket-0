@@ -1,7 +1,7 @@
 :~  title+'Gora - ピタゴラ装置'
     info+'A Proof of Attendance Protocol for Urbit'
     color+0xff.d966
-    site+/gora
+    site+/apps/gora
     base+'pitagora'
     ::       M m P
     ::

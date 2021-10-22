@@ -11,6 +11,7 @@
   ++  style
     '''
     * { margin: 0.2em; padding: 0.2em; font-family: monospace; }
+    body { background-color: #333230; color: white; }
     p { max-width: 75em; margin-left: auto; margin-right: auto; }
     form { margin: 0; padding: 0; max-width: 75em; margin-left: auto; margin-right: auto; }
     button { padding: 0.2em 0.5em; font-size: 8pt; }
@@ -39,6 +40,67 @@
       background-color: #f0dc82;
     }
     .assembly-button { max-width: 75em; margin-left: auto; margin-right: auto; align: center }
+
+    .center-div {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .scroll-table {
+      height: 190px;
+      width: 450px;
+      overflow: auto;
+      max-width: 75em;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+
+    .scroll-owned {
+      height: 180px;
+      width: 75%;
+      overflow: auto;
+      max-width: 75em;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+
+     /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 180px; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    } 
     '''
   ::
   ++  page
@@ -46,20 +108,18 @@
     ;html
       ;head
         ;title:"%gora"
-        ;meta(charset "utf-8");
-        ;meta(name "viewport", content "width=device-width, initial-scale=1");
+        ;meta(name "viewport", content "width=device-width, initial-scale=1", charset "utf-8");
         ;style:"{(trip style)}"
       ==
       ;body
+        ;script:"{(trip javascript)}"
+        
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
         
         ;p
         ;span:"Welcome to"
         ;span(class "gora-color"):"%gora"
         ;span:". We hope to provide you with a feature rich experience, soon."
-        ==
-
-        ;p
         ;span:"For now, we hope you enjoy seeing your"
         ;span(class "gora-color"):"%gora"
         ;span:"and accepting incoming offers."
@@ -73,47 +133,76 @@
         ;span:"The /sur file from this app has some documentation of what a poke should look like."
         ==
         
-        ;div(class "assembly-button")
-        ;+  =/  assembly-token=@uv  0v5.jqnd5.oifil.703am.trbh6.219hm
-            ^-  manx
-            ?:  (~(has ju sent-log) assembly-token [~wet %ask])
+        ;div(class "assembly-button", align "center")
+          ;+  =/  assembly-token=@uv  0v2.ppshp.ckfjl.j8r5l.49vjk.n6c1u
+              ^-  manx
+              ?:  (~(has ju sent-log) assembly-token [~wet %ask])
+                ;form(method "POST")
+                  ;button(type "submit", name "skip", value "", disabled "", class "assembly-button"):"Already Requested"
+                ==
               ;form(method "POST")
-                ;button(type "submit", name "skip", value "", disabled "", class "assembly-button"):"Already Requested"
+                ;button(type "submit", name "send-request", value (scow %uv assembly-token), class "assembly-button"):"Request the Assembly Token"
+                ;input(style "display: none;", type "text", name "host", value (scow %ud `@ud`~dalten));
               ==
-            ;form(method "POST")
-              ;button(type "submit", name "send-request", value (scow %uv assembly-token), class "assembly-button"):"Request the Assembly Token"
-              ;input(style "display: none;", type "text", name "host", value (scow %ud `@ud`~dalten));
-            ==
         ==
-       
-
-        ;table
-          ;tr
-            ;td(colspan "4")
-              ;h3(align "center"):"Incoming %gora"
+        ;*  ?:  =(~(tap in offer-log) ~)
+              ;=  ;div;
+                  ;div;
+              ==
+            ;=  ;h3(align "center"):"Incoming %gora"
+                ;h5(align "center"):"Click the preview image to expand. Click Claim to acquire. Reject coming soon (available as poke)."
+                ;div(class "scroll-table")
+                  ;table
+                    ;*  (roll ~(tap in offer-log) offered-list)
+                  ==
+                ==
             ==
+        ;*  ?.  (count-hodl ~(tap in ~(key by pita)))
+              ;=  ;div;
+                  ;div;
+              ==
+          ;=  ;h3(align "center"):"Owned %gora"
+              ;h5(align "center"):"Click the preview image to see more details."
+              ;div(class "scroll-owned")
+                ;div
+                    ;*  (roll ~(tap in ~(key by pita)) hedl-list)
+                ==
+              ==
           ==
-          ;tr
-            ;td(colspan "4", align "center"):"Click the preview image to expand. Click Claim to acquire. Reject coming soon (available as poke)."
-          ==
-          ;*  (roll ~(tap in offer-log) offered-list)
-        ==
-
-        ;table(display ?.((count-hodl ~(tap in ~(key by pita))) "none" "block"))
-          ;tr
-            ;td(colspan "4")
-              ;h3(align "center"):"Owned %gora"
-            ==
-          ==
-          ;tr
-            ;td(colspan "4", align "center"):"Click the preview image to expand."
-          ==
-          ;*  (roll ~(tap in ~(key by pita)) hedl-list)
-        ==
-
-        ;h4(align "center"):"Brought to you by ~dalten Collective"
+            ;br;
+            ;br;
+            ;h4(align "center"):"Brought to you by ~dalten Collective"
       ==
     ==
+
+  ++  frame-empty
+    '''
+    display: none;
+    '''
+  ++  frame-full
+    '''
+    display: block;
+    '''
+  ++  javascript
+    '''
+    var modalBtn
+
+    function btnFunction(modalId) {
+      modalBtn = document.getElementById(modalId);
+      modalBtn.style.display = "block";
+    }
+
+    var modalAll = document.getElementsByClassName("modal")
+
+    window.onclick = function(event) {
+      for (var i = 0; i < modalAll.length; i++) {
+        if (event.target == modalAll.item(i)) {
+          modalAll.item(i).style.display = "none";
+        }
+      }
+
+    } 
+    '''
   ++  offered-list
     |=  [inc=gora-id out=(list manx)]
     ~?  !(~(has by pita) inc)
@@ -132,7 +221,7 @@
             ;button(class "approve-button", type "submit", name "approve-give", value (scow %ud inc))
               Accept
             ==
-            ;input(style "display: none;", type "text", name "host", value (scow %ud `@ud`host:(~(got by pita) inc)));
+            ;br;
             ;br;
             ;button(class "reject-button", type "submit", name "reject-give", value (scow %ud inc))
               Reject
@@ -151,15 +240,22 @@
       out
     :-
       ;tr
-        ;td(class "gora-color", style "font-weight: bold;"):"{(trip name:-)}"
         ;td
-          ;a(href "{(trip gora-img:-)}", target "_blank")
-            ;img(src "{(trip gora-img:-)}", height "150");
-          ==
+          ;img(src "{(trip gora-img:-)}", height "150", onclick "btnFunction({:(weld "\"pop-" (trip name:-) "\"")})");
         ==
-        ;td:"Host: {(scow %p host:-)}"
-        ;td
-          ;p:"Origin Date: {:(weld (scow %ud m.issue-date:-) "/" (scow %ud d.issue-date:-) "/" (scow %ud y.issue-date:-))}"
+        ;div(id (weld "pop-" (trip name:-)), class "modal")
+          ;div(class "modal-content", align "center")
+                  ;a(href "{(trip gora-img:-)}", target "_blank")
+                    ;img(src "{(trip gora-img:-)}", height "75");
+                  ==
+                  ;p(class "gora-color", style "font-weight: bold;"):"{(trip name:-)}"
+                  ;p(class "gora-color"):"Host: {(scow %p host:-)}"
+                  ;p(class "gora-color"):"Origin Date: {:(weld (scow %ud m.issue-date:-) "/" (scow %ud d.issue-date:-) "/" (scow %ud y.issue-date:-))}"
+                  ;+  =+  (lent ~(tap in hodl-list))
+                      ?.  (gth - 1)
+                        ;p(class "gora-color"):"Unique %gora"
+                      ;p(class "gora-color"):"{:(weld "1 of " (scow %ud -) " %gora")}"
+          ==
         ==
       ==
     out

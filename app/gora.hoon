@@ -25,7 +25,7 @@
   ^-  (quip card _this)
   ~&  >  '%gora initialized'
   :_  this
-  ~[[%pass /eyre/connect %arvo %e %connect [~ %gora ~] dap.bowl]]
+  ~[[%pass /eyre/connect %arvo %e %connect [~ [%apps %gora ~]] dap.bowl]]
 ++  on-save
   ^-  vase
   !>(state)
@@ -72,11 +72,11 @@
     ?~  out  ~
     `(as-octt:mimes:html (en-xml:html u.out))
   ::  405 to unexpected requests here
-  ?.  &(?=(^ site) =('gora' i.site))
+  ?.  &(?=(^ site) =('gora' +<.site))
     [[500 `:/"unexpected route"] ~ state]
   =/  page=@ta
-    ?~  t.site  %index
-    i.t.site
+    ?~  +>.site  %index
+    +>-.site
   ?.  (~(has by webui) page)
     [[404 `:/"no such page: {(trip page)}"] ~ state]
   =*  view  ~(. (~(got by webui) page) bowl +.state)
@@ -121,13 +121,12 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
-  ~&  >  "Watched on {(trip -.path)}"
   ?+  path  (on-watch:def path)
       [%http-response *]
     `this
       [%updates @ *]
     ?:  !(~(has by pita) +:(slaw %uv i.t.path))  
-      ~&  [%unexpected-subscription %bad-id]
+      ~&  >>>  [%unexpected-subscription %bad-id]
       :_  this
       :~  :*  %give
           %kick
@@ -189,14 +188,24 @@
       `state
     ==
       %receive-request
+    ~|  [%unexpected-request %not-watching-id]
+    ?<  =(~ (~(get by pita) gora-id.transaction))
+    ?>  &((~(has by pita) gora-id.transaction) =(our.bol host:(~(got by pita) gora-id.transaction)))
     =.  request-log  (~(put ju request-log) src.bol gora-id.transaction)
     `state
       %receive-gora
     ~|  [%unexpected-offer %duplicate-offer-id]
-    ?>  &(!(~(has by pita) gora-id.gora.transaction) !(~(has in offer-log) gora-id.gora.transaction) !(~(has in blacklist) gora-id.gora.transaction))
+    ?>  ?&
+          ?!  ?&
+            (~(has by pita) gora-id.gora.transaction)
+            !=(our.bol host:(~(got by pita) gora-id.gora.transaction))
+          ==
+          !(~(has in offer-log) gora-id.gora.transaction)
+          !(~(has in blacklist) gora-id.gora.transaction)
+        ==
     =.  offer-log  (~(put in offer-log) gora-id.gora.transaction)
     :_  state
-    :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)/(scot %da now.bol)
+    :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)
             %agent  [src.bol %gora]
             %watch  /updates/(scot %uv gora-id.gora.transaction)  
     ==  ==
@@ -218,10 +227,10 @@
   ?>  (team:title our.bol src.bol)
   ?-  -.v
       %mkgora
-    ~|  'Failed to %make-gora {<name.v>} - Identical gora-hash found.'
+    ~|  [%failed-gora-make name.v %identical-hash-found]
     =+  [id=(mkgora-id name.v) date=(yore now.bol)]
     ?<  (~(has by pita) id)
-    ~&  >  "%gora {(trip name.v)} created at {(scow %uv id)}"
+    ~&  >  [%gora (trip name.v) %created (scow %uv id)]
     =.  pita  (~(put by pita) id `gora`[id name.v gora-img.v our.bol [y.date m.date d.t.date] ~])
     `state
       %delgora
@@ -233,8 +242,13 @@
         ~[/updates/(scot %uv gora-id.v)]
       [%gora-transact !>((transact %update %del -))]
       ==  ==
+    =/  host  host:(~(got by pita) gora-id.v)
     =.  pita  (~(del by pita) gora-id.v)
-    `state
+    :_  state
+    :~  :*  %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
+            %agent  [host %gora]
+            %leave  ~
+    ==  ==
       %send-give
     ?<  &((~(has ju sent-log) gora-id.v [ship.v %giv]) !(~(has by pita) gora-id.v))
     =.  sent-log  (~(put ju sent-log) gora-id.v [ship.v %giv])
@@ -251,7 +265,7 @@
             %agent  [ship.v %gora]
             %poke   %gora-transact  !>((transact %receive-request gora-id.v))
         ==
-        :*  %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+        :*  %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
             %agent  [ship.v %gora]
             %watch  /updates/(scot %uv gora-id.v)  
     ==  ==
@@ -267,7 +281,9 @@
     [%gora-transact !>((transact %update %upd act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v))))]
     ==  ==
       %approve-give
-    ?>  (~(has in offer-log) gora-id.v)
+    ?.  (~(has in offer-log) gora-id.v)
+        ~&  >>>  [%unrecognized-offer (scot %uv gora-id.v)]
+        `state
     =.  offer-log  (~(del in offer-log) gora-id.v)
     =+  (~(got by pita) gora-id.v)
     :_  state
@@ -276,8 +292,9 @@
             %poke   %gora-transact  !>((transact %giv-ack gora-id.v))
     ==  ==
       %reject-give
-    ~|  [%unrecognized-offer (scot %uv gora-id.v)]
-    ?>  (~(has in offer-log) gora-id.v)
+    ?.  (~(has in offer-log) gora-id.v)
+        ~&  >>>  [%unrecognized-offer (scot %uv gora-id.v)]
+        `state
     =.  offer-log  (~(del in offer-log) gora-id.v)
     =.  blacklist  (~(put in blacklist) gora-id.v)
     =+  (~(got by pita) gora-id.v)
