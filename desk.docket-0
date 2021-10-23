@@ -2,9 +2,7 @@
     info+'A Proof of Attendance Protocol for Urbit'
     color+0xff.d966
     site+/apps/gora
-    base+'pitagora'
-    ::       M m P
-    ::
+    base+'gora'
     version+[9 9 9]
     website+'https://dalten.org/'
     license+'Get Rekt'
