@@ -63,6 +63,6 @@
 +$  webpage
   $_  ^|
   |_  [bowl:gall pita request-log offer-log sent-log blacklist]
-  ++  build  |~([(list [k=@t v=@t]) (unit [? @t])] *manx)
+  ++  build  |~([@tas (list [k=@t v=@t])] *manx)
   --
 --

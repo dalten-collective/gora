@@ -1,7 +1,8 @@
 
 /-  *gora
-/+  server, default-agent, dbug
-/~  webui  webpage  /app/gora/webui
+/+  server, default-agent, dbug, schooner
+/~  goraui   webpage    /app/gora/goraui
+/~  errors  webpage  /app/gora/errors
 |%
 +$  versioned-state
     $%  state-zero
@@ -51,69 +52,57 @@
   [cards this]
   ++  http-hndl
   |=  [=eyre-id =inbound-request:eyre]
-  ?.  authenticated.inbound-request
-  :_  state
-  %+  give-simple-payload:app:server
-    eyre-id
-  =-  [[307 ['location' -]~] ~]
-  %^  cat  3
-    '/~/login?redirect='
-  url.request.inbound-request
+  =*  internal  ~(. (~(got by goraui) %index) bowl +.state)
+  =*  errs    ~(. (~(got by errors) %index) bowl +.state)
   =/  ,request-line:server
     (parse-request-line:server url.request.inbound-request)
-  =;  [[status=@ud out=(unit manx)] caz=(list card) =_state]
+  ?+  `path`site  :_  state  (response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]])
+      [%apps %gora %public ~]
     :_  state
-    %+  weld  caz
-    %+  give-simple-payload:app:server
-      eyre-id
-    :-  :-  status
-        ?~  out  ~
-        ['content-type'^'text/html']~
-    ?~  out  ~
-    `(as-octt:mimes:html (en-xml:html u.out))
-  ::  405 to unexpected requests here
-  ?.  &(?=(^ site) =('gora' +<.site))
-    [[500 `:/"unexpected route"] ~ state]
-  =/  page=@ta
-    ?~  +>.site  %index
-    +>-.site
-  ?.  (~(has by webui) page)
-    [[404 `:/"no such page: {(trip page)}"] ~ state]
-  =*  view  ~(. (~(got by webui) page) bowl +.state)
-  ::
-  ?+  method.request.inbound-request  [[405 ~] ~ state]
-      %'GET'
-    :_  [~ state]
-    [200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)]
-      %'POST'
-    =+  (rash `@t`+>.body.request.inbound-request yquy:de-purl:html)
-    ~?  !?=(?(%reject-give %approve-give %send-request) -<.-)
-      [%unexpected-post-from-sail ~]
-    ?+  -<.-  [[200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)] ~ state]
-        %approve-give
-      =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) gora=(~(got by pita) `@uv`+>:(rush ->.- bisk:so))]
-      =^  caz  this
-       (on-poke [%gora-man !>(`manage-gora`[web-action id])])
-       =.  offer-log  (~(del in offer-log) id)
-       =.  pita  (~(put by pita) id gora(hodl-list (~(put in hodl-list.gora) our.bowl)))
-      :_  [caz state]
-      [200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)]
-        %reject-give
-      =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so)]
-      =^  caz  this
-        (on-poke [%gora-man !>(`manage-gora`[web-action id])])
-        =.  offer-log  (~(del in offer-log) id)
-      :_  [caz state]
-      [200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)]
-        %send-request
-      =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) host=`@p`+>:(rush +<+.- bisk:so)]
-      ?:  (~(has ju sent-log) id [host %ask])
-        :_  `state
-        [200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)]
-      =^  caz  this
-        (on-poke [%gora-man !>(`manage-gora`[web-action id host])])
-      :_  [caz state]
-      [200 `(build:view `(list [k=@t v=@t])`~[['key' 'value']] ~)]
+    (response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]])
+      [%apps %gora ~]
+    ?.  authenticated.inbound-request
+      :_  state
+      (response:schooner eyre-id [307 ~ [%login-redirect './apps/gora']])
+    =/  page=@ta
+        ?~  args  %index
+        %fail
+    ?.  (~(has by goraui) page)
+      [(response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]]) state]
+    ::
+    ?+  method.request.inbound-request  [(response:schooner eyre-id [405 ~ [%stock ~]]) state]
+        %'GET'
+      :_  state
+      (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+        %'POST'
+      =+  (rash `@t`+>.body.request.inbound-request yquy:de-purl:html)
+      ~&  >>  (rash `@t`+>.body.request.inbound-request yquy:de-purl:html)
+      ~&  >  -<.-
+      ~&  >  `@uv`+>:(rush ->:- bisk:so)
+      ~?  !?=(?(%reject-give %approve-give %send-request) -<.-)
+        [%unexpected-post-from-sail ~]
+      ?+  -<.-  [(response:schooner eyre-id [405 ~ [%manx (build:errs %not-found ~)]]) state]
+          %approve-give
+        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) gora=(~(got by pita) `@uv`+>:(rush ->.- bisk:so))]
+        =.  pita  (~(put by pita) id gora(hodl-list (~(put in hodl-list.gora) our.bowl)))
+        :_  state(offer-log (~(del in offer-log) id))
+        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
+        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+          %reject-give
+        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so)]
+        ?.  (~(has in offer-log) id)
+          [(response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]]) state]
+        :_  state(offer-log (~(del in offer-log) id))
+        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
+        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+          %send-request
+        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) host=`@p`+>:(rush +<+.- bisk:so)]
+        ?.  (~(has ju sent-log) id [host %ask])
+          [(response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]]) state]
+        :_  state
+        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id host])])
+        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+      ==
     ==
   ==
   --
