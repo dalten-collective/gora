@@ -6,42 +6,73 @@
 ::  which are conveniently defined below. 
 ::
 /+  server
+::
 |%
+::
 +$  eyre-id  @ta
 +$  header  [key=@t value=@t]
 +$  headers  (list header)
-+$  resource  $%([%manx m=manx] [%json j=json] [%login-redirect l=cord] [%plain p=tape] [%none ~] [%stock ~])
+::
++$  resource
+  $%  
+    [%manx m=manx]            [%json j=json]
+    [%login-redirect l=cord]  [%redirect o=cord]
+    [%plain p=tape]           [%none ~]
+    [%stock ~]
+  ==
+::
 +$  http-status  @ud
+::
 ++  response
   |=  [=eyre-id =http-status =headers =resource]
   ^-  (list card:agent:gall)
   %+  give-simple-payload:app:server
-  eyre-id
+    eyre-id
   ^-  simple-payload:http
   ?-  -.resource
       %manx
-    :_  `(as-octt:mimes:html (en-xml:html m.resource))
-    [http-status (weld headers ['content-type'^'text/html']~)]
+    :-  :-  http-status
+      (weld headers ['content-type'^'text/html']~)
+    `(as-octt:mimes:html (en-xml:html m.resource))
+    ::
       %json
-    :_  `(as-octt:mimes:html (en-json:html j.resource))
-    [http-status (weld headers ['content-type'^'application/json']~)]
+    :-  :-  http-status
+        %+  weld  headers
+        ['content-type'^'application/json']~
+    `(as-octt:mimes:html (en-json:html j.resource))
+    ::
       %login-redirect
-    =-  [[http-status (weld headers ['location' -]~)] ~]
-    %^  cat  3
+    =+  %^  cat  3
       '/~/login?redirect='
     l.resource
+    :_  ~
+    :-  http-status
+    (weld headers [['location' -]]~)
+    
+    ::
+      %redirect
+    :_  ~
+    :-  http-status
+    (weld headers ['location'^o.resource]~)
+    ::
       %plain
     :_  `(as-octt:mimes:html p.resource)
-    [http-status (weld headers ['content-type'^'text/html']~)]
+    :-  http-status
+    (weld headers ['content-type'^'text/html']~)
+    ::
       %none
     [[http-status headers] ~]
+    ::
       %stock
     (stock-error headers http-status)
+    ::
   ==
+::
 ++  stock-error
   |=  [=headers code=@ud]
-  |^  ^-  simple-payload:http
-  :-  [code (weld headers ['content-type'^'text/html']~)]
+  ^-  simple-payload:http
+  :-  :-  code
+  (weld headers ['content-type'^'text/html']~)
   :-  ~
   =+  (title-content code)
   %-  as-octt:mimes:html
@@ -59,23 +90,37 @@
       ==
     ==
   ==
-  ++  title-content
-    |=  status=@ud
-    ~&  status
-    ?+  status  :-  "500 Error - Internal Server Error" 
-                "This urbit is experiencing presence. You might try back later, or ask again. Sorry for the inconvenience."
-        %403
-      :-  "403 Error - FORBIDDEN!"
-      "Another one of them new worlds. No beer, no women, no pool partners, nothin'. Nothin' to do but throw rocks at tin cans, and we have to bring our own tin cans."
-        %404
-      :-  "404 Error - Page Not Found"
-      "You've attempted to access absence. Impossible. Try a different path. Sorry for the inconvenience."
-        %405
-      :-  "405 Error - Method Not Allowed"
-      "Something went wrong with your request. You should probably just go back. Sorry for the inconvenience."
+::
+++  title-content
+  |=  status=@ud
+  ~&  status
+  ?+  status
+    :-  "500 Error - Internal Server Error" 
+    ;:  weld  "This urbit is experiencing presence. "
+      "You might try back later, or ask again. "
+      "Sorry for the inconvenience."
     ==
-  --
-  ++  style
+    ::
+      %403
+    :-  "403 Error - FORBIDDEN!"
+    ;:  weld  "Another one of them new worlds. "
+      "No beer, no women, no pool partners, nothin'. "
+      "Nothin' to do but throw rocks at tin cans, and we have to bring our own tin cans."
+    ==
+    ::
+      %404
+    :-  "404 Error - Page Not Found"
+    %+  weld  "You've attempted to access absence. "
+    "Impossible. Try a different path. Sorry for the inconvenience."
+    ::
+      %405
+    :-  "405 Error - Method Not Allowed"
+    %+  weld  "Something went wrong with your request. "
+    "You should probably just go back. Sorry for the inconvenience."
+    ::
+  ==
+::
+++  style
   '''
   .blur-banner { 
     position: relative; 

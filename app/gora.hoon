@@ -1,13 +1,42 @@
-
+::
+::  %gora - by ~dalten Collective
+::  %gora is a proof of presence protocol (POPP) that is
+::  intended to be extensible, flexible and educational
+::  (at least for new hooners). %gora has two distros in
+::  circulation - these can be found at:
+::  ~laddys-dozzod-dalten (Vue.js frontend)
+::  ~mister-dozzod-dalten (sail frontend)
+::
+::  %gora relies on schooner, a library also produced by
+::  ~dalten Collective.
+::
+::  %gora has several available methods including:
+::    &gora-man actions:
+::     [%mkgora 'title' 'url']                       -Make a new gora
+::     [%delgora 0vid.g032h.34300]                   -Delete an existing gora
+::     [%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient
+::     [%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host
+::     [%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift
+::     [%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request
+::     [%reject-give 0vid.g032h.34300]               -Decline an incoming gora gift
+::     [%reject-request 0vid.g032h.34300 ~dev]       -Deny an incoming gora request
+::   and others that are more oriented towards machine use.
+::
 /-  *gora
 /+  server, default-agent, dbug, schooner
-/~  goraui   webpage    /app/gora/goraui
+::
+/~  main  webpage  /app/gora/goraui
 /~  errors  webpage  /app/gora/errors
+::
 |%
 +$  versioned-state
     $%  state-zero
     ==
-+$  state-zero  [%0 =pita =request-log =offer-log =sent-log =blacklist]
++$  state-zero  
+    $:  %0            =pita
+        =request-log  =offer-log
+        =sent-log     =blacklist
+    ==
 +$  card  card:agent:gall
 +$  eyre-id  @ta
 --
@@ -17,119 +46,169 @@
 =*  state  -
 ^-  agent:gall
 =<
-::!.
+::
 |_  =bowl:gall
 +*  this  .
     def   ~(. (default-agent this %|) bowl)
     hc    ~(. +> bowl)
+::
 ++  on-init
   ^-  (quip card _this)
-  ~&  >  '%gora initialized'
+  =/  gora-bind=[[site=(unit @t) path=(list @t)] app=term]
+    [[~ [%apps %gora ~]] dap.bowl]
+  ~&  >>>  [%gora %initilization-sequence-complete]
   :_  this
-  ~[[%pass /eyre/connect %arvo %e %connect [~ [%apps %gora ~]] dap.bowl]]
+  [%pass /eyre/connect %arvo %e %connect gora-bind]~
+::
 ++  on-save
   ^-  vase
   !>(state)
+::
 ++  on-load
-  |=  incoming-state=vase
+  |=  ole=vase
   ^-  (quip card _this)
   ~&  >  '%gora loaded'
-  =/  state-ver  !<(versioned-state incoming-state)
-  ?-  -.state-ver
+  =/  old  !<(versioned-state ole)
+  ?-  -.old
     %0
-  `this(state state-ver)
+  `this(state old)
+  ::
   ==
+::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
   |^
   =^  cards  state
-  ?+  mark            (on-poke:def mark vase)
-      %gora-man       (manag-hndl:hc !<(manage-gora vase))
-      %gora-transact  (trans-hndl:hc !<(transact vase))
-      %handle-http-request  (http-hndl !<([=eyre-id =inbound-request:eyre] vase))
-  ==
+    ?+  mark  (on-poke:def mark vase)
+        %gora-man
+      (manage-handle:hc !<(manage-gora vase))
+      ::
+        %gora-transact
+      (trans-hndl:hc !<(transact vase))
+      ::
+        %handle-http-request
+      %-  http-hndl
+      !<([=eyre-id =inbound-request:eyre] vase)
+      ::
+    ==
   [cards this]
+::
   ++  http-hndl
   |=  [=eyre-id =inbound-request:eyre]
-  =*  internal  ~(. (~(got by goraui) %index) bowl +.state)
-  =*  errs    ~(. (~(got by errors) %index) bowl +.state)
+  =*  intern  ~(. (~(got by main) %index) bowl +.state)
+  =*  reject  ~(. (~(got by errors) %index) bowl +.state)
+  ::=*  public  ~(. (~(got by public) %index) bowl some-state)
+  ::
   =/  ,request-line:server
-    (parse-request-line:server url.request.inbound-request)
-  ?+  `path`site  :_  state  (response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]])
+    %-  parse-request-line:server
+  url.request.inbound-request
+  =/  send
+    (cury response:schooner eyre-id)
+  ::
+  ?+  site
+    :_  state
+    (send [404 ~ [%manx (build:reject %not-found ~)]])
+    ::
       [%apps %gora %public ~]
     :_  state
-    (response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]])
+    (send [404 ~ [%stock ~]])
+    ::
       [%apps %gora ~]
     ?.  authenticated.inbound-request
       :_  state
-      (response:schooner eyre-id [307 ~ [%login-redirect './apps/gora']])
-    =/  page=@ta
-        ?~  args  %index
-        %fail
-    ?.  (~(has by goraui) page)
-      [(response:schooner eyre-id [404 ~ [%manx (build:errs %not-found ~)]]) state]
-    ::
-    ?+  method.request.inbound-request  [(response:schooner eyre-id [405 ~ [%stock ~]]) state]
+      (send [307 ~ [%login-redirect './apps/gora']])
+      ::
+    ?+  method.request.inbound-request  
+      [(send [405 ~ [%stock ~]]) state]
+      ::
         %'GET'
       :_  state
-      (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+      (send [200 ~ [%manx (build:intern %gora-index ~)]])
+      ::
         %'POST'
-      =+  (rash `@t`+>.body.request.inbound-request yquy:de-purl:html)
-      ~&  >>  (rash `@t`+>.body.request.inbound-request yquy:de-purl:html)
-      ~&  >  -<.-
-      ~&  >  `@uv`+>:(rush ->:- bisk:so)
-      ~?  !?=(?(%reject-give %approve-give %send-request) -<.-)
-        [%unexpected-post-from-sail ~]
-      ?+  -<.-  [(response:schooner eyre-id [405 ~ [%manx (build:errs %not-found ~)]]) state]
-          %approve-give
-        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) gora=(~(got by pita) `@uv`+>:(rush ->.- bisk:so))]
-        =.  pita  (~(put by pita) id gora(hodl-list (~(put in hodl-list.gora) our.bowl)))
-        :_  state(offer-log (~(del in offer-log) id))
-        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
-        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
-          %reject-give
-        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so)]
-        ?.  (~(has in offer-log) id)
-          [(response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]]) state]
-        :_  state(offer-log (~(del in offer-log) id))
-        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
-        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
-          %send-request
-        =+  [web-action=-<.- id=`@uv`+>:(rush ->.- bisk:so) host=`@p`+>:(rush +<+.- bisk:so)]
-        ?.  (~(has ju sent-log) id [host %ask])
-          [(response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]]) state]
+      =+  %+  rash
+       `@t`+>.body.request.inbound-request
+      yquy:de-purl:html
+      ?+  -<.-
         :_  state
-        %+  weld  -:(on-poke [%gora-man !>(`manage-gora`[web-action id host])])
-        (response:schooner eyre-id [200 ~ [%manx (build:internal %gora-index ~)]])
+        (send [405 ~ [%manx (build:reject %not-found ~)]])
+        ::
+          %approve-give
+        =+  
+          :+  web-action=-<.- 
+              id=`@uv`+:(rash ->.- bisk:so) 
+              gora=(~(got by pita) `@uv`+:(rash ->.- bisk:so))
+        =.  pita  
+          %+  ~(put by pita) 
+            id 
+          gora(hodl-list (~(put in hodl-list.gora) our.bowl))
+        :_  %=  state
+              offer-log  (~(del in offer-log) gora-id.gora)
+            ==
+        %+  weld  
+          (send [200 ~ [%manx (build:intern %gora-index ~)]])
+        -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
+        ::
+          %reject-give
+        =+  [web-action=-<.- id=`@uv`+:(rash ->.- bisk:so)]
+        ?.  (~(has in offer-log) id)
+          :_  state
+          (send [200 ~ [%manx (build:intern %gora-index ~)]])
+          ::
+        :_  state
+        %+  weld
+          (send [200 ~ [%manx (build:intern %gora-index ~)]])
+        -:(on-poke [%gora-man !>(`manage-gora`[web-action id])])
+        ::
+          %send-request
+        =+
+          :+  web-action=-<.-
+              id=`@uv`+:(rash ->.- bisk:so)
+              host=`@p`+:(rash +<+.- bisk:so)
+        ?.  (~(has ju sent-log) id [host %ask])
+          :_  state
+          (send [200 ~ [%manx (build:intern %gora-index ~)]])
+          ::
+        :_  state
+        %+  weld
+          (send [200 ~ [%manx (build:intern %gora-index ~)]])
+        -:(on-poke [%gora-man !>(`manage-gora`[web-action id host])])
+        ::
       ==
     ==
   ==
   --
-++  on-peek  on-peek:def
+::
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
   ?+  path  (on-watch:def path)
       [%http-response *]
     `this
+    ::
       [%updates @ *]
-    ?:  !(~(has by pita) +:(slaw %uv i.t.path))  
+    ?:  !(~(has by pita) (slav %uv i.t.path))  
       ~&  >>>  [%unexpected-subscription %bad-id]
       :_  this
-      :~  :*  %give
-          %kick
-        ~[~[%updates i.t.path]]
-      `src.bowl
+      :~  :*
+            %give
+            %kick
+            ~[~[%updates i.t.path]]
+            `src.bowl
       ==  ==
-    =+  (~(got by pita) +:(slaw %uv i.t.path))
+      ::
+    =+  (~(got by pita) (slav %uv i.t.path))
     :_  this
-    :~  :*  %give
-        %fact
-      ~
-    [%gora-transact !>((transact %update %upd -))]
+    :~  :*
+          %give
+          %fact
+          ~
+          [%gora-transact !>((transact %update %upd -))]
     ==  ==
+    ::
   ==
+::
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)
@@ -139,14 +218,17 @@
       =^  cards  state
       (trans-hndl !<(transact q.cage.sign))
       [cards this]
+      ::
     ~&  >>>  [%unexpected-mark p.cage.sign]  !!
+    ::
       %kick
-    ?.  (~(has by pita) +:(slaw %ud +<.wire))
-      =.  pita  (~(del by pita) +:(slaw %ud +<.wire))
+    ?.  (~(has by pita) (slav %ud +<.wire))
+      =.  pita  (~(del by pita) (slav %ud +<.wire))
       `this
+      ::
     ~&  >>>  [%unexpected-kick wire src.bol]  !!
   ==
-++  on-leave  on-leave:def
+::
 ++  on-arvo
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
@@ -156,145 +238,223 @@
       [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
     `this
   ==
-++  on-fail  on-fail:def
+++  on-peek   on-peek:def
+++  on-leave  on-leave:def
+++  on-fail   on-fail:def
 --
-::!.
+::
 |_  bol=bowl:gall
+++  mkgora-id
+  |=  in=@t
+  (sham our.bol now.bol in)
 ++  trans-hndl
   |=  transaction=transact
-  ?-  -.transaction
+  =,  transaction
+  ?-  -.+<
       %update
-    ?-  act.transaction
-        %upd
-      =.  pita  (~(put by pita) gora-id.gora.transaction gora.transaction)
-      ?.  (~(has in hodl-list.gora.transaction) our.bol)
-        `state
-      =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
-      `state
+    ?-  +<.+<
         %del
-      =.  pita  (~(del by pita) gora-id.gora.transaction gora.transaction)
-      =.  sent-log  (~(del ju sent-log) gora-id.gora.transaction [src.bol %ask])
+      =.  pita
+        (~(del by pita) gora-id.gora gora)
+      =.  sent-log
+        (~(del ju sent-log) gora-id.gora [src.bol %ask])
       `state
+      ::
+        %upd
+      =.  pita
+        (~(put by pita) gora-id.gora gora)
+      ?.  (~(has in hodl-list.gora) our.bol)
+        `state
+        ::
+      =.  sent-log
+        (~(del ju sent-log) gora-id.gora [src.bol %ask])
+      `state
+      ::
     ==
+    ::
       %receive-request
     ~|  [%unexpected-request %not-watching-id]
-    ?<  =(~ (~(get by pita) gora-id.transaction))
-    ?>  &((~(has by pita) gora-id.transaction) =(our.bol host:(~(got by pita) gora-id.transaction)))
-    =.  request-log  (~(put ju request-log) src.bol gora-id.transaction)
+    ?>  ?&  
+          (~(has by pita) gora-id)
+          =(our.bol host:(~(got by pita) gora-id))
+        ==
+    =.  request-log
+      (~(put ju request-log) src.bol gora-id)
     `state
+    ::
       %receive-gora
     ~|  [%unexpected-offer %duplicate-offer-id]
     ?>  ?&
-          ?!  ?&
-            (~(has by pita) gora-id.gora.transaction)
-            !=(our.bol host:(~(got by pita) gora-id.gora.transaction))
-          ==
-          !(~(has in offer-log) gora-id.gora.transaction)
-          !(~(has in blacklist) gora-id.gora.transaction)
+          !(~(has in offer-log) gora-id.gora)
+          !(~(has in blacklist) gora-id.gora)
         ==
-    =.  offer-log  (~(put in offer-log) gora-id.gora.transaction)
+    =.  offer-log  (~(put in offer-log) gora-id.gora)
     :_  state
-    :~  :*  %pass   /updates/(scot %uv gora-id.gora.transaction)/(scot %p our.bol)
-            %agent  [src.bol %gora]
-            %watch  /updates/(scot %uv gora-id.gora.transaction)  
+    :~  :*  
+          %pass   /updates/(scot %uv gora-id.gora)/(scot %p our.bol)
+          %agent  [src.bol %gora]
+          %watch  /updates/(scot %uv gora-id.gora)
     ==  ==
       %giv-ack
-    ?>  &((~(has by pita) gora-id.transaction) (~(has ju sent-log) gora-id.transaction [src.bol %giv]))
-    =+  (~(got by pita) gora-id.transaction)
-    =.  pita  (~(put by pita) gora-id.transaction -(hodl-list (~(put in hodl-list.-) src.bol)))
-    =.  sent-log  (~(del ju sent-log) gora-id.transaction [src.bol %giv])
+    ?>  ?&  (~(has by pita) gora-id)
+            (~(has ju sent-log) gora-id [src.bol %giv])
+        ==
+    =+  (~(got by pita) gora-id)
+    =.  -  -(hodl-list (~(put in hodl-list.-) src.bol))
+    =.  pita  
+    (~(put by pita) gora-id -)
+    =.  sent-log
+      (~(del ju sent-log) gora-id (sy [src.bol %giv]~))
     :_  state
-    :~  :*  %give
-        %fact
-      ~[/updates/(scot %uv gora-id.transaction)]
-    [%gora-transact !>(`transact`(transact %update %upd -(hodl-list (~(put in hodl-list.-) src.bol))))]
+    :~  :*  
+          %give
+          %fact
+          ~[/updates/(scot %uv gora-id)]
+          :-  %gora-transact
+          !>(`transact`[%update %upd -])
     ==  ==
   ==
-++  manag-hndl
+::
+++  manage-handle
   |=  v=manage-gora
-  |^
   ?>  (team:title our.bol src.bol)
   ?-  -.v
       %mkgora
-    ~|  [%failed-gora-make name.v %identical-hash-found]
+    ~|  [%failed-gora-make name.v %identical-hash]
     =+  [id=(mkgora-id name.v) date=(yore now.bol)]
     ?<  (~(has by pita) id)
+    =.  pita  
+      %+  ~(put by pita)
+        id
+      :*  id
+          name.v
+          gora-img.v
+          our.bol
+          [y.date m.date d.t.date]
+          ~
+      ==
     ~&  >  [%gora (trip name.v) %created (scow %uv id)]
-    =.  pita  (~(put by pita) id `gora`[id name.v gora-img.v our.bol [y.date m.date d.t.date] ~])
     `state
+    ::
       %delgora
-    ?>  (team:title src.bol our.bol)
-    ?:  (team:title our.bol host:(~(got by pita) gora-id.v))
+    ~|  [%failed-delete (scow %uv gora-id.v)]
+    ?>  ?&
+          (~(has by pita) gora-id.v)
+          (team:title src.bol our.bol)
+        ==
+    ?:  =(our.bol host:(~(got by pita) gora-id.v))
+      =+  (~(got by pita) gora-id.v)
       =.  pita  (~(del by pita) gora-id.v)
       :_  state
-      :~  :*  %give  %fact
-        ~[/updates/(scot %uv gora-id.v)]
-      [%gora-transact !>((transact %update %del -))]
+      :~  :*  
+            %give
+            %fact
+            ~[/updates/(scot %uv gora-id.v)]
+            [%gora-transact !>(`transact`[%update %del `gora`-])]
       ==  ==
+      ::
     =/  host  host:(~(got by pita) gora-id.v)
     =.  pita  (~(del by pita) gora-id.v)
     :_  state
-    :~  :*  %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
-            %agent  [host %gora]
-            %leave  ~
+    :~  :*  
+          %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
+          %agent  [host %gora]
+          %leave  ~
     ==  ==
+    ::
       %send-give
-    ?<  &((~(has ju sent-log) gora-id.v [ship.v %giv]) !(~(has by pita) gora-id.v))
-    =.  sent-log  (~(put ju sent-log) gora-id.v [ship.v %giv])
-    :_  state
-    :~  :*  %pass   /transact/send-giv/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
-            %agent  [ship.v %gora]
-            %poke   %gora-transact  !>((transact %receive-gora (~(got by pita) gora-id.v)))
-    ==  ==
-      %send-request
-    ?<  (~(has ju sent-log) gora-id.v [ship.v %ask])
-    =.  sent-log  (~(put ju sent-log) gora-id.v [ship.v %ask])
-    :_  state
-    :~  :*  %pass   /transact/send-req/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
-            %agent  [ship.v %gora]
-            %poke   %gora-transact  !>((transact %receive-request gora-id.v))
+    ?>  ?&  
+          (~(has by pita) gora-id.v)
+          (team:title src.bol our.bol)
+          !(~(has ju sent-log) gora-id.v [ship.v %giv])
         ==
-        :*  %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
-            %agent  [ship.v %gora]
-            %watch  /updates/(scot %uv gora-id.v)  
+    =.  sent-log
+      (~(put ju sent-log) gora-id.v [ship.v %giv])
+    :_  state
+    :~  :*
+          %pass   /transact/send-giv/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+          %agent  [ship.v %gora]
+          %poke   %gora-transact  !>((transact %receive-gora (~(got by pita) gora-id.v)))
     ==  ==
+    ::
+      %send-request
+    ?>  ?&
+          !(~(has ju sent-log) gora-id.v [ship.v %ask])
+          (team:title src.bol our.bol)
+        ==
+    =.  sent-log
+      (~(put ju sent-log) gora-id.v [ship.v %ask])
+    :_  state
+    :~  :* 
+          %pass   /transact/send-req/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
+          %agent  [ship.v %gora]
+          %poke   %gora-transact  !>((transact %receive-request gora-id.v))
+        ==
+        :*
+          %pass   /updates/(scot %uv gora-id.v)/(scot %p our.bol)
+          %agent  [ship.v %gora]
+          %watch  /updates/(scot %uv gora-id.v)  
+    ==  ==
+    ::
       %approve-request
-    ?>  &((~(has ju request-log) ship.v gora-id.v) (~(has by pita) gora-id.v))
-    =.  request-log  (~(del ju request-log) ship.v gora-id.v)
-    =/  act-gora=gora  (~(got by pita) gora-id.v)
-    =.  pita  (~(put by pita) gora-id.v act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v)))
-    :_  state
-    :~  :*  %give
-        %fact
-      ~[/updates/(scot %uv gora-id.v)]
-    [%gora-transact !>((transact %update %upd act-gora(hodl-list (~(put in hodl-list.act-gora) ship.v))))]
-    ==  ==
-      %approve-give
-    ?.  (~(has in offer-log) gora-id.v)
-        ~&  >>>  [%unrecognized-offer (scot %uv gora-id.v)]
-        `state
-    =.  offer-log  (~(del in offer-log) gora-id.v)
+    ~|  [%bad-request (scot %uv gora-id.v) (scot %p ship.v)]
+    ?>  ?&
+          (~(has ju request-log) ship.v gora-id.v)
+          (~(has by pita) gora-id.v)
+        ==
+    =.  request-log
+      (~(del ju request-log) ship.v gora-id.v)
     =+  (~(got by pita) gora-id.v)
+    =/  act-gora=gora
+      %=  -
+        hodl-list  (~(put in hodl-list) ship.v)
+      ==
+    =.  pita  (~(put by pita) gora-id.v act-gora)
     :_  state
+    :~  :*
+          %give
+          %fact
+          ~[/updates/(scot %uv gora-id.v)]
+          :-  %gora-transact
+          !>(`transact`[%update %upd act-gora])
+    ==  ==
+    ::
+      %approve-give
+    ~|  [%unrecognized-offer (scot %uv gora-id.v)]
+    ?>  ?&
+          (team:title src.bol our.bol)
+          (~(has in offer-log) gora-id.v)
+        ==
+    =+  (~(got by pita) gora-id.v)
+    :_  %=  state
+          offer-log  (~(del in offer-log) gora-id.v)
+        ==
     :~  :*  %pass   /transact/give-ack/(scot %uv gora-id.v)/(scot %p host.-)/(scot %da now.bol)
             %agent  [host.- %gora]
             %poke   %gora-transact  !>((transact %giv-ack gora-id.v))
     ==  ==
+    ::
       %reject-give
-    ?.  (~(has in offer-log) gora-id.v)
-        ~&  >>>  [%unrecognized-offer (scot %uv gora-id.v)]
-        `state
+    ~|  [%unrecognized-offer (scot %uv gora-id.v)]
+    ?>  ?&
+          (team:title src.bol our.bol)
+          (~(has in offer-log) gora-id.v)
+        ==
     =.  offer-log  (~(del in offer-log) gora-id.v)
     =.  blacklist  (~(put in blacklist) gora-id.v)
     =+  (~(got by pita) gora-id.v)
     :_  state
-    :~  :*  %pass   /updates/(scot %uv gora-id.v)
-            %agent  [host %gora]
-            %leave  ~
+    :~  :*
+          %pass   /updates/(scot %uv gora-id.v)
+          %agent  [host %gora]
+          %leave  ~
     ==  ==
+    ::
       %reject-request
+    ~|  [%bad-request (scot %uv gora-id.v) (scot %p ship.v)]
     ?>  (~(has in (~(got by request-log) ship.v)) gora-id.v)
-    =.  request-log  (~(del ju request-log) ship.v gora-id.v)
+    =.  request-log
+      (~(del ju request-log) ship.v gora-id.v)
     :_  state
     :~  :*
         %give  %kick
@@ -302,8 +462,4 @@
         `ship.v
     ==  ==
   ==
-  ++  mkgora-id
-    |=  in=@t
-    (sham our.bol now.bol in)
-  --
 --
