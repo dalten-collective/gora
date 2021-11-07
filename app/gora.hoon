@@ -8,7 +8,8 @@
 ::  ~mister-dozzod-dalten (sail frontend)
 ::
 ::  %gora sail relies on schooner, a library also produced
-::  by ~dalten Collective.
+::  by ~dalten Collective. The library is included in the
+::  sail package.
 ::
 ::  %gora has several available methods including:
 ::    &gora-man actions:
