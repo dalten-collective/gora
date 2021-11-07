@@ -1,0 +1,10 @@
+:~  
+  title+'Gora - ピタゴラ装置'
+  info+'A Proof of Attendance Protocol for Urbit'
+  color+0xff.d966
+  version+[0 0 1]
+  website+'https://dalten.org/'
+  license+'Get Rekt'
+  base+'gora'
+  glob-ames+[~dalten 0v0]
+==
