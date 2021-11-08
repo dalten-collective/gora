@@ -6,5 +6,5 @@
   website+'https://dalten.org/'
   license+'Get Rekt'
   base+'gora'
-  glob-ames+[~nut 0v0]
+  glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v6.kjha4.p3o7c.ebfvn.himpg.1af9d.glob' 0v6.kjha4.p3o7c.ebfvn.himpg.1af9d]
 ==
