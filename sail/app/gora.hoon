@@ -264,19 +264,18 @@
           !(~(has in blacklist) gora-id.gora)
         ==
     =;  [caz=(list card:agent:gall) saz=_state]
-      ::?:  ?&  
-      ::      (~(has by pita) gora-id.gora)
-      ::      ::
-      ::      %+  team:title
-      ::          (sein:title our.bol now.bol host.gora)
-      ::          host.gora
-      ::    ==
-      ::  [caz saz]
-      ::
+      ?:  ?&  
+            (~(has by pita) gora-id.gora)
+            ::
+            %+  team:title
+                (sein:title our.bol now.bol host.gora)
+                host.gora
+          ==
+        [caz saz]
+    :-  caz
     %=  saz
       offer-log  (~(put in offer-log) gora-id.gora)
     ==
-    [caz saz]
     ::
     :_  state
     :~  :*  

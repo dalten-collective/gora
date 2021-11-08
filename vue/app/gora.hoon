@@ -122,8 +122,7 @@
     :_  this
     :~  :*
           %give
-          %fact
-          ~
+          %fact  ~
           [%gora-transact !>(`transact`[%update %upd -])]
     ==  ==
     ::
@@ -304,6 +303,10 @@
           ~[/updates/(scot %uv gora-id)]
           :-  %gora-transact
           !>(`transact`[%update %upd -])
+        ==
+        :*  %give
+            %fact  [%website ~]
+            [%json !>(`json`json-hndl:hc)]
     ==  ==
     ::
       %receive-gora
@@ -314,15 +317,15 @@
           !(~(has in blacklist) gora-id.gora)
         ==
     =;  [caz=(list card:agent:gall) saz=_state]
-      ::?:  ?&  
-      ::      (~(has by pita) gora-id.gora)
-      ::      ::
-      ::      %+  team:title
-      ::          (sein:title our.bol now.bol host.gora)
-      ::          host.gora
-      ::    ==
-      ::  [caz saz]
-      ::
+      ?:  ?&  
+            (~(has by pita) gora-id.gora)
+            ::
+            %+  team:title
+                (sein:title our.bol now.bol host.gora)
+                host.gora
+          ==
+        [caz saz]
+      
     %=  saz
       offer-log  (~(put in offer-log) gora-id.gora)
     ==
@@ -333,6 +336,10 @@
           %pass   /updates/(scot %uv gora-id.gora)/(scot %p our.bol)
           %agent  [src.bol %gora]
           %watch  /updates/(scot %uv gora-id.gora)
+        ==
+        :*  %give
+            %fact  [%website ~]
+            [%json !>(`json`json-hndl:hc)]
     ==  ==
     ::
       %giv-ack
@@ -369,13 +376,18 @@
       ?.  (~(has in hodl-list.gora) our.bol)  
         `state
         ::
+      :_
       ?:  %+  ~(has ju sent-log)
               gora-id.gora
               [src.bol %ask]
         =.  sent-log
         (~(del ju sent-log) gora-id.gora [src.bol %ask])
-        `state
-      `state
+        state
+      state
+      :~  :*  %give
+              %fact  [%website ~]
+              [%json !>(`json`json-hndl:hc)]
+      ==  ==
       ::
     ==
     ::
@@ -427,12 +439,10 @@
     ==  ==
     ::
       %send-give
-    ~|  %top
     ?>  ?&  
           (~(has by pita) gora-id.v)
           !(~(has ju sent-log) gora-id.v [ship.v %giv])
         ==
-    ~|  %middle
     =;  [caz=(list card) saz=_state]
     ?:  %-
       ~(has in hodl-list:(~(got by pita) gora-id.v))
@@ -508,6 +518,10 @@
     :~  :*  %pass   /transact/give-ack/(scot %uv gora-id.v)/(scot %p host.-)/(scot %da now.bol)
             %agent  [host.- %gora]
             %poke   %gora-transact  !>((transact %giv-ack gora-id.v))
+        ==
+        :*  %give
+            %fact  [%website ~]
+            [%json !>(`json`json-hndl:hc)]
     ==  ==
     ::
       %reject-give
@@ -521,6 +535,10 @@
           %pass   /updates/(scot %uv gora-id.v)
           %agent  [host %gora]
           %leave  ~
+        ==
+        :*  %give
+            %fact  [%website ~]
+            [%json !>(`json`json-hndl:hc)]
     ==  ==
     ::
       %reject-request
