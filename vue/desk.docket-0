@@ -6,5 +6,5 @@
   website+'https://dalten.org/'
   license+'Get Rekt'
   base+'gora'
-  glob-ames+[~dalten 0v0]
+  glob-ames+[~nut 0v0]
 ==
