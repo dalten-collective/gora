@@ -520,7 +520,7 @@
         ==
         :*  %give
             %fact  [%website ~]
-            [%json !>(`json`json-hndl:hc)]
+            [%json !>(`json`json-hndl)]
     ==  ==
     ::
       %reject-give
@@ -537,7 +537,7 @@
         ==
         :*  %give
             %fact  [%website ~]
-            [%json !>(`json`json-hndl:hc)]
+            [%json !>(`json`json-hndl)]
     ==  ==
     ::
       %reject-request
