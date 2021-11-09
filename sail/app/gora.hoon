@@ -15,12 +15,12 @@
 ::    &gora-man actions:
 ::     [%mkgora 'title' 'url']                       -Make a new gora
 ::     [%delgora 0vid.g032h.34300]                   -Delete an existing gora
-::     [%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient
-::     [%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host
-::     [%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift
-::     [%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request
 ::     [%reject-give 0vid.g032h.34300]               -Decline an incoming gora gift
+::     [%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift
 ::     [%reject-request 0vid.g032h.34300 ~dev]       -Deny an incoming gora request
+::     [%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host
+::     [%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request
+::     [%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient
 ::   and others that are more oriented towards machine use.
 ::
 ::  %gora has several available scries as well:
@@ -33,6 +33,12 @@
 ::    ::
 ::  join ~dalten/dalten-collective-public if you have ideas for others.
 ::  Or, swing by the repo: https://github.com/dalten-collective/gora
+::
+::  Currently outstanding technical debt/improvment roadmap:
+::   - Implement all/most &gora-man pokes as front-end functions
+::   - Tighten business logic to avoid need for %clean-log
+::   - State upgrades and new features (join the support channel to hear more)
+::   - Await decrement
 ::
 /-  *gora
 /+  server, default-agent, dbug, schooner
@@ -284,13 +290,6 @@
           %watch  /updates/(scot %uv gora-id.gora)
     ==  ==
     ::
-    :_  state
-    :~  :*  
-          %pass   /updates/(scot %uv gora-id.gora)/(scot %p our.bol)
-          %agent  [src.bol %gora]
-          %watch  /updates/(scot %uv gora-id.gora)
-    ==  ==
-    ::
       %giv-ack
     ?>  ?&  (~(has by pita) gora-id)
             (~(has ju sent-log) gora-id [src.bol %giv])
@@ -354,10 +353,23 @@
     :_  state
     (send [404 ~ [%manx (build:reject %not-found ~)]])
     ::
-      [%apps %gora %public ~]
-    :_  state
-    (send [404 ~ [%stock ~]])
+    ::  [%apps %gora %public ~]
+    :::_  state
+    ::(send [404 ~ [%stock ~]])
     ::
+      [%apps %gora %wuttis ~]
+    ?.  authenticated.inbound-request
+      :_  state
+      (send [307 ~ [%login-redirect './apps/gora/wuttis']])
+      ::
+    ?+  method.request.inbound-request
+      [(send [405 ~ [%stock ~]]) state]
+      ::
+        %'GET'
+      :_  state
+      %-  send
+      [200 ~ [%manx (build:intern %wuttar-gorae ~)]]
+    ==
       [%apps %gora ~]
     ?.  authenticated.inbound-request
       :_  state
@@ -508,12 +520,10 @@
     ==  ==
     ::
       %send-give
-    ~|  %top
     ?>  ?&  
           (~(has by pita) gora-id.v)
           !(~(has ju sent-log) gora-id.v [ship.v %giv])
         ==
-    ~|  %middle
     =;  [caz=(list card) saz=_state]
     ?:  %-
       ~(has in hodl-list:(~(got by pita) gora-id.v))
@@ -615,5 +625,32 @@
         ~[/updates/(scot %uv gora-id.v)]
         `ship.v
     ==  ==
+      %clean-log
+    ?-  -.log.v
+        %offer-log
+      =,  log.v
+      `state(offer-log (~(del in offer-log) gora-id))
+      ::
+        %blacklist
+      =,  log.v
+      `state(blacklist (~(del in blacklist) gora-id))
+      ::
+        %request-log
+      =,  log.v
+      :-  ~
+      %=  state
+          request-log
+        (~(del ju request-log) ship gora-id)
+      ==
+      ::
+        %sent-log
+      =,  log.v
+      :-  ~
+      %=  state
+          sent-log
+        (~(del ju sent-log) gora-id [ship act])
+      ==
+      ::
+    ==
   ==
 --

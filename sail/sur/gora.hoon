@@ -10,7 +10,8 @@
 :: Manage Your Goras:
 ::
 +$  manage-gora
-  $%  [%delgora =gora-id]
+  $%  [%clean-log =log]
+      [%delgora =gora-id]
       [%reject-give =gora-id]
       [%approve-give =gora-id]
       [%mkgora name=@t =gora-img]
@@ -31,6 +32,15 @@
   ==
 ::
 :: Used Types:
+::
+:: Log Names
++$  log
+  $%  [%offer-log =gora-id]
+      [%blacklist =gora-id]
+      [%request-log =ship =gora-id]
+      [%sent-log =gora-id =ship act=?(%ask %giv)]
+  ==
+::
 :: Defining Gora
 +$  gora-id      @uv
 +$  gora-img     cord

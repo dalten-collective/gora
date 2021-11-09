@@ -14,6 +14,8 @@
   ?+  requested-page  (build:errs %not-found ~)
       %gora-index
     (main-page args)
+      %wuttar-gorae
+    (wuttis-gora args)
   ==
   ++  main-page
     |=  url-params=(list [k=@t v=@t])
@@ -28,7 +30,9 @@
         ;script:"{(trip javascript)}"
         
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
-        
+        ;div(align "center")
+          ;a(class "wuttarButton", href "./gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
+        ==
         ;p
         ;span:"Welcome to"
         ;span(class "gora-color"):"%gora"
@@ -36,27 +40,6 @@
         ;span:"For now, we hope you enjoy seeing your"
         ;span(class "gora-color"):"%gora"
         ;span:"and accepting incoming offers."
-        ==
-
-        ;p
-        ;span:"Feeling bold? Try poking your ship to issue your own"
-        ;span(class "gora-color"):"%gora."
-        ==
-        ;p
-        ;span:"The /sur file from this app has some documentation of what a poke should look like."
-        ==
-        
-        ;div(class "assembly-button", align "center")
-          ;+  =/  assembly-token=@uv  0v2.ppshp.ckfjl.j8r5l.49vjk.n6c1u
-              ^-  manx
-              ?:  (~(has ju sent-log) assembly-token [~wet %ask])
-                ;form(method "POST")
-                  ;button(type "submit", name "skip", value "", disabled "", class "assembly-button"):"Already Requested"
-                ==
-              ;form(method "POST")
-                ;button(type "submit", name "send-request", value (scow %uv assembly-token), class "assembly-button"):"Request the Assembly Token"
-                ;input(style "display: none;", type "text", name "host", value (scow %ud `@ud`~dalten));
-              ==
         ==
         ;*  ?:  =(~(tap in offer-log) ~)
               ;=  ;div;
@@ -87,7 +70,32 @@
             ;h4(align "center"):"Brought to you by ~dalten Collective"
       ==
     ==
+  ++  wuttis-gora
+    |=  url-params=(list [k=@t v=@t])
+    ^-  manx
+    ;html
+      ;head
+        ;title:"%gora - マイ ゴラ スイッチ"
+        ;meta(name "viewport", content "width=device-width, initial-scale=1", charset "utf-8");
+        ;style:"{(trip style)}"
+      ==
+      ;body
+        ;script:"{(trip javascript)}"
+        
+        ;h2(class "gora-title gora-color", align "center"):"?=  %gora / ?*  %gorae - マイ ゴラ スイッチ"
+        ;div(align "center")
+          ;a(class "wuttarButton", href ".", title "zapzap"):"!!"
+        ==
+        ;div
+          ;*  wuttar-gorae
+        ==
 
+            ;br;
+            ;br;
+            ;h4(align "center"):"Brought to you by ~dalten Collective"
+      ==
+    ==
+    ::
   ++  frame-empty
     '''
     display: none;
@@ -154,7 +162,7 @@
     :-
       ;tr
         ;td
-          ;img(src "{(trip gora-img:-)}", height "150", onclick "btnFunction({:(weld "\"pop-" (trip name:-) "\"")})");
+          ;img(class "container", src "{(trip gora-img:-)}", height "150", onclick "btnFunction({:(weld "\"pop-" (trip name:-) "\"")})");
         ==
         ;div(id (weld "pop-" (trip name:-)), class "modal")
           ;div(class "modal-content", align "center")
@@ -213,7 +221,14 @@
     .approve-button {
       background-color: #f0dc82;
     }
-    .assembly-button { max-width: 75em; margin-left: auto; margin-right: auto; align: center }
+    .assembly-button { 
+      max-width: 75em; 
+      margin-left: auto; 
+      margin-right: auto; 
+      align: center;
+      background-color: #997300;
+      text-color: #FFFFFF;
+    }
     .center-div {
       margin-left: auto;
       margin-right: auto;
@@ -267,7 +282,59 @@
       color: black;
       text-decoration: none;
       cursor: pointer;
-    } 
+    }
+    .wuttarButton {
+      box-shadow: 0px 1px 0px 0px #fff6af;
+      background:linear-gradient(to bottom, #997300 5%, #b58e18 100%);
+      background-color:#997300;
+      border-radius:999999px;
+      border:1px solid #ffaa22;
+      display:inline-block;
+      cursor:pointer;
+      color:#FFFFFF;
+      font-size:10px;
+      padding:6px 6px;
+      text-decoration:none;
+    }
+    .wuttarButton:hover {
+      background:linear-gradient(to bottom, #b58e18 5%, #997300 100%);
+      background-color:#ffab23;
+    }
+    .wuttarButton:active {
+      position:relative;
+      top:1px;
+    }
+    .container {
+      transition: 0.9s;
+    }
+    .container:hover {
+      transform: translate(5px, 10px);
+    }
     '''
+  ++  wuttar-gorae
+    ;=
+    ;p:"%gora by ~dalten Collective (vue edition) is a proof of presence protocol (POPP). %gora allows users to issue (and receive) lasting indicia of presence in a variety of contexts. This memorial tokens contain within their own data structure a name, issuer, image link, validation hash and list of other holders of the token."
+    ;br;
+    ;p:"%gora is distributed in two varieties - one that uses Vue.js and is reactive to user actions just like a modern Earth Web 2.0 application; the other uses Sail, an XML markdown language compatible with hoon that delivers a decidedly Earth Web 1.0 experience. They are available to install from the following moons:"
+    ;br;
+    ;p:"- %gora Vue.js Edition - |install ~laddys-dozzod-dalten %gora"
+    ;p:"- %gora Sail Edition   - |install ~mister-dozzod-dalten %gora"
+    ;br;
+    ;p:"Feel free to build and distribute extensions to %gora that suite your particular need. The base features can (soon) be accessed through this interface, and can also be accessed through the dojo or by other %gall agents using pokes and scries. The scries are documented within the app file, and a successful poke will look something like this:"
+    ;br;
+    ;p:":gora &gora-man [%mkgora /'Your Gora's Name/' /'http://your-url.s3-phuket.com/your-jpg.gif/']"
+    ;br;
+    ;p:"The &gora-man structure includes other pokes like:"
+    ;p:"[%mkgora /'title/' /'url/']                       -Make a new gora"
+    ;p:"[%delgora 0vid.g032h.34300]                   -Delete an existing gora"
+    ;p:"[%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient"
+    ;p:"[%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host"
+    ;p:"[%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift"
+    ;p:"[%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request"
+    ;p:"[%reject-give 0vid.g032h.34300]               -Decline an incoming gora gift"
+    ;p:"[%reject-request 0vid.g032h.34300 ~dev]       -Deny an incoming gora request"
+    ;br;
+    ;p:"If you need support with %gora - join ~mister-hilper-dozzod-dalten/gora and we'll see what we can do!"
+  ==
   --
 --
