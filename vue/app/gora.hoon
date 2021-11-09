@@ -15,12 +15,12 @@
 ::    &gora-man actions:
 ::     [%mkgora 'title' 'url']                       -Make a new gora
 ::     [%delgora 0vid.g032h.34300]                   -Delete an existing gora
-::     [%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient
-::     [%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host
-::     [%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift
-::     [%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request
 ::     [%reject-give 0vid.g032h.34300]               -Decline an incoming gora gift
+::     [%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift
 ::     [%reject-request 0vid.g032h.34300 ~dev]       -Deny an incoming gora request
+::     [%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host
+::     [%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request
+::     [%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient
 ::   and others that are more oriented towards machine use.
 ::
 ::  %gora has several available scries as well:
@@ -290,11 +290,13 @@
           ::
           =(our.bol host:(~(got by pita) gora-id))
         ==
+        ::
     ?.  %-  ~(has in hodl-list:(~(got by pita) gora-id))
         src.bol 
       =.  request-log
         (~(put ju request-log) src.bol gora-id)
       `state
+      ::
     =+  (~(got by pita) gora-id)
     :_  state
     :~  :*
@@ -304,28 +306,30 @@
           :-  %gora-transact
           !>(`transact`[%update %upd -])
         ==
-        :*  %give
-            %fact  [%website ~]
-            [%json !>(`json`json-hndl:hc)]
+        :*
+          %give
+          %fact  ~[/website]
+          [%json !>(`json`json-hndl)]
     ==  ==
     ::
       %receive-gora
     ~|  [%unexpected-offer %duplicate-offer-id]
     ?>  ?&
           !(~(has in offer-log) gora-id.gora)
-          ::
           !(~(has in blacklist) gora-id.gora)
         ==
+        ::
     =;  [caz=(list card:agent:gall) saz=_state]
-      ?:  ?&  
-            (~(has by pita) gora-id.gora)
-            ::
-            %+  team:title
-                (sein:title our.bol now.bol host.gora)
-                host.gora
-          ==
+    ?:  ?&
+          (~(has by pita) gora-id.gora)
+          (~(has in hodl-list.gora) our.bol)
+        ==
         [caz saz]
-    =.  saz  saz(offer-log (~(put in offer-log) gora-id.gora))
+        ::
+    =.  offer-log
+        (~(put in offer-log) gora-id.gora)
+    =.  +<+>+.caz
+        [%json !>(`json`json-hndl)]
     [caz saz]
     ::
     :_  state
@@ -334,9 +338,10 @@
           %agent  [src.bol %gora]
           %watch  /updates/(scot %uv gora-id.gora)
         ==
-        :*  %give
-            %fact  [%website ~]
-            [%json !>(`json`json-hndl:hc)]
+        :*
+          %give
+          %fact  ~[/website]
+          [%json !>(`json`json-hndl)]
     ==  ==
     ::
       %giv-ack
@@ -361,29 +366,46 @@
       %update
     ?-  +<.+<
         %del
-      =.  pita
+      :-  ~
+      %=  state
+          pita
         (~(del by pita) gora-id.gora gora)
-      =.  sent-log
+        ::
+          sent-log
         (~(del ju sent-log) gora-id.gora [src.bol %ask])
-      `state
+        ::
+          offer-log
+        (~(del in offer-log) gora-id.gora)
+        ::
+      ==
       ::
         %upd
       =.  pita
         (~(put by pita) gora-id.gora gora)
       ?.  (~(has in hodl-list.gora) our.bol)  
-        `state
+        :_  state
+        :~  :*
+              %give
+              %fact  ~[/website]
+              [%json !>(`json`json-hndl)]
+        ==  ==
         ::
-      :_
-      ?:  %+  ~(has ju sent-log)
-              gora-id.gora
-              [src.bol %ask]
-        =.  sent-log
-        (~(del ju sent-log) gora-id.gora [src.bol %ask])
-        state
-      state
-      :~  :*  %give
-              %fact  [%website ~]
-              [%json !>(`json`json-hndl:hc)]
+      =;  [caz=(list card:agent:gall) saz=_state]
+      ?.  %+  ~(has ju sent-log)
+          gora-id.gora  [src.bol %ask]
+        [caz saz]
+        ::
+      =.  sent-log
+      (~(del ju sent-log) gora-id.gora [src.bol %ask])
+      ::=.  ->+.caz
+      ::  [%json !>(`json`json-hndl)]
+      [caz saz]
+      ::
+      :_  state
+      :~  :*
+            %give
+            %fact  ~[/website]
+            [%json !>(`json`json-hndl)]
       ==  ==
       ::
     ==
@@ -549,5 +571,33 @@
         ~[/updates/(scot %uv gora-id.v)]
         `ship.v
     ==  ==
+    ::
+      %clean-log
+    ?-  -.log.v
+        %offer-log
+      =,  log.v
+      `state(offer-log (~(del in offer-log) gora-id))
+      ::
+        %blacklist
+      =,  log.v
+      `state(blacklist (~(del in blacklist) gora-id))
+      ::
+        %request-log
+      =,  log.v
+      :-  ~
+      %=  state
+          request-log
+        (~(del ju request-log) ship gora-id)
+      ==
+      ::
+        %sent-log
+      =,  log.v
+      :-  ~
+      %=  state
+          sent-log
+        (~(del ju sent-log) gora-id [ship act])
+      ==
+      ::
+    ==
   ==
 --
