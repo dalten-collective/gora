@@ -325,11 +325,10 @@
                 host.gora
           ==
         [caz saz]
-      
+    :-  caz
     %=  saz
       offer-log  (~(put in offer-log) gora-id.gora)
     ==
-    [caz saz]
     ::
     :_  state
     :~  :*  
