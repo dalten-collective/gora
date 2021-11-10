@@ -31,7 +31,7 @@
         
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
         ;div(align "center")
-          ;a(class "wuttarButton", href "./gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
+          ;a(class "wuttarButton", href "../gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
         ==
         ;p
         ;span:"Welcome to"

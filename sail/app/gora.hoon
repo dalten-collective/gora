@@ -338,6 +338,9 @@
 ::
 ++  http-handle
   |=  [=eyre-id =inbound-request:eyre]
+  =/  send
+    (cury response:schooner eyre-id)
+  ~&  >>  inbound-request
   ^-  (quip card _state)
   =*  intern  ~(. (~(got by main) %index) bol +.state)
   =*  reject  ~(. (~(got by errors) %index) bol +.state)
@@ -346,9 +349,8 @@
   =/  ,request-line:server
     %-  parse-request-line:server
   url.request.inbound-request
-  =/  send
-    (cury response:schooner eyre-id)
   ::
+  |^
   ?+  site
     :_  state
     (send [404 ~ [%manx (build:reject %not-found ~)]])
@@ -370,7 +372,13 @@
       %-  send
       [200 ~ [%manx (build:intern %wuttar-gorae ~)]]
     ==
+    ::
       [%apps %gora ~]
+    call-gora-index
+      [%apps %gora %$ ~]
+    call-gora-index
+  ==
+  ++  call-gora-index
     ?.  authenticated.inbound-request
       :_  state
       (send [307 ~ [%login-redirect './apps/gora']])
@@ -472,7 +480,7 @@
         ::
       ==
     ==
-  ==
+  --
 ::
 ++  manage-handle
   |=  v=manage-gora
