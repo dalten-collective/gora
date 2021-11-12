@@ -13,7 +13,6 @@
   ?~  args
     `(map @t @t)`~
   (my `(list (pair @t @t))`args)
-  ~&  >>  -
   ?+  requested-page  (code-404 -)
       %not-found
     (code-404 -)

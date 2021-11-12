@@ -2,9 +2,9 @@
   title+'Gora - ピタゴラ装置'
   info+'A Proof of Attendance Protocol for Urbit'
   color+0xff.d966
-  version+[0 0 1]
+  version+[0 0 2]
   website+'https://dalten.org/'
   license+'Get Rekt'
   base+'gora'
-  glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v6.kjha4.p3o7c.ebfvn.himpg.1af9d.glob' 0v6.kjha4.p3o7c.ebfvn.himpg.1af9d]
+  glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/gora-11.9.2021-0v2.53m9q.v2635.r4gqd.hu1uu.laukd.glob' 0v2.53m9q.v2635.r4gqd.hu1uu.laukd]
 ==

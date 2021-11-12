@@ -340,7 +340,6 @@
   |=  [=eyre-id =inbound-request:eyre]
   =/  send
     (cury response:schooner eyre-id)
-  ~&  >>  inbound-request
   ^-  (quip card _state)
   =*  intern  ~(. (~(got by main) %index) bol +.state)
   =*  reject  ~(. (~(got by errors) %index) bol +.state)
