@@ -4,7 +4,7 @@
 
 /-  *gora
 
-|_  [=bowl:gall [=pita =request-log =offer-log =sent-log =blacklist]]
+|_  [=bowl:gall [=usps-mode =pita =my-public =request-log =offer-log =sent-log =blacklist =tag-set =tag-store]]
 ++  build
   |=  [requested-page=@tas args=(list [@t @t])]
   |^

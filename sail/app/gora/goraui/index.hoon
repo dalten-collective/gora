@@ -5,12 +5,12 @@
 /+  schooner
 /~  errors  webpage  /app/gora/errors
 
-|_  [=bowl:gall [=pita =request-log =offer-log =sent-log =blacklist]]
+|_  [=bowl:gall [=usps-mode =pita =my-public =request-log =offer-log =sent-log =blacklist =tag-set =tag-store]]
 ++  build
   |=  [requested-page=@tas args=(list [k=@t v=@t])]
   |^
   ^-  manx
-  =*  errs    ~(. (~(got by errors) %index) bowl [pita request-log offer-log sent-log blacklist])
+  =*  errs    ~(. (~(got by errors) %index) bowl [usps-mode pita my-public request-log offer-log sent-log blacklist tag-set tag-store])
   ?+  requested-page  (build:errs %not-found ~)
       %gora-index
     (main-page args)
