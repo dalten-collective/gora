@@ -2,6 +2,7 @@
 ::
 /-  *docket
 |%
+
 ::
 :: Block List:
 ::
@@ -10,9 +11,7 @@
 :: Manage Your Goras:
 ::
 +$  manage-gora-1
-  $%  [%clean-log =log]
-      ::
-      [%set-max-hodl =gora-id max=@ud]
+  $%  [%set-max-hodl =gora-id max=@ud]
       [%pubmod-host =gora-id public=?]
       [%pubmod-hodl =gora-id public=?]
       [%add-tag =tag gorae=(set gora-id)]
@@ -33,7 +32,9 @@
           max=(unit @ud)  req=?(%approve %reject %none)
           giv=?(%transfer %reissue %none)            ==
       ::
+      [%clean-log =log]
       [%usps-mode mode=?]
+      [%resubscribe-all ~]
   ==
 ::
 :: Manage Interstellar Activity
@@ -129,11 +130,11 @@
         [%update act=?(%upd %del) =gora]
     ==
   :: State 0 Format - applied in agent separately
-  ::+$  gora  
-  ::  $:  =gora-id     name=@t
-  ::      =gora-img    host=ship
-  ::      =issue-date  =hodl-list
-  ::  ==
+  +$  gora  
+    $:  =gora-id     name=@t
+        =gora-img    host=ship
+        =issue-date  =hodl-list
+    ==
   --
 ::
 :: Related to Sail

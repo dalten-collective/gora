@@ -101,13 +101,13 @@
   |=  ole=vase
   |^  ^-  (quip card _this)
   ~&  >>  [%gora %reload %sail]
-  =/  old  !<(versioned-state ole)
+  =+  [[~ [%apps %gora ~]] dap.bowl]
+  =+  [old=!<(versioned-state ole) caz=`(list card)`[%pass /eyre/connect %arvo %e %connect -]~]
   |-
   ?-    -.old
       %1
-    =+  [[~ [%apps %gora ~]] dap.bowl]
     :_  this(state old)
-    [%pass /eyre/connect %arvo %e %connect -]~
+    caz
       ::
       %0
     %=  $
@@ -123,6 +123,14 @@
         blacklist.old
         ~
         ~
+      ==
+    ::
+        caz
+      :_  caz
+      :*
+        %pass   /init-sub/(scot %p our.bowl)/(scot %da now.bowl)
+        %agent  [our.bowl %gora]
+        %poke   %gora-man-1  !>(`manage-gora-1`[%resubscribe-all ~])
       ==
     ==
   ==
@@ -150,7 +158,7 @@
         %gora-man-1
       (manage-handle-1:hc !<(manage-gora-1 vase))
       ::
-        %gora-transact-1
+        %gora-transact
       (transact-handle:hc !<(transact:zero vase))
         %gora-transact-1
       (transact-handle-1:hc !<(transact-1 vase) ~)
@@ -169,11 +177,9 @@
     `this
     ::
       [%updates @ *]
-    ~|  [%unexpected-subscription %bad-id]
+    ~|  [%unexpected-subscription %bad-id `@uv`(slav %uv i.t.path)]
     =/  id=@uv  (slav %uv i.t.path)
-    ?>  ?&  !(~(has by pita) -)
-            =(our.bol host:(~(got by pita) -))
-        ==
+    ?>  =(our.bowl host:(~(got by pita) id))
     =+  :+  %update  %upd
             :-  ~
             :-  %initialize
@@ -225,10 +231,10 @@
     ==  ==
   ::
       %watch-ack
-    ?.  ?=(~ p.sign)
-      `this
-    ~&  [%watch-nack (slav %ud +<.wire) %bummer]
-    =+  (slav %ud +<.wire)
+    ?:  =(~ p.sign)
+       `this
+    ~&  >>>  [%watch-nack (slav %uv +<.wire) %bummer]
+    =+  (slav %uv +<.wire)
     :-  ~
     %=  this
       sent-log   (~(del ju sent-log) - [src.bol %ask])
@@ -277,7 +283,14 @@
 ::
 |_  bol=bowl:gall
 ++  mkgora-id
-  |=  [name=@t img=gora-img max=(unit @ud) req=@tas giv=@tas hedl=hodl-list host=ship]
+  |=  $:  name=@t
+          img=gora-img
+          max=(unit @ud)
+          req=@tas
+          giv=@tas
+          hedl=hodl-list
+          host=ship
+      ==
   (sham our.bol now.bol name img max req giv hedl host)
 ::
 ++  transact-handle
@@ -289,21 +302,7 @@
     (transact-handle-1 [%giv-ack gora-id] ~)
   ::
       %receive-gora
-    =,  gora
-    =.  gora.transaction
-      :*
-        gora-id
-        name
-        gora-img
-        host
-        issue-date
-        hodl-list
-        %.n
-        ~
-        %none
-        %none
-      ==
-    (transact-handle-1 [%receive-gora gora-id %none] ~)
+    (transact-handle-1 [%receive-gora gora-id.gora %none] ~)
   ::
       %receive-request
     (transact-handle-1 [%receive-request gora-id] ~)
@@ -314,7 +313,7 @@
   ::
       %update
     =,  gora
-    =.  gora.transaction
+    =/  goz
       :*
         gora-id
         name
@@ -327,7 +326,7 @@
         %none
         %none
       ==
-    (transact-handle-1 [%update %upd [~ [%initialize gora]]] ~)
+    (transact-handle-1 [%update %upd [~ [%initialize goz]]] ~)
   ==
 ++  transact-handle-1
   |=  [transaction=transact-1 pat=(unit path)]
@@ -364,28 +363,36 @@
     `state
   ::
       %giv-ack
-    =+  (~(got by pita) gora-id)
+    =+  goz=`gora`(~(got by pita) gora-id)
     ?>  ?&  
+          !=(request-behavior.goz %reject)
           (~(has ju sent-log) gora-id [src.bol %giv])
-          ?~(max-hodl.- %.y (gte u.max-hodl.- +((lent ~(tap in hodl-list)))))
-          !=(request-behavior %reject)
+          ::
+          ?~  max-hodl.goz
+            %.y
+          %+  gte
+              u.max-hodl.goz
+              +((lent ~(tap in hodl-list.goz)))
         ==
-    =?  -
-      =(max-hodl.- +((lent ~(tap in hodl-list))))
-    -(request-behavior %reject)
-    =.  -  -(hodl-list (~(put in hodl-list) src.bol))
+    =?  goz
+      ?~  max-hodl.goz
+        %.n
+      =(u.max-hodl.goz +((lent ~(tap in hodl-list.goz))))
+    goz(request-behavior %reject)
+    =.  goz  
+      goz(hodl-list (~(put in hodl-list.goz) src.bol))
     =:
         pita
-      (~(put by pita) gora-id -)
+      (~(put by pita) gora-id.goz goz)
     ::
         sent-log
-      (~(del ju sent-log) gora-id (sy [src.bol %giv]~))
+      (~(del ju sent-log) gora-id.goz (sy [src.bol %giv]~))
     ==
     :_  state
     :~  :*  
           %give
           %fact
-          ~[/updates/(scot %uv gora-id)]
+          ~[/updates/(scot %uv gora-id.goz)]
           :-  %gora-transact-1
           !>(`transact-1`[%update %upd [~ [%new-hodlr src.bol]]])
     ==  ==
@@ -396,7 +403,10 @@
     ?>  ?&  
           =(our.bol host:(~(got by pita) gora-id))
           ?|
-            ?~(max-hodl.- %.y (gte u.max-hodl.- +((lent ~(tap in hodl-list.-)))))
+            ?~  max-hodl.-
+              %.y
+            (gte u.max-hodl.- +((lent ~(tap in hodl-list.-))))
+          ::
             (~(has in hodl-list.-) src.bol)
           ==
         ==
@@ -414,8 +424,16 @@
         %approve
       =/  goz=gora  -
       =?  goz
-        ?~(max-hodl.goz %.y (gte u.max-hodl.goz +((lent ~(tap in hodl-list.goz)))))
-      `gora`goz(request-behavior %reject, hodl-list (~(put in hodl-list) src.bol))
+        ^-  ?
+        ?~  max-hodl.goz
+          %.y
+        %+  gte
+          u.max-hodl.goz
+        +((lent ~(tap in hodl-list.goz)))
+      %=  goz
+        request-behavior  %reject
+        hodl-list         (~(put in hodl-list) src.bol)
+      ==
       =.  pita
         (~(put by pita) gora-id goz)
       :_  state
@@ -436,7 +454,10 @@
       ==  ==
     ::
         %none
-      ?.  ?~(max-hodl.- %.y (gte u.max-hodl.- +((lent ~(tap in hodl-list.-)))))
+      ?.  ^-  ?  
+        ?~  max-hodl.-
+          %.y
+        (gte u.max-hodl.- +((lent ~(tap in hodl-list.-))))
         =.  pita
           (~(put by pita) gora-id -(request-behavior %reject))
         :_  state
@@ -541,22 +562,27 @@
                 =(%reissue give-permissions.goz)
                 (~(has in hodl-list.goz) src.bol)
             ==
-        =/  gora-update=gora
-          goz(hodl-list (~(uni in hodl-list.goz) new.u.jot.transaction))
-        =+  [caz=*(list card:agent:gall) nez=`(list ship)`~(tap in new.u.jot.transaction)]
-        :_  state(pita (~(put by pita) gora-id.gora-update gora-update))
-        |-  ^-  (list card:agent:gall)
+        =+  :-  caz=*(list card)
+            nez=`(list ship)`~(tap in new.u.jot.transaction)
+        =^  cards  sent-log
+        |-  
         ?~  nez
-          caz
-        %=  $
+          [caz sent-log]
+        %=    $
           nez  t.nez
-          caz  :_  caz
-               :*
-                 %pass  /transact/send-giv/(scot %uv gora-id.gora-update)/(scot %p our.bol)/(scot %da now.bol)
-                 %agent  [i.nez %gora]
-                 %poke  %gora-transact  !>(`transact-1`[%receive-gora gora-id.gora-update give-permissions.goz])
-               ==
+        ::
+            sent-log
+          (~(put ju sent-log) gora-id.goz [i.nez %giv])
+        ::
+            caz
+          :_  caz
+          :*
+            %pass  /transact/send-giv/(scot %uv gora-id.goz)/(scot %p our.bol)/(scot %da now.bol)
+            %agent  [i.nez %gora]
+            %poke  %gora-transact-1  !>(`transact-1`[%receive-gora gora-id.goz give-permissions.goz])
+          ==
         ==
+        [cards state]
         --
       ==
     ==
@@ -566,7 +592,6 @@
   |=  [=eyre-id =inbound-request:eyre]
   =/  send
     (cury response:schooner eyre-id)
-  ^-  (quip card _state)
   =*  intern  ~(. (~(got by main) %index) bol +.state)
   =*  reject  ~(. (~(got by errors) %index) bol +.state)
   ::=*  public  ~(. (~(got by public) %index) bol some-state)
@@ -575,7 +600,7 @@
     %-  parse-request-line:server
   url.request.inbound-request
   ::
-  |^
+  |^  ^-  (quip card _state)
   ?+  site
     :_  state
     (send [404 ~ [%manx (build:reject %not-found ~)]])
@@ -610,61 +635,81 @@
       ::
     ?+  method.request.inbound-request  
       [(send [405 ~ [%stock ~]]) state]
-      ::
+    ::
         %'GET'
       :_  state
       %-  send
       [200 ~ [%manx (build:intern %gora-index ~)]]
-      ::
+    ::
         %'POST'
-      =+  %+  rash
-       `@t`+>.body.request.inbound-request
-      yquy:de-purl:html
-      ?+  -<.-
+      ?~  body.request.inbound-request
+        [(send [405 ~ [%stock ~]]) state]
+      =/  mop=(map @t @t)  %-  my
+        ^-  (list (pair @t @t))
+        %+  rash
+            +>.body.request.inbound-request
+            yquy:de-purl:html
+      ?+    (~(got by mop) 'action')
         :_  state
         %-  send
         [405 ~ [%manx (build:reject %not-found ~)]]
-        ::
-          %approve-give
-        =+  :+  web-action=-<.- 
-          id=`@uv`+:(rash ->.- bisk:so)
-        gora=(~(got by pita) `@uv`+:(rash ->.- bisk:so))
-        ?:  !(~(has in offer-log) id)
-          ~&  >>>  [%unrecognized-id id %offer-log]
+      ::
+          %pubmod-hodl
+        ?:  =((~(got by mop) 'public') '%.y')
+          =.  my-public
+            (~(put in my-public) `@uv`(slav %uv (~(got by mop) 'gora-id')))
           :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index ~)]]
+        =.  my-public
+          (~(del in my-public) `@uv`(slav %uv (~(got by mop) 'gora-id')))
+        :_  state
+        %-  send
+        [200 ~ [%manx (build:intern %gora-index ~)]]
+      ::
+          %approve-give
+        =/  goz=gora
+          (~(got by pita) `@uv`(slav %uv (~(got by mop) 'gora-id')))
+        ?:  !(~(has in offer-log) gora-id.goz)
           =+  
           :~
-            'id'^(scot %uv id)
-            'failed-action'^web-action
+            'id'^(scot %uv gora-id.goz)
+            'failed-action'^(~(got by mop) 'action')
             'method'^method.request.inbound-request
           ==
+          :_  state
           %-  send  
-          [405 ~ [%manx (build:reject %bad-method -)]] 
+          [405 ~ [%manx (build:reject %bad-method -)]]
         :_  state
-        %+  welp
-          %-  send
-          =+  (~(got by pita) id)
-          =.  -  
-            -(hodl-list (~(put in hodl-list.-) our.bol))
-          =.  state  %=  state
-                      offer-log  (~(del in offer-log) id)
-                      pita       (~(put by pita) id -)
-                     ==
-          [200 ~ [%manx (build:intern %gora-index ~)]]
+        %-  welp
+        :_
+          =:
+              pita
+            =.  goz
+              %=    goz
+                  hodl-list
+                (~(put in hodl-list.goz) our.bol)
+              ==
+            (~(put by pita) gora-id.goz goz)
+          ::
+                offer-log
+            (~(del in offer-log) gora-id.goz)
+          ==
+            %-  send
+            [200 ~ [%manx (build:intern %gora-index [[%approve-give-success '%approve-give: approved']]~)]]
         :~  :*
-              %pass   /approve-give/(scot %uv id)/(scot %da now.bol)
+              %pass   /approve-give/(scot %uv gora-id.goz)/(scot %da now.bol)
               %agent  [our.bol %gora]
-              %poke   %gora-man  !>(`manage-gora-1`[web-action id])
+              %poke   %gora-man-1  !>(`manage-gora-1`[%approve-give gora-id.goz])
         ==  ==
-        ::
+      ::
           %reject-give
-        =+  :-  web-action=-<.-
-            id=`@uv`+:(rash ->.- bisk:so)
-        ?.  (~(has in offer-log) id)
+        =+  gora-id=(slav %uv (~(got by mop) 'gora-id'))
+        ?.  (~(has in offer-log) gora-id)
           =+  
           :~
-            'id'^(scot %uv id)
-            'failed-action'^web-action
+            'id'^(scot %uv gora-id)
+            'failed-action'^(~(got by mop) 'action')
             'method'^method.request.inbound-request
           ==
           :_  state
@@ -675,34 +720,210 @@
         %+  welp
           %-  send
           =.  state
-            state(offer-log (~(del in offer-log) id))
-          [200 ~ [%manx (build:intern %gora-index ~)]]
+            state(offer-log (~(del in offer-log) gora-id))
+          [200 ~ [%manx (build:intern %gora-index [[%reject-give-success '%reject-give: rejected']]~)]]
         :~  :*
-              %pass   /reject-give/(scot %uv id)/(scot %p our.bol)/(scot %da now.bol)
+              %pass   /reject-give/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
               %agent  [our.bol %gora]
-              %poke   %gora-man  !>(`manage-gora-1`[web-action id])
+              %poke   %gora-man-1  !>(`manage-gora-1`[%reject-give gora-id])
         ==  ==
-        ::
+      ::
           %send-request
-        =+
-          :+  web-action=-<.-
-              id=`@uv`+:(rash ->.- bisk:so)
-              host=`@p`+:(rash +<+.- bisk:so)
-        ?.  (~(has ju sent-log) id [host %ask])
+        ?.  ?&  !=((~(got by mop) 'gora-id') ~)
+                !=((~(got by mop) 'host') ~)
+            ==
           :_  state
           %-  send
-          [200 ~ [%manx (build:intern %gora-index ~)]]
+          [200 ~ [%manx (build:intern %gora-index [[%send-request '%send-request failed: complete-all-values']]~)]]
+        =+  :-  gora-id=`@uv`(slav %uv (~(got by mop) 'gora-id'))
+            host=`@p`(slav %p (~(got by mop) 'host'))
+        ?:  (~(has ju sent-log) gora-id [host %ask])
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%send-request '%send-request failed: existing-pending-request']]~)]]
           ::
         :_  state
         %+  welp
           %-  send
-          [200 ~ [%manx (build:intern %gora-index ~)]]
+          [200 ~ [%manx (build:intern %gora-index [[%send-request-success '%send-request success: request-sent']]~)]]
         :~  :*
-              %pass   /send-request/(scot %uv id)/(scot %p our.bol)/(scot %da now.bol)
+              %pass   /send-request/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
               %agent  [our.bol %gora]
-              %poke   %gora-man  !>(`manage-gora-1`[web-action id host])
+              %poke   %gora-man-1  !>(`manage-gora-1`[%send-request gora-id host])
         ==  ==
+      ::
+          %mkgora
+        ?.  ?&  (~(has by mop) 'name')
+                (~(has by mop) 'giveBehavior')
+                (~(has by mop) 'requestBehavior')
+                (~(has by mop) 'maxUsers')
+                (~(has by mop) 'gora-img')
+                (~(has by mop) 'public')
+            ==
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%mkgora '%mkgora failed: complete-all-values']]~)]]
+        =+  :*  date=(yore now.bol)
+                name=(~(got by mop) 'name')
+                give=(~(got by mop) 'giveBehavior')
+                auto=(~(got by mop) 'requestBehavior')
+                user=?~((~(got by mop) 'maxUsers') ~ [~ (slav %ud (~(got by mop) 'maxUsers'))])
+                imag=(~(got by mop) 'gora-img')
+                open=?:(=((~(got by mop) 'public') '%.y') %.y %.n)
+            ==
+        ?>  ?&  
+              ?=(?(%approve %reject %none) auto)
+              ?=(?(%transfer %reissue %none) give)
+            ==
+        =/  id=@uv  %-  mkgora-id
+                      :*  name
+                          imag
+                          ?:(=(give %transfer) [~ 2] user)
+                          auto
+                          give
+                          ~
+                          our.bol
+                      ==
+        =+  :*  id
+              name
+              imag
+              our.bol
+              [y.date m.date d.t.date]
+              ~
+              open
+              ?:(=(give %transfer) [~ 2] user)
+              ?:(=(give %transfer) %reject auto)
+              give
+          ==
+        =.  pita  
+          %+  ~(put by pita)
+            id
+          `gora`-
+        ~&  >  [%gora (trip name) %created (scow %uv id)]
+        =+  %-  crip
+            :(weld "%mkgora success: " (trip name) " " (scow %uv id))
+        :_  state
+        %-  send
+        [200 ~ [%manx (build:intern %gora-index [[%mkgora-success -]]~)]]
+      ::
+          %send-give
+        =+  :*  i=0
+                caz=*(list card)
+                goz=(~(got by pita) `@uv`(slav %uv (~(got by mop) 'gora-id')))
+            ==
+        ?.  =(host:goz our.bol)
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%send-give '%send-give failed: not-host']]~)]]
+        =^  caz  sent-log
+        |-
+        =+  (~(got by mop) (crip (weld "ship-" (scow %ud i))))
+        ?:  =(i 5)
+          [caz sent-log]
+        ?:  =(- '')
+          $(i +(i))
+        ?:  %+  ~(has ju sent-log)  gora-id.goz
+            :_  %giv
+            (slav %p -)
+          $(i +(i))
+        %=    $
+          i  +(i)
         ::
+            sent-log
+          %+  ~(put ju sent-log)  gora-id.goz
+          :_  %giv
+          (slav %p -)
+        ::
+            caz
+          %+  welp  caz
+          :~  :*
+                %pass  /transact/send-giv/(scot %uv gora-id.goz)/(scot %p our.bol)/(scot %da now.bol)
+                %agent  [(slav %p -) %gora]
+                %poke  %gora-transact  !>(`transact-1`[%receive-gora gora-id.goz give-permissions.goz]) 
+          ==  ==
+        ==
+        :_  state
+        %+  welp
+          caz
+        %-  send
+        [200 ~ [%manx (build:intern %gora-index [[%send-give-success '%send-give success: %gora sent']]~)]]
+      ::
+          %reissue
+        =+  :*  goz=(~(got by pita) `@uv`(slav %uv (~(got by mop) 'gora-id')))
+                caz=*(list card)
+                i=0
+                m=*@ud
+            ==
+        =.  m  
+          ?~  max-hodl.goz
+            5
+          (sub u.max-hodl.goz (lent ~(tap in hodl-list.goz)))
+        ?.  (gth m i)
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%reissue '%reissue failed: out-of-stock']]~)]]
+        :_  state
+        %+  welp
+        |-  ^-  (list card)
+        ?:  =(i (min 5 m))
+          caz
+        ?.  (~(has by mop) (crip (weld "ship-" (scow %ud i))))
+          $(i +(i))
+        =+  (~(got by mop) (crip (weld "ship-" (scow %ud i))))
+        ?:  =(- '')
+          $(i +(i))
+        %=    $
+          i  +(i)
+        ::
+            caz
+          %+  welp  caz
+          :~  :*
+                %pass   /transact/reissue/(scot %uv gora-id.goz)/(scot %p host.goz)/(scot %da now.bol)
+                %agent  [host.goz %gora]
+                %poke   %gora-transact-1  !>(`transact-1`[%update %upd [~ [%reissue gora-id.goz (sy [(slav %p -)]~)]]])
+          ==  ==
+        ==
+        %-  send
+        [200 ~ [%manx (build:intern %gora-index [[%transfer-success '%transfer success: chain-letter-probably-sent']]~)]]
+      ::
+          %transfer
+        =+  :*  goz=(~(got by pita) `@uv`(slav %uv (~(got by mop) 'gora-id')))
+                caz=*(list card)
+                i=0
+                m=*@ud
+            ==
+        ?~  max-hodl.goz
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%transfer '%transfer failed: strange-state']]~)]]
+        =.  m  (sub u.max-hodl.goz (lent ~(tap in hodl-list.goz)))
+        ?.  (gth i m)
+          :_  state
+          %-  send
+          [200 ~ [%manx (build:intern %gora-index [[%transfer '%transfer failed: out-of-stock']]~)]]
+        :_  state
+        %+  welp
+        |-  ^-  (list card)
+        ?:  =(i (min 5 m))
+          caz
+        ?.  (~(has by mop) (crip (weld "ship-" (scow %ud i))))
+          $(i +(i))
+        =+  (~(got by mop) (crip (weld "ship-" (scow %ud i))))
+        ?:  =(- '')
+          $(i +(i))
+        %=    $
+          i  +(i)
+        ::
+            caz
+          %+  welp  caz
+          :~  :*
+                %pass   /send-transfer/(scot %uv gora-id.goz)/(scot %p our.bol)/(scot %da now.bol)
+                %agent  [our.bol %gora]
+                %poke   %gora-man-1  !>(`manage-gora-1`[%send-transfer gora-id.goz (sy [(slav %p -)]~)])
+          ==  ==
+        ==
+        %-  send
+        [200 ~ [%manx (build:intern %gora-index [[%transfer-success '%transfer success: chain-letter-probably-sent']]~)]]
       ==
     ==
   --
@@ -717,10 +938,31 @@
       mode.v
     `state
   ::
+      %resubscribe-all
+    =+  [caz=*(list card:agent:gall) kez=~(tap in ~(key by pita))]
+    :_  state
+    |-
+    ?~  kez
+      caz
+    %=  $
+      kez  t.kez
+      ::
+        caz  
+      :_  caz
+      :*
+        %pass   /updates/(scot %uv i.kez)/(scot %p our.bol)
+        %agent  [host:(~(got by pita) i.kez) %gora]
+        %watch  /updates/(scot %uv i.kez)  
+      ==
+    ==
+  ::
       %pubmod-hodl
-    =?  my-public
-      public.v
-    (~(put in my-public) gora-id.v)
+    ?:  public.v
+      =.  my-public
+        (~(put in my-public) gora-id.v)
+      `state
+    =.  my-public
+      (~(del in my-public) gora-id.v)
     `state
   ::
       %set-max-hodl
@@ -783,8 +1025,8 @@
           [y.date m.date d.t.date]
           ~
           public.v
-          ?:(=(%transfer giv.v) [~ 2] max.v)
-          req.v
+          ?:(=(giv.v %transfer) [~ 2] max.v)
+          ?:(=(giv.v %transfer) %reject req.v)
           giv.v
       ==
     ~&  >  [%gora (trip name.v) %created (scow %uv id)]
@@ -823,7 +1065,7 @@
       [caz state]
     ?>  !(~(has ju sent-log) gora-id.v [i.my-ships %giv])
     =?  sent-log
-      (~(has in hodl-list:(~(got by pita) gora-id.v)) i.my-ships)
+      !(~(has in hodl-list:(~(got by pita) gora-id.v)) i.my-ships)
     (~(put ju sent-log) gora-id.v [i.my-ships %giv])
     %=    $
         caz
@@ -983,7 +1225,9 @@
             dez=(yore now.bol)
     :_  %=    state
             pita
-          (~(put by pita) gora-id.v goz(hodl-list (~(uni in hodl-list) new.v)))
+          %+  ~(put by pita)
+            gora-id.v
+          goz(hodl-list (~(uni in hodl-list) new.v))
         ==
     |-
     ?~  nez
@@ -1004,11 +1248,11 @@
     %=  $
       nez  t.nez
       caz  :_  caz
-            :*
-              %pass  /transact/send-giv/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
-              %agent  [i.nez %gora]
-              %poke  %gora-transact-1  !>(`transact-1`[%receive-transfer -])
-            ==
+           :*
+             %pass  /transact/send-giv/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
+             %agent  [i.nez %gora]
+             %poke  %gora-transact-1  !>(`transact-1`[%receive-transfer -])
+           ==
     ==
   ==
 --
