@@ -28,9 +28,15 @@
       [%send-transfer =gora-id new=(set ship)]
       ::
       [%delgora =gora-id]
-      $:  %mkgora  name=@t   =gora-img   public=?
-          max=(unit @ud)  req=?(%approve %reject %none)
-          giv=?(%transfer %reissue %none)            ==
+      :: change these names to be more lined up
+      $:  %mkgora
+          name=@t
+          =gora-img
+          public=?
+          max=(unit @ud)
+          req=?(%approve %reject %none)
+          giv=?(%transfer %reissue %none)
+      ==
       ::
       [%clean-log =log]
       [%usps-mode mode=?]
@@ -41,9 +47,9 @@
 ::
 +$  transact-1
   $%  [%giv-ack =gora-id]
-      [%receive-gora =gora-id giv=?(%transfer %reissue %none)]
       [%receive-transfer =gora]
       [%receive-request =gora-id]
+      [%receive-gora =gora-id giv=?(%transfer %reissue %none)]
       [%proxy-approve =gora-id =ship]
       [%update act=?(%upd %del) jot=(unit update)]
   ==

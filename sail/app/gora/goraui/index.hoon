@@ -53,6 +53,10 @@
               ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'transfer-success'))}"
             ?:  (~(has by url-params) 'transfer')
               ;p(class "warn-color", align "center"):"{(trip (~(got by url-params) 'transfer'))}"
+            ?:  (~(has by url-params) 'reissue-success')
+              ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'reissue-success'))}"
+            ?:  (~(has by url-params) 'reissue')
+              ;p(class "warn-color", align "center"):"{(trip (~(got by url-params) 'reissue'))}"  
             ?:  (~(has by url-params) 'mkgora-success')
               ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'mkgora-success'))}"
             ?:  (~(has by url-params) 'mkgora')
@@ -188,19 +192,18 @@
           butn.value = "send-give"
           butn.className = "wuttarButton";
           butn.innerText = "Submit";
-
+          
+          var ship = document.createElement("input");
+            ship.type="text";
+            ship.placeholder = "~sampel-palnet ~rabbel-rosser";
+            ship.id=`ships`;
+            ship.name=`ships`;
+          
           form.className = "multi-form";
           form.method = "POST";
           form.appendChild(id);
-          for (var i = 0; i < 5; i++) {
-            form.appendChild(document.createElement("br"));
-            var ship = document.createElement("input");
-            ship.type="text";
-            ship.placeholder = "~sampel-palnet";
-            ship.id=`ship-${i}`;
-            ship.name=`ship-${i}`;
-            form.appendChild(ship);
-          };
+          form.appendChild(document.createElement("br"));
+          form.appendChild(ship);
           form.appendChild(document.createElement("br"));
           form.appendChild(butn);
       } else if (behavior == "transfer") {
@@ -222,20 +225,19 @@
           butn.className = "wuttarButton";
           butn.innerText = "Submit";
 
-          form.className = "multi-form";
-          form.method = "POST";
-          form.appendChild(id);
-          for (var i = 0; i < Math.min(parseInt(remaining), 5); i++) {
-            form.appendChild(document.createElement("br"));
-            var ship = document.createElement("input");
-            ship.type="text";
-            ship.placeholder = "~sampel-palnet";
-            ship.id=`ship-${i}`;
-            ship.name=`ship-${i}`;
-            form.appendChild(ship);
-          };
-          form.appendChild(document.createElement("br"));
-          form.appendChild(butn);
+        var ship = document.createElement("input");
+          ship.type="text";
+          ship.id=`ships`;
+          ship.placeholder = "~sampel-palnet ~rabbel-rosser";
+          ship.name=`ships`;
+
+        form.className = "multi-form";
+        form.method = "POST";
+        form.appendChild(id);
+        form.appendChild(document.createElement("br"));
+        form.appendChild(ship);
+        form.appendChild(document.createElement("br"));
+        form.appendChild(butn);
       } else if (behavior == "send-reissue") {
         title.innerText = `Reissue ${goraName}`
 
@@ -255,18 +257,17 @@
           butn.className = "wuttarButton";
           butn.innerText = "Submit";
 
+        var ship = document.createElement("input");
+          ship.type="text";
+          ship.placeholder = "~sampel-palnet ~rabbel-rosser";
+          ship.id=`ships`;
+          ship.name=`ships`;
+
           form.className = "multi-form";
           form.method = "POST";
           form.appendChild(id);
-          for (var i = 0; i < Math.min(parseInt(remaining), 5); i++) {
-            form.appendChild(document.createElement("br"));
-            var ship = document.createElement("input");
-            ship.type="text";
-            ship.placeholder = "~sampel-palnet";
-            ship.id=`ship-${i}`;
-            ship.name=`ship-${i}`;
-            form.appendChild(ship);
-          };
+          form.appendChild(document.createElement("br"));
+          form.appendChild(ship);
           form.appendChild(document.createElement("br"));
           form.appendChild(butn);
       } else if (behavior == "mkgora") {
