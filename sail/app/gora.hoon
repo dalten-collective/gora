@@ -102,7 +102,7 @@
   |^  ^-  (quip card _this)
   ~&  >>  [%gora %reload %sail]
   =+  :-  old=!<(versioned-state ole)
-        ^-  caz=(list card)
+      ^-  caz=(list card)
       [%pass /eyre/connect %arvo %e %connect [[~ [%apps %gora ~]] dap.bowl]]~
   |-
   ?-    -.old
@@ -127,12 +127,12 @@
       ==
     ::
         caz
-      :_  caz
-      :*
+      %+  welp  caz
+      :~  :*
         %pass   /init-sub/(scot %p our.bowl)/(scot %da now.bowl)
         %agent  [our.bowl %gora]
         %poke   %gora-man-1  !>(`manage-gora-1`[%resubscribe-all ~])
-      ==
+      ==  ==
     ==
   ==
   ++  structure-gora
@@ -158,12 +158,12 @@
     ?+    mark  (on-poke:def mark vase)
         %gora-man-1
       (manage-handle-1:hc !<(manage-gora-1 vase))
-      ::
+    ::
         %gora-transact
       (transact-handle:hc !<(transact:zero vase))
         %gora-transact-1
       (transact-handle-1:hc !<(transact-1 vase) ~)
-      ::
+    ::
         %handle-http-request
       %-  http-handle:hc
       !<([=eyre-id =inbound-request:eyre] vase)
@@ -176,7 +176,7 @@
   ?+  path  (on-watch:def path)
       [%http-response *]
     `this
-    ::
+  ::
       [%updates @ *]
     ~|  [%unexpected-subscription %bad-id `@uv`(slav %uv i.t.path)]
     =/  id=@uv  (slav %uv i.t.path)
@@ -251,7 +251,7 @@
     ?>  (team:title our.bowl src.bowl)
     =-  ``noun+!>(`(set @uv)`-)
     (~(get ju request-log) (slav %p i.t.t.path))
-    ::
+  ::
       [%x %made-gora ~]
     ?>  (team:title our.bowl src.bowl)
     =-  ``noun+!>(`(set gora)`-)
@@ -267,15 +267,14 @@
       all   t.all
       mine  (~(put in mine) (~(got by pita) i.all))
     ==
-    ::
+  ::
       [%x %tags ~]
     ?>  (team:title our.bowl src.bowl)
     ``noun+!>(`(set @tas)`tag-set)
-    ::
+  ::
       [%x %offers ~]
     ?>  (team:title our.bowl src.bowl)
     ``noun+!>(`(set @uv)`offer-log)
-    ::
   ==
 ::
 ++  on-leave  on-leave:def
@@ -573,12 +572,12 @@
           (~(put ju sent-log) gora-id.goz [i.nez %giv])
         ::
             caz
-          :_  caz
-          :*
+          %+  welp  caz
+          :~  :*
             %pass  /transact/send-giv/(scot %uv gora-id.goz)/(scot %p our.bol)/(scot %da now.bol)
             %agent  [i.nez %gora]
             %poke  %gora-transact-1  !>(`transact-1`[%receive-gora gora-id.goz give-permissions.goz])
-          ==
+          ==  ==
         ==
         [cards state]
         --
@@ -1000,7 +999,7 @@
         =^  cards  state
           (manage-handle-1 [%send-transfer gora-id.goz soz])
         :_  state
-        %+  weld  cards
+        %+  welp  cards
         %-  send
         :+  200
           ~
@@ -1023,7 +1022,7 @@
     `state
   ::
       %resubscribe-all
-    =+  [caz=*(list card:agent:gall) kez=~(tap in ~(key by pita))]
+    =+  [caz=*(list card) kez=~(tap in ~(key by pita))]
     :_  state
     |-
     ?~  kez
@@ -1032,12 +1031,12 @@
       kez  t.kez
       ::
         caz  
-      :_  caz
-      :*
+      %+  welp  caz
+      :~  :*
         %pass   /updates/(scot %uv i.kez)/(scot %p our.bol)
         %agent  [host:(~(got by pita) i.kez) %gora]
         %watch  /updates/(scot %uv i.kez)  
-      ==
+      ==  ==
     ==
   ::
       %pubmod-hodl
@@ -1153,12 +1152,12 @@
     (~(put ju sent-log) gora-id.v [i.my-ships %giv])
     %=    $
         caz
-      :_  caz
-      :*
+      %+  welp  caz
+      :~  :*
         %pass   /transact/send-giv/(scot %uv gora-id.v)/(scot %p our.bol)/(scot %da now.bol)
         %agent  [i.my-ships %gora]
         %poke   %gora-transact-1  !>(`transact-1`[%receive-gora gora-id.v give-permissions.goz])
-      ==
+      ==  ==
     ::
         my-ships
       t.my-ships
@@ -1331,12 +1330,12 @@
       ==
     %=  $
       nez  t.nez
-      caz  :_  caz
-           :*
-             %pass  /transact/send-giv/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
-             %agent  [i.nez %gora]
-             %poke  %gora-transact-1  !>(`transact-1`[%receive-transfer -])
-           ==
+      caz  %+  welp  caz
+        :~  :*
+          %pass  /transact/send-giv/(scot %uv gora-id)/(scot %p our.bol)/(scot %da now.bol)
+          %agent  [i.nez %gora]
+          %poke  %gora-transact-1  !>(`transact-1`[%receive-transfer -])
+        ==  ==
     ==
   ==
 --
