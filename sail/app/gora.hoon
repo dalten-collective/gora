@@ -652,6 +652,76 @@
         %-  send
         [405 ~ [%manx (build:reject %not-found ~)]]
       ::
+          %show-tag
+        :_  state
+        %-  send
+        :+  200
+          ~
+        :-  %manx
+        %+  build:intern
+          %gora-index
+        [[%tag (~(got by mop) 'tag')]]~
+      ::
+      ::  get-behind-me-satan
+          %tags
+        ?>  ?&  (~(has by mop) 'tags')
+                (~(has by mop) 'gora-id')
+            ==
+        |^
+        =+  :*  coz=*(list card)                                      :: a list of card builder
+                gid=(slav %uv (~(got by mop) 'gora-id'))              :: gora-id
+                haz=(gora-tags (slav %uv (~(got by mop) 'gora-id')))  :: current tags
+              ::
+                ^-  taz=(set tag)                                     :: user specified tags
+                %-  sy
+                %+  turn
+                  %+  scan
+                    (trip (~(got by mop) 'tags'))
+                  (more ace ;~(pfix cen (star alf)))
+                |=  in=tape
+                %+  slav
+                  %tas
+                (crip in)
+            ==
+        =+  :-  rec=~(tap in (~(dif in taz) haz))          :: recall
+            for=~(tap in (~(dif in haz) taz))              :: forget
+        =^  caz  state
+        |-
+        ?~  rec
+          ?~  for
+            [coz state]
+          =+  (manage-handle-1 [%del-tag i.for (sy :~(gid))])
+          %=  $
+            for    t.for
+            coz    (welp -.- coz)
+            state  +.-
+          ==
+        =+  (manage-handle-1 [%add-tag i.rec (sy :~(gid))])
+        %=  $
+          rec    t.rec
+          coz    (welp -.- coz)
+          state  +.-
+        ==
+        :_  state
+        %+  welp  caz
+        %-  send
+        :+  200
+          ~
+        :-  %manx
+        (build:intern %gora-index ~)
+        ++  gora-tags
+          |=  gid=gora-id
+          ^-  (set tag)
+          =+  :-  kez=~(tap in ~(key by tag-store))
+              out=*(set tag)
+          |-
+          ?~  kez
+            out
+          ?:  (~(has ju tag-store) i.kez gid)
+            $(kez t.kez, out (~(put in out) i.kez))
+          $(kez t.kez)
+        --
+      ::
           %pubmod-hodl
         ?>  (~(has by mop) 'public')
           =+  :-  gid=(slav %uv (~(got by mop) 'gora-id'))
@@ -1082,16 +1152,27 @@
     ==  ==
   ::
       %add-tag
-    =?  tag-set
-      !(~(has in tag-set) tag.v)
-    (~(put in tag-set) tag.v)
     =/  tag-me=(list @uv)  ~(tap in gorae.v)
     |-
     ?~  tag-me
+      =.  tag-set  ~(key by tag-store)
       `state
     %=  $
       tag-me     t.tag-me
       tag-store  (~(put ju tag-store) tag.v i.tag-me)
+    ==
+  ::
+      %del-tag
+    =/  fre-me=(list @uv)  ~(tap in gorae.v)
+    |-
+    ?~  fre-me
+      =.  tag-set  ~(key by tag-store)
+      `state
+    %=  $
+      fre-me  t.fre-me
+    ::
+        tag-store
+      (~(del ju tag-store) tag.v i.fre-me)
     ==
   ::
       %mkgora

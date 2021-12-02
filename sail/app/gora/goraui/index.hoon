@@ -14,9 +14,14 @@
   ?+  requested-page  (build:errs %not-found ~)
       %gora-index
     (main-page (my args))
+  ::
       %wuttar-gorae
     (wuttis-gora (my args))
+  ::
+      %publ-index
+    (publ-page (my args))
   ==
+::
   ++  main-page
     |=  url-params=(map @t @t)
     ^-  manx
@@ -28,7 +33,29 @@
       ==
       ;body
         ;script:"{(trip javascript)}"
-        
+        ;div(align "right")
+          ;form(class "multi-form", method "POST", id "tag-select", name "tag-select")
+            ;select(name "tag", id "tag")
+              ;option(value "all", selected "true"):"%all"
+              ;*  ^-  marl
+                  =+  :-  maz=*marl
+                      ^-  taz=(list @tas)  ~(tap in tag-set)
+                  |-
+                  ?~  taz
+                    maz
+                  %=    $
+                      taz
+                    t.taz
+                  ::
+                      maz
+                    :_  maz
+                    ;option(value "{(scow %tas i.taz)}"):"{(scow %tas i.taz)}"
+                  ==
+            ==
+            ;button(type "submit", name "action", class "wuttarButton", value "show-tag"):"Submit"
+          ==
+        ==
+                    
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
         ;div(align "center")
           ;a(class "wuttarButton", href "../gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
@@ -120,6 +147,7 @@
         ==
       ==
     ==
+::
   ++  wuttis-gora
     |=  url-params=(map @t @t)
     ^-  manx
@@ -145,7 +173,21 @@
             ;h4(align "center"):"Brought to you by ~dalten Collective"
       ==
     ==
-    ::
+::
+  ++  publ-page
+    |=  url-params=(map @t @t)
+    ^-  manx
+    ;html
+      ;head
+        ;title: "{(scow %p our.bowl)}'s %gorae"
+        ;meta(name "viewport", content "width=device-width, initial-scale=1", charset "utf-8");
+        ;style:"{(trip style)}"
+      ==
+      ;body
+        ;p:"test"
+      ==
+    ==
+::
   ++  frame-empty
     '''
     display: none;
@@ -631,13 +673,20 @@
     out
   ++  hedl-list
     |=  [inc=gora-id out=(list manx)]
+    =+  ^-  tag=(unit @t)
+        ?.  (~(has by (my args)) 'tag')
+          ~
+        ?:  =((~(got by (my args)) 'tag') 'all')
+          ~
+        [~ (~(got by (my args)) 'tag')]
     ~?  !(~(has by pita) inc)
       [%unexpected-hedls-when-rendering-webui inc %not-in-pita]
     =+  goz=(~(got by pita) inc)
     =+  [daz="{:(weld (scow %ud m.issue-date.goz) "/" (scow %ud d.issue-date.goz) "/" (scow %ud y.issue-date.goz))}" lon=(lent ~(tap in hodl-list.goz))]
     ?.  (~(has in hodl-list:goz) our.bowl)
       out
-    :-
+    ?~  tag
+      :_  out
       ;tr
         ;td
           ;img(class "container", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({:(weld "\"pop-" daz (trip name.goz) (scow %ud inc) "\"")})");
@@ -650,9 +699,6 @@
                   ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
                   ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
                   ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
-                  ;+  ?:  (~(has in my-public) gora-id.goz)
-                    ;button(class "wuttarButton", id (weld (scow %ud inc) "-public-already"), onclick "multiFunc('private', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Private"
-                  ;button(class "wuttarButton", id (weld (scow %ud inc) "-make-public"), onclick "multiFunc('public', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Public"
                   ;+  ?:  =(give-permissions.goz %transfer)
                         ?~  max-hodl.goz
                           ;p(class "gora-color"):"%strange-state"
@@ -671,10 +717,86 @@
                           ;br;
                         ;button(class "wuttarButton", id (weld (scow %ud inc) "-transfer"), onclick "multiFunc('transfer', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{(scow %ud (sub u.max-hodl.goz lon))}')"):"Transfer"
                       ==
+                  ;+  ?:  (~(has in my-public) gora-id.goz)
+                    ;button(class "wuttarButton", id (weld (scow %ud inc) "-public-already"), onclick "multiFunc('private', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Private"
+                  ;button(class "wuttarButton", id (weld (scow %ud inc) "-make-public"), onclick "multiFunc('public', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Public"
+                  ;form(class "multi-form", method "POST")
+                    ;input(name "action", style "display: none;", value "tags", type "submit");
+                    ;input(name "gora-id", style "display: none;", value "{(scow %uv inc)}");
+                    ;+  =+  :-  out=*tape
+                            ^-  tag=(list @tas)  ~(tap in ~(key by tag-store))
+                        |-
+                        ?~  tag
+                          ;input(name "tags", value out);
+                        %=    $
+                            tag
+                          t.tag
+                        ::
+                            out
+                          ?.  (~(has ju tag-store) i.tag inc)
+                            out
+                          ;:  weld  "%"  (scow %tas i.tag)
+                              ?~(out out (weld " " out))
+                          ==
+                        ==
+                  ==
           ==
         ==
       ==
-    out
+    ?.  (~(has ju tag-store) u.tag gora-id.goz)
+      out
+    :_  out
+    ;tr
+      ;td
+        ;img(class "container", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({:(weld "\"pop-" daz (trip name.goz) (scow %ud inc) "\"")})");
+      ==
+      ;div(id :(weld "pop-" daz (trip name.goz) (scow %ud inc)), class "modal")
+        ;div(class "modal-content", align "center")
+                ;a(href "{(trip gora-img:goz)}", target "_blank")
+                  ;img(src "{(trip gora-img:goz)}", height "75");
+                ==
+                ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
+                ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
+                ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
+                ;+  ?:  =(give-permissions.goz %transfer)
+                      ?~  max-hodl.goz
+                        ;p(class "gora-color"):"%strange-state"
+                      ;p(class "gora-color"):"{(weld "# recipients remaining: " (scow %ud (sub u.max-hodl.goz lon)))}"
+                    ?.  (gth lon 1)
+                      ;p(class "gora-color"):"Unique %gora"
+                    ;p(class "gora-color"):"{:(weld "Series of " (scow %ud lon) " %gora")}"
+                ;+  ?+    give-permissions.goz  ;div;
+                        %reissue
+                      ;button(class "wuttarButton", id (weld (scow %ud inc) "-reissue"), onclick "multiFunc('send-reissue', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?:(?=(~ max-hodl.goz) (scow %ud 6) (scow %ud (sub u.max-hodl.goz lon)))}')"):"Reissue"
+                    ::
+                        %transfer
+                      ?~  max-hodl.goz
+                        ;p(class "gora-color"):"%strange-state"
+                      ?:  (lte u.max-hodl.goz lon)
+                        ;br;
+                      ;button(class "wuttarButton", id (weld (scow %ud inc) "-transfer"), onclick "multiFunc('transfer', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{(scow %ud (sub u.max-hodl.goz lon))}')"):"Transfer"
+                    ==
+                ;+  ?:  (~(has in my-public) gora-id.goz)
+                  ;button(class "wuttarButton", id (weld (scow %ud inc) "-public-already"), onclick "multiFunc('private', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Private"
+                ;button(class "wuttarButton", id (weld (scow %ud inc) "-make-public"), onclick "multiFunc('public', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Public"
+                ;+  =+  :-  out=*tape
+                        ^-  tag=(list @t)  ~(tap in ~(key by tag-store))
+                    |-
+                    ?~  tag
+                      ;input(name "tags", readonly "true"):"{out}"
+                    %=    $
+                        tag
+                      t.tag
+                        out
+                      ?.  (~(has ju tag-store) i.tag gora-id.goz)
+                        out
+                      ;:  weld  out
+                        " "  (scow %tas i.tag)
+                      ==
+                    ==
+        ==
+      ==
+    ==
   ++  count-hodl
     |=  [inc=(list gora-id)]
     =/  show=?  %.n

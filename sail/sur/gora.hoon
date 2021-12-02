@@ -15,6 +15,7 @@
       [%pubmod-host =gora-id public=?]
       [%pubmod-hodl =gora-id public=?]
       [%add-tag =tag gorae=(set gora-id)]
+      [%del-tag =tag gorae=(set gora-id)]
       ::
       [%reject-give =gora-id]
       [%approve-give =gora-id]
