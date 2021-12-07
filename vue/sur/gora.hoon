@@ -142,4 +142,11 @@
         =issue-date  =hodl-list
     ==
   --
+:: Related to Sail
+::
++$  webpage
+  $_  ^|
+  |_  [bowl:gall usps-mode pita my-public request-log offer-log sent-log blacklist tag-set tag-store]
+  ++  build  |~([@tas (list [k=@t v=@t])] *manx)
+  --
 --

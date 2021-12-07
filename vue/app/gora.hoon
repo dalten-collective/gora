@@ -35,7 +35,10 @@
 ::  Or, swing by the repo: https://github.com/dalten-collective/gora
 ::
 /-  *gora
-/+  *server, default-agent, dbug
+/+  server, default-agent, dbug, schooner
+::
+/~  publui  webpage  /app/gora/publui
+/~  errors  webpage  /app/gora/errors
 ::
 |%
 +$  versioned-state
@@ -63,6 +66,7 @@
   ==
 ::
 +$  card     card:agent:gall
++$  eyre-id  @ta
 --
 ::
 %-  agent:dbug
@@ -91,7 +95,16 @@
   ~&  >>  [%gora %reload %vue]
   =+  :-  old=!<(versioned-state ole)
       ^-  caz=(list card)
-      [%pass /eyre/connect %arvo %e %disconnect `[%apps %gora ~]]~
+      :~
+        :*  %pass        /eyre/connect
+            %arvo        %e
+            %disconnect  [~ [%apps %gora ~]]
+        ==
+        :*  %pass     /eyre/connect
+            %arvo     %e
+            %connect  [[~ [%apps %gora %public ~]] dap.bowl]
+        ==
+      ==
   |-
   ?-    -.old
       %1
@@ -153,6 +166,9 @@
         %gora-transact-1
       (transact-handle-1:hc !<(transact-1 vase) ~)
     ::
+        %handle-http-request
+      %-  http-handle:hc
+      !<([=eyre-id =inbound-request:eyre] vase)
     ==
   [cards this]
 ::
@@ -160,6 +176,9 @@
   |=  =path
   ^-  (quip card _this)
   ?+  path  (on-watch:def path)
+      [%http-response *]
+    `this
+  ::
       [%website ~]
     :_  this
     :~  :*  %give
@@ -182,6 +201,16 @@
           ~
           [%gora-transact-1 !>(`transact-1`-)]
     ==  ==
+  ==
+::
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  (quip card _this)
+  ?+  sign-arvo  (on-arvo:def wire sign-arvo)
+      [%eyre %bound *]
+    ~?  !accepted.sign-arvo
+      [dap.bowl [%eyre %bind %fail] binding.sign-arvo]
+    `this
   ==
 ::
 ++  on-agent
@@ -258,7 +287,6 @@
   ==
 ::
 ++  on-leave  on-leave:def
-++  on-arvo  on-arvo:def
 ++  on-fail  on-fail:def
 --
 ::!.
@@ -653,6 +681,68 @@
       ==
     ==
   ==
+::
+++  http-handle
+  |=  [=eyre-id =inbound-request:eyre]
+  =/  send
+    (cury response:schooner eyre-id)
+  =*  reject  ~(. (~(got by errors) %index) bol +.state)
+  =*  public  ~(. (~(got by publui) %index) bol +.state)
+  ::
+  =/  ,request-line:server
+    %-  parse-request-line:server
+  url.request.inbound-request
+  ::
+  |^  ^-  (quip card _state)
+  ?+    site  :_  state
+              %-  send
+              :+  404
+                ~
+              [%manx (build:reject %not-found ~)]
+  ::
+      [%apps %gora %public ~]
+    call-public-index
+      [%apps %gora %public %$ ~]
+    :_  state
+    %-  send
+    [302 ~ [%redirect './apps/gora/public']]
+  ==
+  ::
+  ++  call-public-index
+    ?+    method.request.inbound-request
+      [(send [405 ~ [%stock ~]]) state]
+    ::
+        %'GET'
+      :_  state
+      %-  send
+      [200 ~ [%manx (build:public %publ-index ~)]]
+    ::
+        %'POST'
+      ?~  body.request.inbound-request
+        [(send [405 ~ [%stock ~]]) state]
+      =/  mop=(map @t @t)  
+        %-  my
+        ^-  (list (pair @t @t))
+        %+  rash
+          +>.body.request.inbound-request
+        yquy:de-purl:html
+      ?+    (~(got by mop) 'action')
+        :_  state
+        %-  send
+        [405 ~ [%manx (build:reject %not-found ~)]]
+      ::
+          %show-tag
+        :_  state
+        %-  send
+        :+  200
+          ~
+        :-  %manx
+        %+  build:public
+          %publ-index
+        [[%tag (~(got by mop) 'tag')]]~
+      ==
+    ==
+  --
 ::
 ++  manage-handle-1
 |=  v=manage-gora-1
