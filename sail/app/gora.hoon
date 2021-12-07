@@ -43,8 +43,9 @@
 /-  *gora
 /+  server, default-agent, dbug, schooner
 ::
-/~  main    webpage  /app/gora/goraui
+/~  mainui  webpage  /app/gora/goraui
 /~  errors  webpage  /app/gora/errors
+/~  publui  webpage  /app/gora/publui
 ::
 |%
 +$  versioned-state
@@ -101,15 +102,24 @@
   |=  ole=vase
   |^  ^-  (quip card _this)
   ~&  >>  [%gora %reload %sail]
-  =+  :-  old=!<(versioned-state ole)
-      ^-  caz=(list card)
-      [%pass /eyre/connect %arvo %e %connect [[~ [%apps %gora ~]] dap.bowl]]~
+  =/  old=versioned-state  !<(versioned-state ole)
+  =/  caz=(list card)
+      :~
+        :*  %pass        /eyre/connect
+            %arvo        %e
+            %disconnect  [~ [%apps %gora %public ~]]
+        ==
+        :*  %pass     /eyre/connect
+            %arvo     %e
+            %connect  [[~ [%apps %gora ~]] dap.bowl]
+        ==
+      ==
   |-
   ?-    -.old
       %1
-    :_  this(state old)
-    caz
-      ::
+    :-  caz
+    this(state old)
+  ::
       %0
     %=  $
         old
@@ -589,9 +599,9 @@
   |=  [=eyre-id =inbound-request:eyre]
   =/  send
     (cury response:schooner eyre-id)
-  =*  intern  ~(. (~(got by main) %index) bol +.state)
+  =*  intern  ~(. (~(got by mainui) %index) bol +.state)
   =*  reject  ~(. (~(got by errors) %index) bol +.state)
-  ::=*  public  ~(. (~(got by public) %index) bol some-state)
+  =*  public  ~(. (~(got by publui) %index) bol +.state)
   ::
   =/  ,request-line:server
     %-  parse-request-line:server
@@ -620,13 +630,53 @@
     ==
     ::
       [%apps %gora ~]
-    call-gora-index
+    call-goraui-index
       [%apps %gora %$ ~]
     :_  state
     %-  send
     [302 ~ [%redirect './apps/gora']]
+      [%apps %gora %public ~]
+    call-public-index
+      [%apps %gora %public %$ ~]
+    :_  state
+    %-  send
+    [302 ~ [%redirect './apps/gora/public']]
   ==
-  ++  call-gora-index
+  ++  call-public-index
+    ?+    method.request.inbound-request
+      [(send [405 ~ [%stock ~]]) state]
+    ::
+        %'GET'
+      :_  state
+      %-  send
+      [200 ~ [%manx (build:public %publ-index ~)]]
+    ::
+        %'POST'
+      ?~  body.request.inbound-request
+        [(send [405 ~ [%stock ~]]) state]
+      =/  mop=(map @t @t)  
+        %-  my
+        ^-  (list (pair @t @t))
+        %+  rash
+          +>.body.request.inbound-request
+        yquy:de-purl:html
+      ?+    (~(got by mop) 'action')
+        :_  state
+        %-  send
+        [405 ~ [%manx (build:reject %not-found ~)]]
+      ::
+          %show-tag
+        :_  state
+        %-  send
+        :+  200
+          ~
+        :-  %manx
+        %+  build:public
+          %publ-index
+        [[%tag (~(got by mop) 'tag')]]~
+      ==
+    ==
+  ++  call-goraui-index
     ?.  authenticated.inbound-request
       :_  state
       (send [302 ~ [%login-redirect './apps/gora']])
@@ -675,8 +725,8 @@
                 ^-  taz=(set tag)                                     :: user specified tags
                 %-  sy
                 %+  turn
-                  %+  scan
-                    (trip (~(got by mop) 'tags'))
+                  %+  rash
+                    (~(got by mop) 'tags')
                   (more ace ;~(pfix cen (star alf)))
                 |=  in=tape
                 %+  slav
@@ -686,22 +736,19 @@
         =+  :-  rec=~(tap in (~(dif in taz) haz))          :: recall
             for=~(tap in (~(dif in haz) taz))              :: forget
         =^  caz  state
-        |-
-        ?~  rec
-          ?~  for
-            [coz state]
-          =+  (manage-handle-1 [%del-tag i.for (sy :~(gid))])
+          |-
+          ?~  rec
+            ?~  for
+              [coz state]
+            =^  cuz  state
+              (manage-handle-1 [%del-tag i.for [(sy :~(gid))]])
+            $(for t.for, coz (welp cuz coz))
+          =^  cyz  state
+            (manage-handle-1 [%add-tag i.rec (sy :~(gid))])
           %=  $
-            for    t.for
-            coz    (welp -.- coz)
-            state  +.-
+            rec    t.rec
+            coz    (welp cyz coz)
           ==
-        =+  (manage-handle-1 [%add-tag i.rec (sy :~(gid))])
-        %=  $
-          rec    t.rec
-          coz    (welp -.- coz)
-          state  +.-
-        ==
         :_  state
         %+  welp  caz
         %-  send
@@ -900,7 +947,7 @@
           %+  build:intern
             %gora-index
           [[%send-give '%send-give failed: specify-gora']]~
-        ?~  (scan (trip (~(got by mop) 'ships')) (more ace ;~(pfix sig fed:ag)))
+        ?~  (rash (~(got by mop) 'ships') (more ace ;~(pfix sig fed:ag)))
           :_  state
           %-  send
           :+  200
@@ -912,8 +959,8 @@
         =+  :-  goz=(~(got by pita) (slav %uv (~(got by mop) 'gora-id')))
             ^-  soz=(set ship)
             %-  sy
-            %+  scan
-              (trip (~(got by mop) 'ships'))
+            %+  rash
+              (~(got by mop) 'ships')
             (most ace ;~(pfix sig fed:ag))
         ?.  =(host:goz our.bol)
           :_  state
@@ -970,7 +1017,7 @@
           %+  build:intern
             %gora-index
           [[%reissue '%reissue failed: specify-gora']]~
-        ?~  (scan (trip (~(got by mop) 'ships')) (more ace ;~(pfix sig fed:ag)))
+        ?~  (rash (~(got by mop) 'ships') (more ace ;~(pfix sig fed:ag)))
           :_  state
           %-  send
           :+  200
@@ -982,8 +1029,8 @@
         =+  :-  goz=(~(got by pita) (slav %uv (~(got by mop) 'gora-id')))
               ^-  soz=(set ship)
               %-  sy
-              %+  scan
-                (trip (~(got by mop) 'ships'))
+              %+  rash
+                (~(got by mop) 'ships')
               (most ace ;~(pfix sig fed:ag))
         ~&  >  soz
         ?~  max-hodl.goz
@@ -1031,7 +1078,7 @@
           %+  build:intern
             %gora-index
           [[%transfer '%transfer failed: specify-gora']]~
-        ?~  (scan (trip (~(got by mop) 'ships')) (more ace ;~(pfix sig fed:ag)))
+        ?~  (rash (~(got by mop) 'ships') (more ace ;~(pfix sig fed:ag)))
           :_  state
           %-  send
           :+  200
@@ -1043,8 +1090,8 @@
         =+  :-  goz=(~(got by pita) (slav %uv (~(got by mop) 'gora-id')))
             ^-  soz=(set ship)
             %-  sy
-            %+  scan
-              (trip (~(got by mop) 'ships'))
+            %+  rash
+              (~(got by mop) 'ships')
             (most ace ;~(pfix sig fed:ag))
         ?~  max-hodl.goz
           :_  state
