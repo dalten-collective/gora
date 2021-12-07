@@ -37,8 +37,9 @@
 /-  *gora
 /+  server, default-agent, dbug, schooner
 ::
-/~  publui  webpage  /app/gora/publui
+::/~  mainui  webpage  /app/gora/goraui
 /~  errors  webpage  /app/gora/errors
+/~  publui  webpage  /app/gora/publui
 ::
 |%
 +$  versioned-state
@@ -83,7 +84,12 @@
 ++  on-init
   ^-  (quip card _this)
   ~&  >>>  [%gora %start %vue]
-  `this
+  :_  this
+  :~  :*
+    %pass     /eyre/connect
+    %arvo     %e
+    %connect  [[~ [%apps %gora %public ~]] dap.bowl]
+  ==  ==
 ::
 ++  on-save
   ^-  vase
@@ -705,7 +711,7 @@
       [%apps %gora %public %$ ~]
     :_  state
     %-  send
-    [302 ~ [%redirect './apps/gora/public']]
+    [302 ~ [%redirect '/apps/gora/public']]
   ==
   ::
   ++  call-public-index
@@ -745,7 +751,7 @@
   --
 ::
 ++  manage-handle-1
-|=  v=manage-gora-1
+  |=  v=manage-gora-1
   ^-  (quip card _state)
   ?>  (team:title our.bol src.bol)
   ?-    -.v

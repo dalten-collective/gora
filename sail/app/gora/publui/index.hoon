@@ -1,11 +1,24 @@
 ::
 ::  %gora  publui  %index
-
+::
 /-  *gora
+::
 /+  schooner
+::
 /~  errors  webpage  /app/gora/errors
-
-|_  [=bowl:gall [=usps-mode =pita =my-public =request-log =offer-log =sent-log =blacklist =tag-set =tag-store]]
+::
+|_  $:  =bowl:gall
+        =usps-mode
+        =pita
+        =my-public
+        =request-log
+        =offer-log
+        =sent-log
+        =blacklist
+        =tag-set
+        =tag-store
+    ==
+::
 ++  build
   |=  [requested-page=@tas args=(list (pair @t @t))]
   |^
@@ -15,6 +28,7 @@
       %publ-index
     (publ-page (my args))
   ==
+::
   ++  publ-page
     |=  url-params=(map @t @t)
     ^-  manx
@@ -53,158 +67,158 @@
         ;script:"{(trip script)}"
       ==
     ==
-    ++  public-tags
-      ^-  (list tag)
-      =+  [som=*(set tag) all=~(tap in ~(key by tag-store))]
-      |-
-      ?~  all
-        ~(tap in som)
-      =+  dim=~(tap in (~(got by tag-store) i.all))
-      %=    $
-          all
-        t.all
-      ::
-          som
-        |-
-        ?~  dim
-          som
-        ?:  (~(has in my-public) i.dim)
-          (~(put in som) i.all)
+  ++  public-tags
+    ^-  (list tag)
+    =+  [som=*(set tag) all=~(tap in ~(key by tag-store))]
+    |-
+    ?~  all
+      ~(tap in som)
+    =+  dim=~(tap in (~(got by tag-store) i.all))
+    %=    $
+        all
+      t.all
+    ::
         som
-      ==
-    ++  hedl-list
-      |=  url-params=(map @t @t)
-      |^
-      ^-  marl
-      =-  ;=  ;div(id "contentwrapper")
-                ;div(id "inner-wrapper")
-                  ;*  liz
-                ==
+      |-
+      ?~  dim
+        som
+      ?:  (~(has in my-public) i.dim)
+        (~(put in som) i.all)
+      som
+    ==
+  ++  hedl-list
+    |=  url-params=(map @t @t)
+    |^
+    ^-  marl
+    =-  ;=  ;div(id "contentwrapper")
+              ;div(id "inner-wrapper")
+                ;*  liz
               ==
-              ;div(id "collector", class "collector")
-                ;*  luz
-              ==
-          ==
-      :-  liz=(roll ~(tap in ~(key by pita)) make-imgs)
-      luz=(roll ~(tap in ~(key by pita)) make-containers)
-      ++  make-imgs
-        |=  [inc=gora-id out=marl]
-        =+  
-          ^-  tag=(unit @t)
-          ?.  (~(has by url-params) 'tag')
-            ~
-          ?:  =((~(got by url-params) 'tag') 'all')
-            ~
-          (~(get by url-params) 'tag')
-        ::
-        ~?  !(~(has by pita) inc)
-          [%error-rendering-webui inc %not-in-pita]
-        ::
-        =+  goz=(~(got by pita) inc)
-        =+  lon=(lent ~(tap in hodl-list.goz))
-        =/  daz=tape  ;:  weld
-                         (scow %ud m.issue-date.goz)  "/"
-                         (scow %ud d.issue-date.goz)  "/"
-                         (scow %ud y.issue-date.goz)
-                      ==
-        =/  buz=tape  ;:  weld
-                        "\"pop-"  daz
-                        (trip name.goz)
-                        (scow %ud inc)  
-                        "\""
-                      ==
-        ?.  ?&  (~(has in hodl-list.goz) our.bowl)
-                (~(has in my-public) gora-id.goz)
             ==
-          out
-        ?~  tag
-          :_  out
-          ;p
-            ;img(class "grasp", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({buz})");
+            ;div(id "collector", class "collector")
+              ;*  luz
+            ==
+        ==
+    :-  liz=(roll ~(tap in ~(key by pita)) make-imgs)
+    luz=(roll ~(tap in ~(key by pita)) make-containers)
+    ++  make-imgs
+      |=  [inc=gora-id out=marl]
+      =+  
+        ^-  tag=(unit @t)
+        ?.  (~(has by url-params) 'tag')
+          ~
+        ?:  =((~(got by url-params) 'tag') 'all')
+          ~
+        (~(get by url-params) 'tag')
+      ::
+      ~?  !(~(has by pita) inc)
+        [%error-rendering-webui inc %not-in-pita]
+      ::
+      =+  goz=(~(got by pita) inc)
+      =+  lon=(lent ~(tap in hodl-list.goz))
+      =/  daz=tape  ;:  weld
+                       (scow %ud m.issue-date.goz)  "/"
+                       (scow %ud d.issue-date.goz)  "/"
+                       (scow %ud y.issue-date.goz)
+                    ==
+      =/  buz=tape  ;:  weld
+                      "\"pop-"  daz
+                      (trip name.goz)
+                      (scow %ud inc)  
+                      "\""
+                    ==
+      ?.  ?&  (~(has in hodl-list.goz) our.bowl)
+              (~(has in my-public) gora-id.goz)
           ==
-        ?.  (~(has ju tag-store) u.tag gora-id.goz)
-          out
+        out
+      ?~  tag
         :_  out
         ;p
           ;img(class "grasp", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({buz})");
         ==
-      ++  make-containers
-        |=  [inc=gora-id out=marl]
-        =+  
-          ^-  tag=(unit @t)
-          ?.  (~(has by (my args)) 'tag')
-            ~
-          ?:  =((~(got by (my args)) 'tag') 'all')
-            ~
-          (~(get by (my args)) 'tag')
-        ::
-        ~?  !(~(has by pita) inc)
-          [%error-rendering-webui inc %not-in-pita]
-        ::
-        =+  goz=(~(got by pita) inc)
-        =+  lon=(lent ~(tap in hodl-list.goz))
-        =/  daz=tape
-          ;:  weld
-            (scow %ud m.issue-date.goz)  "/"
-            (scow %ud d.issue-date.goz)  "/"
-            (scow %ud y.issue-date.goz)
-          ==
-        =/  buz=tape
-          ;:  weld
-            "\"pop-"  daz
-            (trip name.goz)
-            (scow %ud inc)  "\""
-          ==
-        ?.  ?&  (~(has in hodl-list.goz) our.bowl)
-                (~(has in my-public) gora-id.goz)
-            ==
-          out
-        :_  out
-        ;div(id :(weld "pop-" daz (trip name.goz) (scow %ud inc)), class "modal")
-          ;div(class "modal-content", align "center")
-            ;a(href "{(trip gora-img:goz)}", target "_blank")
-              ;img(src "{(trip gora-img:goz)}", height "75");
-            ==
-            ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
-            ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
-            ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
-            ;+  ?:  =(give-permissions.goz %transfer)
-                  ?~  max-hodl.goz
-                    ;p(class "gora-color"):"%strange-state"
-                  ;p(class "gora-color"):"{(weld "# recipients remaining: " (scow %ud (sub u.max-hodl.goz lon)))}"
-                  ?.  (gth lon 1)
-                    ;p(class "gora-color"):"Unique %gora"
-                  ;p(class "gora-color"):"{:(weld "Series of " (scow %ud lon) " %gora")}"
-            ;+  ?+    give-permissions.goz  ;div;
-                    %reissue
-                  ;p(class "gora-color"):"%reissue-able"
-                ::
-                    %transfer
-                  ?~  max-hodl.goz
-                    ;p(class "gora-color"):"%strange-state"
-                  ?:  (lte u.max-hodl.goz lon)
-                    ;br;
-                  ;p(class "gora-color"):"%chain-letter"
-                    ==
-            ;+  =+  :-  out=*tape
-                ^-  tag=(list @t)  ~(tap in ~(key by tag-store))
-                |-
-                ?~  tag
-                  ;input(name "tags", readonly "true"):"{out}"
-                %=    $
-                    tag
-                  t.tag
-                ::
-                    out
-                  ?.  (~(has ju tag-store) i.tag gora-id.goz)
-                    out
-                  ;:  weld  out
-                    " "  (scow %tas i.tag)
-                  ==
-                ==
-          ==
+      ?.  (~(has ju tag-store) u.tag gora-id.goz)
+        out
+      :_  out
+      ;p
+        ;img(class "grasp", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({buz})");
+      ==
+    ++  make-containers
+      |=  [inc=gora-id out=marl]
+      =+  
+        ^-  tag=(unit @t)
+        ?.  (~(has by (my args)) 'tag')
+          ~
+        ?:  =((~(got by (my args)) 'tag') 'all')
+          ~
+        (~(get by (my args)) 'tag')
+      ::
+      ~?  !(~(has by pita) inc)
+        [%error-rendering-webui inc %not-in-pita]
+      ::
+      =+  goz=(~(got by pita) inc)
+      =+  lon=(lent ~(tap in hodl-list.goz))
+      =/  daz=tape
+        ;:  weld
+          (scow %ud m.issue-date.goz)  "/"
+          (scow %ud d.issue-date.goz)  "/"
+          (scow %ud y.issue-date.goz)
         ==
-    --
+      =/  buz=tape
+        ;:  weld
+          "\"pop-"  daz
+          (trip name.goz)
+          (scow %ud inc)  "\""
+        ==
+      ?.  ?&  (~(has in hodl-list.goz) our.bowl)
+              (~(has in my-public) gora-id.goz)
+          ==
+        out
+      :_  out
+      ;div(id :(weld "pop-" daz (trip name.goz) (scow %ud inc)), class "modal")
+        ;div(class "modal-content", align "center")
+          ;a(href "{(trip gora-img:goz)}", target "_blank")
+            ;img(src "{(trip gora-img:goz)}", height "75");
+          ==
+          ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
+          ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
+          ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
+          ;+  ?:  =(give-permissions.goz %transfer)
+                ?~  max-hodl.goz
+                  ;p(class "gora-color"):"%strange-state"
+                ;p(class "gora-color"):"{(weld "# recipients remaining: " (scow %ud (sub u.max-hodl.goz lon)))}"
+                ?.  (gth lon 1)
+                  ;p(class "gora-color"):"Unique %gora"
+                ;p(class "gora-color"):"{:(weld "Series of " (scow %ud lon) " %gora")}"
+          ;+  ?+    give-permissions.goz  ;div;
+                  %reissue
+                ;p(class "gora-color"):"%reissue-able"
+              ::
+                  %transfer
+                ?~  max-hodl.goz
+                  ;p(class "gora-color"):"%strange-state"
+                ?:  (lte u.max-hodl.goz lon)
+                  ;br;
+                ;p(class "gora-color"):"%chain-letter"
+                  ==
+          ;+  =+  :-  out=*tape
+              ^-  tag=(list @t)  ~(tap in ~(key by tag-store))
+              |-
+              ?~  tag
+                ;input(name "tags", readonly "true"):"{out}"
+              %=    $
+                  tag
+                t.tag
+              ::
+                  out
+                ?.  (~(has ju tag-store) i.tag gora-id.goz)
+                  out
+                ;:  weld  out
+                  " "  (scow %tas i.tag)
+                ==
+              ==
+        ==
+      ==
+  --
 ::
   ++  style
     '''

@@ -1,10 +1,21 @@
 ::
 ::  %gora  errors  %index
 ::
-
+::
 /-  *gora
-
-|_  [=bowl:gall [=usps-mode =pita =my-public =request-log =offer-log =sent-log =blacklist =tag-set =tag-store]]
+::
+|_  $:  =bowl:gall
+        =usps-mode
+        =pita
+        =my-public
+        =request-log
+        =offer-log
+        =sent-log
+        =blacklist
+        =tag-set
+        =tag-store
+    ==
+::
 ++  build
   |=  [requested-page=@tas args=(list [@t @t])]
   |^
@@ -26,17 +37,17 @@
     |=  args=(map @t @t)
     ^-  manx
     ;html
-        ;head
-          ;title:"%gora - マイ ゴラ スイッチ // page not found"
-          ;meta(name "viewport", content "width=device-width, initial-scale=1", charset "utf-8");
-          ;style:"{(trip style)}"
-        ==
-        ;body
-          ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
-          ;p(align "center"):"You have reached an invalid page. Please try again."
-        ==
+      ;head
+        ;title:"%gora - マイ ゴラ スイッチ // page not found"
+        ;meta(name "viewport", content "width=device-width, initial-scale=1", charset "utf-8");
+        ;style:"{(trip style)}"
+      ==
+      ;body
+        ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
+        ;p(align "center"):"You have reached an invalid page. Please try again."
+      ==
     ==
-    ::
+::
   ++  code-405
     |=  args=(map @t @t)
     ^-  manx
@@ -52,7 +63,8 @@
                 ;=  ;p:"Invalid HTTP-Method or Arguments"
                     ;a:"Return Home"
                 ==
-              ;=  ;p:"Invalid HTTP-Method {(trip (~(got by args) 'method'))}"
+              ;=  
+                ;p:"Invalid HTTP-Method {(trip (~(got by args) 'method'))}"
                 ;+  ?+  (~(got by args) 'failed-action')  ;p:"Unknown Action."
                         %approve-give
                       ;p:"%approve-give failed for {(trip (~(got by args) 'id'))}"
@@ -62,6 +74,7 @@
               ==
         ==
     ==
+::
   ++  style
     '''
     * { margin: 0.2em; padding: 0.2em; font-family: monospace; }
