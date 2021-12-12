@@ -8,22 +8,28 @@
 /~  errors  webpage  /app/gora/errors
 ::
 |_  $:  =bowl:gall
-        =usps-mode
-        =pita
-        =my-public
-        =request-log
-        =offer-log
-        =sent-log
-        =blacklist
-        =tag-set
-        =tag-store
+        =usps-mode  =pita
+        =my-public  =request-log
+        =offer-log  =blacklist
+        =tag-set    =tag-store
+        =pend
     ==
 ::
 ++  build
   |=  [requested-page=@tas args=(list (pair @t @t))]
   |^
   ^-  manx
-  =*  errs    ~(. (~(got by errors) %index) bowl [usps-mode pita my-public request-log offer-log sent-log blacklist tag-set tag-store])
+  =*  errs  
+    %~  .
+      (~(got by errors) %index)
+    :-  bowl
+    :*  
+      usps-mode  pita
+      my-public  request-log
+      offer-log  blacklist
+      tag-set    tag-store
+      pend
+    ==
   ?+    requested-page  (build:errs %not-found ~)
       %publ-index
     (publ-page (my args))
@@ -128,13 +134,14 @@
                       "\""
                     ==
       ?.  ?&  (~(has in hodl-list.goz) our.bowl)
-              (~(has in my-public) gora-id.goz)
+              (~(has in my-public) inc)
+              =(%.y host-public.goz)
           ==
         out
       ?~  tag
         :_  out
         ;p
-          ;img(class "grasp", src "{(trip gora-img.goz)}", height "150", onclick "goraImgBtn({buz})");
+          ;img(class "grasp", src "{(trip gora-img.goz)}", onclick "goraImgBtn({buz})");
         ==
       ?.  (~(has ju tag-store) u.tag gora-id.goz)
         out
@@ -273,6 +280,8 @@
 
     .grasp {
       transition: 0.9s;
+      width: 150px;
+      height: 150px;
     }
     .grasp:hover {
       transform: translate(-40%, 5%);

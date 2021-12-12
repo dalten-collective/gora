@@ -1,6 +1,9 @@
 ::  gora Structures - ~dalten Collective
 ::
 /-  *docket
+::
+/+  *pal
+::
 |%
 
 ::
@@ -15,6 +18,7 @@
       [%pubmod-host =gora-id public=?]
       [%pubmod-hodl =gora-id public=?]
       [%add-tag =tag gorae=(set gora-id)]
+      [%del-tag =tag gorae=(set gora-id)]
       ::
       [%reject-give =gora-id]
       [%approve-give =gora-id]
@@ -73,7 +77,6 @@
   $%  [%offer-log =gora-id]
       [%blacklist =gora-id]
       [%request-log =ship =gora-id]
-      [%sent-log =gora-id =ship act=?(%ask %giv)]
   ==
 ::
 :: Defining Gora
@@ -113,7 +116,14 @@
 +$  tag-set    (set tag)
 +$  tag-store  (jug tag gora-id)
 ::
+:: Outstanding Transactions
+::
++$  gib
+  ?(%send-ask %send-giv %give-ack %chain-it %proxy-it)
++$  pend  (mip gora-id (map [ship gib] [wen=@da dun=?]))
+::
 :: Last-Version Structures/Marks
+::
 ++  zero
   |%
   ::+$  manage-gora
@@ -146,7 +156,7 @@
 ::
 +$  webpage
   $_  ^|
-  |_  [bowl:gall usps-mode pita my-public request-log offer-log sent-log blacklist tag-set tag-store]
+  |_  [bowl:gall usps-mode pita my-public request-log offer-log blacklist tag-set tag-store pend]
   ++  build  |~([@tas (list [k=@t v=@t])] *manx)
   --
 --

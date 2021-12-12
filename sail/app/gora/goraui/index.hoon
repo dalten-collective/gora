@@ -2,19 +2,15 @@
 ::  %gora  goraui  %index
 ::
 /-  *gora
-/+  schooner
+/+  schooner, *pal
 /~  errors  webpage  /app/gora/errors
 ::
 |_  $:  =bowl:gall
-        =usps-mode
-        =pita
-        =my-public
-        =request-log
-        =offer-log
-        =sent-log
-        =blacklist
-        =tag-set
-        =tag-store
+        =usps-mode  =pita
+        =my-public  =request-log
+        =offer-log  =blacklist
+        =tag-set    =tag-store
+        =pend
     ==
 ::
 ++  build
@@ -28,9 +24,9 @@
     :*  
       usps-mode  pita
       my-public  request-log
-      offer-log  sent-log
-      blacklist  tag-set
-      tag-store
+      offer-log  blacklist
+      tag-set    tag-store
+      pend
     ==
   ?+    requested-page  (build:errs %not-found ~)
       %gora-index
@@ -75,6 +71,71 @@
       ==
     ==
 ::
+  ++  pend-sort
+    |=  $:
+          $:
+            x=@uv
+            y=[@p ?(%chain-it %give-ack %proxy-it %send-ask %send-giv)]
+            v=[wen=@da dun=?(%.y %.n)]
+          ==
+          $:
+            x=@uv
+            y=[@p ?(%chain-it %give-ack %proxy-it %send-ask %send-giv)]
+            v=[wen=@da dun=?(%.y %.n)]
+          ==
+        ==
+    =+  [a=+<-.. b=+<+..]
+    (gth wen.v.b wen.v.a)
+::
+  ++  pend-send
+    |=  $:
+          $:
+            x=@uv
+            y=[@p ?(%chain-it %give-ack %proxy-it %send-ask %send-giv)]
+            v=[wen=@da dun=?(%.y %.n)]
+          ==
+        ::
+          out=(list manx)
+        ==
+    =+  yre=(yore wen.v)
+    :_  out
+    ;tr(align "center")
+      ;td
+        ;+  ?:  (~(has by pita) x)
+              ;p(class "gora-color"):"{(trip name:(~(got by pita) x))}"
+            ;p(class "warn-color"):"{(scow %uv x)}"
+      ==
+      ;td
+        ;p:"{(scow %p -.y)}"
+      ==
+      ;td
+        ;+  ?-    +.y
+                %send-ask
+              ;p(class "gora-color"):"%gora requested"
+            ::
+                %send-giv
+              ;p(class "gora-color"):"%gora sent"
+            ::
+                %give-ack
+              ;p(class "gora-color"):"%gora accepted"
+            ::
+                %chain-it
+              ;p(class "warn-color"):"%spam sent"
+            ::
+                %proxy-it
+              ;p(class "gora-color"):"%gora reissued"
+            ==
+      ==
+      ;td
+        ;p:"{(scow %ud m.yre)}/{(scow %ud d.t.yre)}/{(scow %ud y.-.yre)}"
+      ==
+      ;td
+        ;+  ?:  dun.v
+              ;p(class "gora-color"):"Ack!"
+            ;p(class "warn-color"):"Pending"
+      ==
+    ==
+::
   ++  main-page
     |=  url-params=(map @t @t)
     ^-  manx
@@ -112,23 +173,14 @@
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
         ;div(align "center")
           ;a(class "wuttarButton", href "../gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
-          ;br;
           ;button(class "wuttarButton", onclick "multiFunc('mkgora', '', '', '{(scow %p our.bowl)}', '')"):"Make %gora"
           ;button(class "wuttarButton", onclick "multiFunc('send-request', '', '', '', '')"):"Request %gora"
           ;button(class "wuttarButton", onclick "multiFunc('send-give', '', '', '{(scow %p our.bowl)}', '')"):"Send %gora"
         ==
-        ;p
-          ;span:"Welcome to"
-          ;span(class "gora-color"):"%gora"
-          ;span:". We hope to provide you with a feature rich experience, soon."
-          ;span:"For now, we hope you enjoy seeing your"
-          ;span(class "gora-color"):"%gora"
-          ;span:"and accepting incoming offers."
-        ==
         ;+  ?:  (~(has by url-params) 'approve-give-success')
-              ;p(class "color-gora", align "center"):"{(trip (~(got by url-params) 'approve-give-success'))}"
+              ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'approve-give-success'))}"
             ?:  (~(has by url-params) 'reject-give-success')
-              ;p(class "color-gora", align "center"):"{(trip (~(got by url-params) 'reject-give-success'))}"
+              ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'reject-give-success'))}"
             ?:  (~(has by url-params) 'transfer-success')
               ;p(class "gora-color", align "center"):"{(trip (~(got by url-params) 'transfer-success'))}"
             ?:  (~(has by url-params) 'transfer')
@@ -155,8 +207,7 @@
                   ;div;
               ==
             ;=  ;h3(align "center"):"Incoming %gora"
-                ;h5(align "center"):"Click the preview image to expand. Click Claim to acquire. Reject coming soon (available as poke)."
-                ;div(class "scroll-table")
+                ;div(class "offer-div")
                   ;table
                     ;*  (roll ~(tap in offer-log) offered-list)
                   ==
@@ -167,16 +218,18 @@
                   ;div;
               ==
           ;=  ;h3(align "center"):"Owned %gora"
-              ;h5(align "center"):"Click the preview image to see more details."
-              ;div(class "scroll-owned")
-                ;div
-                  ;*  (roll ~(tap in ~(key by pita)) hedl-list)
-                ==
+              ;div(class "hedl-div")
+                ;*  (roll ~(tap in ~(key by pita)) hedl-list)
               ==
           ==
         ;br;
         ;br;
         ;h4(align "center"):"Brought to you by ~dalten Collective"
+        ;div(class "pend-div")
+          ;table
+            ;*  (roll (sort ~(tap bi pend) pend-sort) pend-send)
+          ==
+        ==
         ;br;
         ;div(class "modal", id "multi-modal")
           ;div(class "mult-content", align "center")
@@ -291,6 +344,7 @@
                     ;br;
                   ;button(class "wuttarButton", id (weld (scow %ud inc) "-transfer"), onclick "multiFunc('transfer', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{(scow %ud (sub u.max-hodl.goz lon))}')"):"Transfer"
                 ==
+            ;br;
             ;+  ?:  (~(has in my-public) gora-id.goz)
               ;button(class "wuttarButton", id (weld (scow %ud inc) "-public-already"), onclick "multiFunc('private', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Private"
             ;button(class "wuttarButton", id (weld (scow %ud inc) "-make-public"), onclick "multiFunc('public', '{(scow %uv inc)}', '{(trip name.goz)}', '{(scow %p host.goz)}', '{?~(max-hodl.goz "infinite" (scow %ud (sub u.max-hodl.goz lon)))}')"):"Make Public"
@@ -415,7 +469,7 @@
     body { background-color: #333230; color: white; }
     p { max-width: 75em; margin-left: auto; margin-right: auto; }
     button { padding: 0.2em 0.5em; font-size: 8pt; }
-    table { table-layout: fixed;max-width: 75em; margin-left: auto; margin-right: auto; }
+    table { table-layout: fixed; max-width: 90vw; margin-left: auto; margin-right: auto; }
     img { 
       border: 2px solid #997300;
       border-radius: 50%;
@@ -444,7 +498,7 @@
       color: #997300;
     }
     .gora-title {
-      font-size: 24pt;
+      font-size: 20pt;
       align: center;
     }
     .gora-name {
@@ -468,19 +522,26 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .scroll-table {
-      width: 80vw;
+    .offer-div {
+      display: flex;
       max-height: 35vh;
-      max-width: 80vw;
-      overflow: scroll;
+      overflow: auto;
       margin-left: auto;
       margin-right: auto; 
     }
-    .scroll-owned {
-      width: 80vw;
-      max-height: 35vh;
-      max-width: 80vw;
-      overflow: scroll;
+    .hedl-div {
+      display: flex;
+      max-height: 60vh;
+      max-width: 90vw;
+      flex-wrap: wrap;
+      overflow-y: auto;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .pend-div {
+      max-height: 10vh;
+      max-width: 60vw;
+      overflow: auto;
       margin-left: auto;
       margin-right: auto; 
     }

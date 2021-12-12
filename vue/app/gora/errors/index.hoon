@@ -5,15 +5,11 @@
 /-  *gora
 ::
 |_  $:  =bowl:gall
-        =usps-mode
-        =pita
-        =my-public
-        =request-log
-        =offer-log
-        =sent-log
-        =blacklist
-        =tag-set
-        =tag-store
+        =usps-mode  =pita
+        =my-public  =request-log
+        =offer-log  =blacklist
+        =tag-set    =tag-store
+        =pend
     ==
 ::
 ++  build
