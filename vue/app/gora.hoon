@@ -410,11 +410,11 @@
     =+  yor=(yore wen.v)
     :_  out
     %-  pairs:enjs:format
-    :~  ['g-id' [%s (scot %uv x)]]
-        ['targ' (ship:enjs:format -.y)]
-        ['acts' [%s (scot %tas +.y)]]
+    :~  ['g-id' s+(scot %uv x)]
+        ['targ' s+(scot %p -.y)]
+        ['acts' s+(scot %tas +.y)]
         ['date' (date-parse [y.yor m.yor d.t.yor])]
-        ['ackd' [%b dun.v]]
+        ['ackd' b+dun.v]
     ==
   ::
   ++  pend-sort
