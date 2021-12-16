@@ -368,7 +368,7 @@
   :_  state
   =-  :~  :*
         %give
-        %fact  ~
+        %fact  ~[/website]
         [%json !>(`json`jon)]
       ==  ==
   ^-  jon=json
@@ -777,6 +777,7 @@
         [cards state]
       ::
           %new-hodlr
+        ~&  >>  [transaction pat]
         ~|  [%unexpected-update %new-hodlr ~]
         ?<  ?=(~ pat)
         =+  goz=(~(got by pita) (slav %uv +<.u.pat))
@@ -784,6 +785,11 @@
           %+  ~(put by pita)
             gora-id.goz
           goz(hodl-list (~(put in hodl-list.goz) ship.up))
+        =?    request-log
+            ?&  (~(has ju request-log) src.bol gora-id.goz)
+                (~(has in hodl-list.goz) our.bol)
+            ==
+          (~(del ju request-log) src.bol gora-id.goz)
         =^  cards  state
           %-  json-handle
           [%success :((cury cat 3) (scot %p ship.up) ' owns ' name.goz)]
@@ -792,6 +798,11 @@
           %initialize
         =.  pita
           (~(put by pita) gora-id.gora.up gora.up)
+        =?    request-log
+            ?&  (~(has ju request-log) src.bol gora-id.gora.up)
+                (~(has in hodl-list.gora.up) our.bol)
+            ==
+          (~(del ju request-log) src.bol gora-id.gora.up)
         =^  cards  state
           %-  json-handle
           [%success :((cury cat 3) src.bol ' initialized ' name.gora.up)]
