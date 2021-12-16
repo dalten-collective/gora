@@ -7,11 +7,11 @@
 |%
 
 ::
-:: Block List:
+::  Block List:
 ::
 +$  blacklist  (set gora-id)
 ::
-:: Manage Your Goras:
+::  Manage Your Goras:
 ::
 +$  manage-gora-1
   $%  [%set-max-hodl =gora-id max=@ud]
@@ -32,7 +32,7 @@
       [%send-transfer =gora-id new=(set ship)]
       ::
       [%delgora =gora-id]
-      :: change these names to be more lined up
+      ::  change these names to be more lined up
       $:  %mkgora
           name=@t
           =gora-img
@@ -47,7 +47,7 @@
       [%resubscribe-all ~]
   ==
 ::
-:: Manage Interstellar Activity
+::  Manage Interstellar Activity
 ::
 +$  transact-1
   $%  [%giv-ack =gora-id]
@@ -58,7 +58,7 @@
       [%update act=?(%upd %del) jot=(unit update)]
   ==
 ::
-:: Update Types
+::  Update Types
 ::
 +$  update
   $%  [%update-image ~]
@@ -79,7 +79,7 @@
       [%request-log =ship =gora-id]
   ==
 ::
-:: Defining Gora
+::  Defining Gora
 ::
 +$  gora-id      @uv
 +$  gora-img     cord
@@ -88,7 +88,7 @@
 +$  pita         (map gora-id gora)
 +$  issue-date   [y=@ud m=@ud d=@ud]
 ::
-:: State 1 Format
+::  State 1 Format
 ::
 +$  gora
   $:  =gora-id
@@ -103,26 +103,26 @@
       give-permissions=?(%transfer %reissue %none)
   ==
 ::
-:: Controlling Issuance
+::  Controlling Issuance
 ::
 +$  offer-log    (set gora-id)
 +$  request-log  (jug ship gora-id)
 +$  sent-log     (jug gora-id [ship ?(%ask %giv)])
 +$  usps-mode    ?
 ::
-:: Tagging Functionality
+::  Tagging Functionality
 ::
 +$  tag        @tas
 +$  tag-set    (set tag)
 +$  tag-store  (jug tag gora-id)
 ::
-:: Outstanding Transactions
+::  Outstanding Transactions
 ::
 +$  gib
   ?(%send-ask %send-giv %give-ack %chain-it %proxy-it)
 +$  pend  (mip gora-id (map [ship gib] [wen=@da dun=?]))
 ::
-:: Last-Version Structures/Marks
+::  Last-Version Structures/Marks
 ::
 ++  zero
   |%
@@ -145,14 +145,17 @@
         [%proxy-approve =gora-id =ship]
         [%update act=?(%upd %del) =gora]
     ==
-  :: State 0 Format - applied in agent separately
+  ::  State 0 Format - applied in agent separately
   +$  gora  
     $:  =gora-id     name=@t
         =gora-img    host=ship
         =issue-date  =hodl-list
     ==
   --
-:: Related to Sail
+::
+::  Related to json
+::
+::  Related to Sail
 ::
 +$  webpage
   $_  ^|

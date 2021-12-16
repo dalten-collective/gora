@@ -1237,6 +1237,9 @@
     ~|  [%failed-gora-make name.v %identical-hash]
     =+  id=(mkgora-id name.v gora-img.v max.v req.v giv.v ~ our.bol) 
     =+  date=(yore now.bol)
+    =?    max.v
+        ?~(max.v %.y =(0 u.max.v))
+      ~
     ?>  !(~(has by pita) id)
     =.  pita  
       %+  ~(put by pita)
