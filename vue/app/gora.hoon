@@ -203,7 +203,7 @@
   ::
       [%website ~]
     =^  cards  state
-      (json-handle [%none ~])
+      (json-handle:hc [%none ~])
     [cards this]
   ::
       [%updates @ *]
@@ -475,6 +475,8 @@
   ::
   ++  pita-filter
     |=  [[p=gora-id q=gora] out=^pita]
+    ~&  >>  hodl-list.q
+    ~&  >   our.bol
     ?:  (~(has in hodl-list.q) our.bol)
       (~(put by out) p q)
     out

@@ -43,7 +43,7 @@
         :~  ['name' so]
             ['gora-img' so]
             ['public' bo]
-            ['max' (mu ni))]
+            ['max' (mu ni)]
             ['req' (se %tas)]
             ['giv' (se %tas)]
         ==
