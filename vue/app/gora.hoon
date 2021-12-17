@@ -575,9 +575,11 @@
             %.y
           !=(%transfer giv)
         ==
+    =.  offer-log
+      (~(put in offer-log) gora-id)
     =^  cards  state
       (json-handle [%success 'gora-received'])
-    :_  state(offer-log (~(put in offer-log) gora-id))
+    :_  state
     %+  welp  cards
     :~  :*  
       %pass   /updates/(scot %uv gora-id)/(scot %p our.bol)
@@ -590,10 +592,10 @@
           !(~(has in offer-log) gora-id.gora)
           !(~(has in blacklist) gora-id.gora)
         ==
-    =^  cards  state
-      (json-handle [%success 'spam-received'])
     =.  pita
       (~(put by pita) gora-id.gora gora)
+    =^  cards  state
+      (json-handle [%success 'spam-received'])
     [cards state]
   ::
       %giv-ack
@@ -617,15 +619,11 @@
       goz(request-behavior %reject)
     =.  goz  
       goz(hodl-list (~(put in hodl-list.goz) src.bol))
+    =.  pita
+      (~(put by pita) gora-id.goz goz)
     =^  cards  state
       (json-handle [%success (cat 3 (scot %p src.bol) ' accepted gora')])
-    :_  %=    state
-            pita
-          (~(put by pita) gora-id.goz goz)
-        ::
-            pend
-          (~(put bi pend) gora-id [src.bol %send-giv] [now.bol %.y])
-        ==
+    :_  state
     %+  welp  cards
     :~  :*  
       %give
@@ -777,7 +775,6 @@
         [cards state]
       ::
           %new-hodlr
-        ~&  >>  [transaction pat]
         ~|  [%unexpected-update %new-hodlr ~]
         ?<  ?=(~ pat)
         =+  goz=(~(got by pita) (slav %uv +<.u.pat))
@@ -809,7 +806,7 @@
         [cards state]
       ::
           %reissue
-        ~|  [%unexpecte-update %reissue %bad-id]
+        ~|  [%unexpected-update %reissue %bad-id]
         =+  goz=(~(got by pita) id.up)
         ?>  ?&  =(our.bol host.goz)
                 =(%reissue give-permissions.goz)
@@ -821,9 +818,20 @@
                   u.max-hodl.goz
                 (lent ~(tap in (~(uni in hodl-list.goz) new.up)))
             ==
-        =^  cards  state
-          (manage-handle-1 [%send-give id.up new.up])
-        [cards state]
+        =/  wir
+          ;:  welp
+            /reissue
+            /send-giv
+            /(scot %uv id.up)
+            /(scot %p src.bol)
+          ==
+        :_  state
+        :~  :*
+          %pass   wir
+          %agent  [our.bol %gora]
+          %poke   %gora-man-1
+          !>(`manage-gora-1`[%send-give id.up new.up])
+        ==  ==
       ==
     ==
   ==
@@ -1263,9 +1271,10 @@
     ==
   ::
       %send-reissue
-    ~|  [%unrecognized-reissue (scot %uv gora-id.v)]
+    ~?  !(~(has by pita) gora-id.v)
+      [%unrecognized-reissue (scot %uv gora-id.v)]
     =+  goz=(~(got by pita) gora-id.v)
-    ~|  [%unexpected-reissue %no-reissue-permissions ~]
+    ~|  [%unexpected-reissue %no-reissue-permissions %or %over-max ~]
     ?>  ?&  =(%reissue give-permissions.goz)
             (~(has in hodl-list.goz) our.bol)
         ==
@@ -1290,7 +1299,6 @@
         !>(`transact-1`[%update %upd [~ [%reissue gora-id.v new.v]]])
       ==  ==
     ::
-    ~|  [%unexpected-reissue %over-max ~]
     ?>  (gte u.max-hodl.goz +((lent ~(tap in hodl-list.goz))))
     =.  pend
       (~(put bi pend) gora-id.v [host.goz %proxy-it] [now.bol %.n])

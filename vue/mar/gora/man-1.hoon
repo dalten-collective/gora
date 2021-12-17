@@ -43,7 +43,7 @@
         :~  ['name' so]
             ['gora-img' so]
             ['public' bo]
-            ['max' ni:dejs-soft:format]
+            ['max' (mu ni))]
             ['req' (se %tas)]
             ['giv' (se %tas)]
         ==
