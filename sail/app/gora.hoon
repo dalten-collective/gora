@@ -65,9 +65,9 @@
 ::
 |%
 +$  versioned-state
-    $%  state-one
-        state-zero
-    ==
+  $%  state-one
+      state-zero
+  ==
 ::
 +$  state-one
   $:  %1
@@ -668,13 +668,13 @@
       [%apps %gora %$ ~]
     :_  state
     %-  send
-    [302 ~ [%redirect './apps/gora']]
+    [302 ~ [%redirect '/apps/gora']]
       [%apps %gora %public ~]
     call-public-index
       [%apps %gora %public %$ ~]
     :_  state
     %-  send
-    [302 ~ [%redirect './apps/gora/public']]
+    [302 ~ [%redirect '/apps/gora/public']]
   ==
   ++  call-public-index
     ?+    method.request.inbound-request

@@ -172,7 +172,7 @@
                     
         ;h2(class "gora-title gora-color", align "center"):"%gora - マイ ゴラ スイッチ"
         ;div(align "center")
-          ;a(class "wuttarButton", href "../gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
+          ;a(class "wuttarButton", href "../apps/gora/wuttis", title "wuttis gora?"):"?=  %gora / ?*  %gorae"
           ;button(class "wuttarButton", onclick "multiFunc('mkgora', '', '', '{(scow %p our.bowl)}', '')"):"Make %gora"
           ;button(class "wuttarButton", onclick "multiFunc('send-request', '', '', '', '')"):"Request %gora"
           ;button(class "wuttarButton", onclick "multiFunc('send-give', '', '', '{(scow %p our.bowl)}', '')"):"Send %gora"
@@ -429,30 +429,63 @@
 
   ++  wuttar-gorae
     ;=
-    ;p:"%gora by ~dalten Collective (vue edition) is a proof of presence protocol (POPP). %gora allows users to issue (and receive) lasting indicia of presence in a variety of contexts. This memorial tokens contain within their own data structure a name, issuer, image link, validation hash and list of other holders of the token."
-    ;br;
-    ;p:"%gora is distributed in two varieties - one that uses Vue.js and is reactive to user actions just like a modern Earth Web 2.0 application; the other uses Sail, an XML markdown language compatible with hoon that delivers a decidedly Earth Web 1.0 experience. They are available to install from the following moons:"
-    ;br;
-    ;p:"- %gora Vue.js Edition - |install ~laddys-dozzod-dalten %gora"
-    ;p:"- %gora Sail Edition   - |install ~mister-dozzod-dalten %gora"
-    ;br;
-    ;p:"Feel free to build and distribute extensions to %gora that suite your particular need. The base features can (soon) be accessed through this interface, and can also be accessed through the dojo or by other %gall agents using pokes and scries. The scries are documented within the app file, and a successful poke will look something like this:"
-    ;br;
-    ;p:":gora &gora-man [%mkgora /'Your Gora's Name/' /'http://your-url.s3-phuket.com/your-jpg.gif/']"
-    ;br;
-    ;p:"The &gora-man structure includes other pokes like:"
-    ;p:"[%mkgora /'title/' /'url/']                       -Make a new gora"
-    ;p:"[%delgora 0vid.g032h.34300]                   -Delete an existing gora"
-    ;p:"[%send-give 0vid.g032h.34300 ~sampel-palnet]  -Send a gora to a recipient"
-    ;p:"[%send-request 0vid.g032h.34300 ~dalten]      -Request a gora from a host"
-    ;p:"[%approve-give 0vid.g032h.34300]              -Approve an incoming gora gift"
-    ;p:"[%approve-request 0vid.g032h.34300 ~dev]      -Approve an incoming gora request"
-    ;p:"[%reject-give 0vid.g032h.34300]               -Decline an incoming gora gift"
-    ;p:"[%reject-request 0vid.g032h.34300 ~dev]       -Deny an incoming gora request"
-    ;br;
-    ;p:"If you need support with %gora - join ~mister-hilper-dozzod-dalten/gora and we'll see what we can do!"
-  ==
-::
+      ;p:"::  %gora - by ~dalten Collective (sail version)"
+      ;p:"%gora is a proof of presence protocol (POPP) that is"
+      ;p:"intended to be extensible, flexible and educational"
+      ;p:"(at least for new hooners). %gora has two distros in"
+      ;p:"circulation - these can be found at:"
+      ;p:"~laddys-dozzod-dalten (Vue.js frontend)"
+      ;p:"~mister-dozzod-dalten (sail frontend)"
+      ;br;
+      ;p:"::  %gora relies on schooner, a library also produced by"
+      ;p:"::  ~dalten Collective."
+      ;p:"::"
+      ;p:"::  %gora has several available methods including:"
+      ;p:"::    &gora-man-1 actions:"
+      ;p:"::   ::  Making your own"
+      ;p:"::     $:  %mkgora                               -Make a new gora"
+      ;p:"::         name=@t"
+      ;p:"::         =gora-img"
+      ;p:"::         public=?"
+      ;p:"::         max=(unit @ud)"
+      ;p:"::         req=?(%approve %reject %none)"
+      ;p:"::         giv=?(%transfer %reissue %none)"
+      ;p:"::     =="
+      ;p:"::     [%delgora =gora-id]                       -Delete an existing gora"
+      ;p:"::     [%reject-request =gora-id ~dev]           -Deny an incoming gora request"
+      ;p:"::     [%approve-request =gora-id ~dev]          -Approve an incoming gora request"
+      ;p:"::     [%pubmod-host =gora-id public=?]          -Set whether a gora can be public"
+      ;p:"::     [%set-max-hodl =gora-id max=@ud]          -Set max hodlers"
+      ;p:"::     [%send-give =gora-id new=(set ship)]      -Send a gora to a recipient"
+      ;p:"::     [%send-transfer =gora-id new=(set ship)]  -Send a chain letter"
+      ;p:"::"
+      ;p:"::   ::  Working with your collection"
+      ;p:"::     [%reject-give =gora-id]                   -Decline an incoming gora gift"
+      ;p:"::     [%approve-give =gora-id]                  -Approve an incoming gora gift"
+      ;p:"::     [%send-request =gora-id ~dalten]          -Request a gora from a host"
+      ;p:"::     [%send-reissue =gora-id new=(set ship)]   -Reissue a gora you hodl"
+      ;p:"::     [%send-transfer =gora-id new=(set ship)]  -Send a chain letter"
+      ;p:"::"
+      ;p:"::   ::  Other necessities"
+      ;p:"::     [%clean-log =log]                         -Clean log - (use a log below)"
+      ;p:"::                [%offer-log =gora-id]            +Offer Log"
+      ;p:"::                [%blacklist =gora-id]            +Blacklist"
+      ;p:"::                [%request-log =ship =gora-id]    +Request Log"
+      ;p:"::     [%usps-mode mode=?]                       -Turn off incoming chain letters"
+      ;p:"::     [%resubscribe-all ~]                      -Resub to all gorae"
+      ;p:"::   and others that are more oriented towards machine use."
+      ;p:"::"
+      ;p:"::  %gora has several available scries as well:"
+      ;p:"::      [%x %requests @ ~]                          -Get gora-ids for gora requested from specified ship"
+      ;p:"::    .^((set @uv) %gx /=gora=/requests/~zod/noun)"
+      ;p:"::    ::"
+      ;p:"::      [%x %made-gora ~]"
+      ;p:"::    =g -build-file  /=gora=/sur/gora/hoon         -Get a set gora of gorae you've made"
+      ;p:"::    .^((set gora.g) %gy /=gora=/made-gora)"
+      ;p:"::    ::"
+      ;p:"::  join ~dalten/dalten-collective-public if you have ideas for others."
+      ;p:"::  Or, swing by the repo: https://github.com/dalten-collective/gora"
+    ==
   ++  frame-empty
     '''
     display: none;

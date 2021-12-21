@@ -382,6 +382,7 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
+        ['reqs' `json`a/gibs]
         ['newg' `json`s/(scot %uv +.giv)]
     ==
   ::
@@ -390,6 +391,7 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
+        ['reqs' `json`a/gibs]
     ==
   ::  
       %failure
@@ -397,6 +399,7 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
+        ['reqs' `json`a/gibs]
         ['fail' `json`s/(scot %tas +.giv)]
     ==
   ::
@@ -405,10 +408,41 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
+        ['reqs' `json`a/gibs]
         ['succ' `json`s/(scot %tas +.giv)]
     ==
-  ::
   ==
+  ::
+  ++  gibs
+    ^-  (list json)
+    =+  [muny=~(tap in ~(key by request-log)) out=*(list json)]
+    |-
+    ?~  muny
+      out
+    =+  want=~(tap in (~(get ju request-log) i.muny))
+    %=    $
+        muny
+      t.muny
+    ::
+        out
+      =+  oot=*(list json)
+      %+  weld  out
+      |-  ^-  (list json)
+      ?~  want
+        oot
+      %=    $
+          want
+        t.want
+      ::
+          oot
+        :_  oot
+        %-  pairs:enjs:format
+        :~  ['id' [%s `@t`(scot %uv i.want)]]
+            ['ship' (ship:enjs:format i.muny)]
+        ==
+      ==
+    ==  
+  ::
   ++  hedl
     |=  [[key=@ goz=gora] out=(list json)]
     :_  out
@@ -475,8 +509,6 @@
   ::
   ++  pita-filter
     |=  [[p=gora-id q=gora] out=^pita]
-    ~&  >>  hodl-list.q
-    ~&  >   our.bol
     ?:  (~(has in hodl-list.q) our.bol)
       (~(put by out) p q)
     out
