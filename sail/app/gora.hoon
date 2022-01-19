@@ -140,12 +140,12 @@
     this(state old)
   ::
       %0
-    =+  cuz=-:(manage-handle-1 [%resubscribe-all ~])
+    =+  cuz=-:(mange [%resubscribe-all ~])
     %=    $
         old
       :*
         %1
-        %.y            (~(run by pita-zero.old) structure-gora)
+        %.y            (~(run by pita-zero.old) struc)
         ~              request-log.old
         offer-log.old  blacklist.old
         ~             ~
@@ -156,7 +156,7 @@
       (weld caz cuz)
     ==
   ==
-  ++  structure-gora
+  ++  struc
     |=  old=gora-zero
     ^-  gora
     :*  gora-id.old
@@ -178,15 +178,15 @@
   =^  cards  state
     ?+    mark  (on-poke:def mark vase)
         %gora-man-1
-      (manage-handle-1:hc !<(manage-gora-1 vase))
+      (mange:hc !<(manage-gora-1 vase))
     ::
         %gora-transact
-      (transact-handle:hc !<(transact:zero vase))
+      (trans-0:hc !<(transact:zero vase))
         %gora-transact-1
-      (transact-handle-1:hc !<(transact-1 vase) ~)
+      (trans:hc !<(transact-1 vase) ~)
     ::
         %handle-http-request
-      %-  http-handle:hc
+      %-  https:hc
       !<([=eyre-id =inbound-request:eyre] vase)
     ==
   [cards this]
@@ -234,9 +234,9 @@
           ==
       ?+  p.cage.sign  !!
           %gora-transact
-        (transact-handle:hc !<(transact:zero q.cage.sign))
+        (trans-0:hc !<(transact:zero q.cage.sign))
           %gora-transact-1
-        %+  transact-handle-1:hc
+        %+  trans:hc
         !<(transact-1 q.cage.sign)  [~ wire]
       ==
     [cards this]
@@ -341,7 +341,7 @@
 --
 ::
 |_  bol=bowl:gall
-++  mkgora-id
+++  mkgor
   |=  $:  name=@t
           img=gora-img
           max=(unit @ud)
@@ -352,19 +352,19 @@
       ==
   (sham our.bol now.bol name img max req giv hedl host)
 ::
-++  transact-handle
+++  trans-0
   |=  transaction=transact:zero
   ^-  (quip card _state)
   =,  transaction
   ?-    -.+<
       %giv-ack
-    (transact-handle-1 [%giv-ack gora-id] ~)
+    (trans [%giv-ack gora-id] ~)
   ::
       %receive-gora
-    (transact-handle-1 [%receive-gora gora-id.gora %none] ~)
+    (trans [%receive-gora gora-id.gora %none] ~)
   ::
       %receive-request
-    (transact-handle-1 [%receive-request gora-id] ~)
+    (trans [%receive-request gora-id] ~)
   ::
       %proxy-approve
     ~|  [%unexpected-proxy-attempt ~]
@@ -385,9 +385,10 @@
         %none
         %none
       ==
-    (transact-handle-1 [%update %upd [~ [%initialize goz]]] ~)
+    (trans [%update %upd [~ [%initialize goz]]] ~)
   ==
-++  transact-handle-1
+::
+++  trans
   |=  [transaction=transact-1 pat=(unit path)]
   ^-  (quip card _state)
   =,  transaction
@@ -631,7 +632,7 @@
     ==
   ==
 ::
-++  http-handle
+++  https
   |=  [=eyre-id =inbound-request:eyre]
   =*  intern  ~(. (~(got by mainui) %index) bol +.state)
   =*  reject  ~(. (~(got by errors) %index) bol +.state)
@@ -750,11 +751,11 @@
                 (~(has by mop) 'gora-id')
             ==
         |^
-        =+  :*  coz=*(list card)                                      :: a list of card builder
-                gid=(slav %uv (~(got by mop) 'gora-id'))              :: gora-id
-                haz=(gora-tags (slav %uv (~(got by mop) 'gora-id')))  :: current tags
+        =+  :*  coz=*(list card)                                        :: a list of card builder
+                gid=(slav %uv (~(got by mop) 'gora-id'))                :: gora-id
+                haz=(get-set-tag (slav %uv (~(got by mop) 'gora-id')))  :: current tags
               ::
-                ^-  taz=(set tag)                                     :: user specified tags
+                ^-  taz=(set tag)                                       :: user specified tags
                 %-  sy
                 %+  turn
                   %+  rash
@@ -773,10 +774,10 @@
             ?~  for
               [coz state]
             =^  cuz  state
-              (manage-handle-1 [%del-tag i.for [(sy :~(gid))]])
+              (mange [%del-tag i.for [(sy :~(gid))]])
             $(for t.for, coz (welp cuz coz))
           =^  cyz  state
-            (manage-handle-1 [%add-tag i.rec (sy :~(gid))])
+            (mange [%add-tag i.rec (sy :~(gid))])
           %=  $
             rec    t.rec
             coz    (welp cyz coz)
@@ -788,7 +789,7 @@
           ~
         :-  %manx
         (build:intern %gora-index ~)
-        ++  gora-tags
+        ++  get-set-tag
           |=  gid=gora-id
           ^-  (set tag)
           =+  :-  kez=~(tap in ~(key by tag-store))
@@ -808,8 +809,8 @@
         =^  cards  state
           ^-  (quip card _state)
           ?:  =(poz '%.y')
-            (manage-handle-1 [%pubmod-hodl gid `?`%.y])
-          (manage-handle-1 [%pubmod-hodl gid `?`%.n])
+            (mange [%pubmod-hodl gid `?`%.y])
+          (mange [%pubmod-hodl gid `?`%.n])
         :_  state
         %+  welp  cards
         %-  send
@@ -827,7 +828,7 @@
           %-  send  
           [405 ~ [%manx (build:reject %bad-method -)]]
         =^  cards  state
-          (manage-handle-1 [%approve-give gid])
+          (mange [%approve-give gid])
         :_  state
         %+  welp  cards
         %-  send
@@ -851,7 +852,7 @@
           [405 ~ [%manx (build:reject %bad-method -)]]
           ::
         =^  cards  state
-          (manage-handle-1 [%reject-give gid])
+          (mange [%reject-give gid])
         :_  state
         %+  welp  cards
         %-  send
@@ -878,7 +879,7 @@
             hoz=(slav %p (~(got by mop) 'host'))
         ?:  (~(has in (~(key bi pend) gid)) [hoz %send-ask])
           =^  cards  state
-            (manage-handle-1 [%send-request gid hoz])
+            (mange [%send-request gid hoz])
           :_  state
           %+  welp  cards
           %-  send
@@ -890,7 +891,7 @@
           [[%send-request '%send-request failed: prior existing send']]~
           ::
         =^  cards  state
-          (manage-handle-1 [%send-request gid hoz])
+          (mange [%send-request gid hoz])
         :_  state
         %+  welp  cards
         %-  send
@@ -932,7 +933,7 @@
               ?=(?(%approve %reject %none) auto)
               ?=(?(%transfer %reissue %none) give)
             ==
-        =+  :*  %-  mkgora-id
+        =+  :*  %-  mkgor
                 :*  name
                     imag
                     ?:(=(give %transfer) [~ 2] user)
@@ -1009,7 +1010,7 @@
           [[%send-give '%send-give failed: not-host']]~
         ?~  max-hodl.goz
           =^  cards  state
-            (manage-handle-1 [%send-give gora-id.goz soz])
+            (mange [%send-give gora-id.goz soz])
           :_  state
           %+  welp  cards
           %-  send
@@ -1031,7 +1032,7 @@
             %gora-index
           [[%send-give '%send-give failed: out-of-stock']]~
         =^  cards  state
-          (manage-handle-1 [%send-give gora-id.goz soz])
+          (mange [%send-give gora-id.goz soz])
         :_  state
         %+  welp  cards
         %-  send
@@ -1069,7 +1070,7 @@
               (most ace ;~(pfix sig fed:ag))
         ?~  max-hodl.goz
           =^  cards  state
-            (manage-handle-1 [%send-reissue gora-id.goz soz])
+            (mange [%send-reissue gora-id.goz soz])
           :_  state
           %+  welp  cards
           %-  send
@@ -1091,7 +1092,7 @@
             %gora-index
           [[%reissue '%reissue failed: out-of-stock']]~
         =^  cards  state
-          (manage-handle-1 [%send-reissue gora-id.goz soz])
+          (mange [%send-reissue gora-id.goz soz])
         :_  state
         %+  welp  cards
         %-  send
@@ -1148,7 +1149,7 @@
             %gora-index
           [[%transfer '%transfer failed: too-many']]~
         =^  cards  state
-          (manage-handle-1 [%send-transfer gora-id.goz soz])
+          (mange [%send-transfer gora-id.goz soz])
         :_  state
         %+  welp  cards
         %-  send
@@ -1162,7 +1163,7 @@
     ==
   --
 ::
-++  manage-handle-1
+++  mange
   |=  v=manage-gora-1
   ^-  (quip card _state)
   ~&  src.bol
@@ -1259,7 +1260,7 @@
   ::
       %mkgora
     ~|  [%failed-gora-make name.v %identical-hash]
-    =+  id=(mkgora-id name.v gora-img.v max.v req.v giv.v ~ our.bol) 
+    =+  id=(mkgor name.v gora-img.v max.v req.v giv.v ~ our.bol) 
     =+  date=(yore now.bol)
     =?    max.v
         ?~(max.v %.y =(0 u.max.v))
