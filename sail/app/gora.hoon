@@ -305,7 +305,15 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ?+  path  (on-peek:def path)
+  ?+    path  (on-peek:def path)
+      [%y %pub ~]
+    =-  ``noun+!>(`(list [name=@t url=@t])`-)
+    (~(rep by pita) pfpic:hc)
+  ::
+      [%y %check ~]
+    =-  ``noun+!>(`(set gora)`-)
+    (~(rep by pita) blues:hc)
+  ::
       [%x %requests @ ~]
     ?>  (team:title our.bowl src.bowl)
     =-  ``noun+!>(`(set @uv)`-)
@@ -351,6 +359,37 @@
           host=ship
       ==
   (sham our.bol now.bol name img max req giv hedl host)
+::
+++  pfpic
+  |=  [inn=[gid=gora-id gor=gora] out=(list [name=@t url=@t])]
+  ?.  ?&  =(%.y host-public.gor.inn)
+          (~(has in my-public) gid.inn)
+      ==
+    out
+  [[name.gor.inn gora-img.gor.inn] out]
+::
+++  blues
+  |=  [inn=[gid=gora-id gor=gora] out=(set gora)]
+  |^
+  =/  hop  ?&  =(%.y host-public.gor.inn)
+                 (~(has in my-public) gid.inn)
+           ==
+  =/  hol  (gte 20 (rank hodl-list.gor.inn))
+  ?.  &(hop hol)
+    out
+  (~(put in out) gor.inn)
+  ++  rank
+    |=  hod=hodl-list
+    =+  [hol=~(tap in hod) hud=0]
+    |-
+    ?~  hol
+      hud
+    =/  rnk  ?|  =(%duke (clan:title i.hol))
+                 =(%duke (clan:title i.hol))
+                 =(%duke (clan:title i.hol))
+             ==
+    $(hol t.hol, hud ?:(rnk +(hud) hud))
+  --
 ::
 ++  trans-0
   |=  transaction=transact:zero

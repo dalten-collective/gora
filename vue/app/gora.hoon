@@ -142,12 +142,12 @@
     caz
   ::
       %0
-    =+  cuz=-:(manage-handle-1 [%resubscribe-all ~])
+    =+  cuz=-:(mange [%resubscribe-all ~])
     %=    $
         old
       :*
         %1
-        %.y              (~(run by pita-zero.old) structure-gora)
+        %.y              (~(run by pita-zero.old) struc)
         ~                request-log.old
         offer-log.old    blacklist.old
         ~                ~
@@ -158,7 +158,7 @@
       (welp caz cuz)
     ==
   ==
-  ++  structure-gora
+  ++  struc
     |=  old=gora-zero
     ^-  gora
     :*  gora-id.old
@@ -181,15 +181,15 @@
   =^  cards  state
     ?+    mark  (on-poke:def mark vase)
         %gora-man-1
-      (manage-handle-1:hc !<(manage-gora-1 vase))
+      (mange:hc !<(manage-gora-1 vase))
     ::
         %gora-transact
-      (transact-handle:hc !<(transact:zero vase))
+      (trans-0:hc !<(transact:zero vase))
         %gora-transact-1
-      (transact-handle-1:hc !<(transact-1 vase) ~)
+      (trans:hc !<(transact-1 vase) ~)
     ::
         %handle-http-request
-      %-  http-handle:hc
+      %-  https:hc
       !<([=eyre-id =inbound-request:eyre] vase)
     ==
   [cards this]
@@ -203,7 +203,7 @@
   ::
       [%website ~]
     =^  cards  state
-      (json-handle:hc [%none ~])
+      (javas:hc [%none ~])
     [cards this]
   ::
       [%updates @ *]
@@ -244,9 +244,9 @@
           ==
       ?+  p.cage.sign  !!
           %gora-transact
-        (transact-handle:hc !<(transact:zero q.cage.sign))
+        (trans-0:hc !<(transact:zero q.cage.sign))
           %gora-transact-1
-        %+  transact-handle-1:hc
+        %+  trans:hc
         !<(transact-1 q.cage.sign)  [~ wire]
       ==
     [cards this]
@@ -315,9 +315,16 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ?+  path  (on-peek:def path)
+  ?+    path  (on-peek:def path)
+      [%y %pub ~]
+    =-  ``noun+!>(`(list [name=@t url=@t])`-)
+    (~(rep by pita) pfpic:hc)
+  ::
+      [%y %check ~]
+    =-  ``noun+!>(`(set gora)`-)
+    (~(rep by pita) blues:hc)
+  ::
       [%x %requests @ ~]
-    ?>  (team:title our.bowl src.bowl)
     =-  ``noun+!>(`(set @uv)`-)
     (~(get ju request-log) (slav %p i.t.t.path))
   ::
@@ -351,7 +358,7 @@
 --
 ::!.
 |_  bol=bowl:gall
-++  mkgora-id
+++  mkgor
   |=  $:  name=@t
           img=gora-img
           max=(unit @ud)
@@ -362,7 +369,38 @@
       ==
   (sham our.bol now.bol name img max req giv hedl host)
 ::
-++  json-handle
+++  pfpic
+  |=  [inn=[gid=gora-id gor=gora] out=(list [name=@t url=@t])]
+  ?.  ?&  =(%.y host-public.gor.inn)
+          (~(has in my-public) gid.inn)
+      ==
+    out
+  [[name.gor.inn gora-img.gor.inn] out]
+::
+++  blues
+  |=  [inn=[gid=gora-id gor=gora] out=(set gora)]
+  |^
+  =/  hop  ?&  =(%.y host-public.gor.inn)
+                 (~(has in my-public) gid.inn)
+           ==
+  =/  hol  (gte 20 (rank hodl-list.gor.inn))
+  ?.  &(hop hol)
+    out
+  (~(put in out) gor.inn)
+  ++  rank
+    |=  hod=hodl-list
+    =+  [hol=~(tap in hod) hud=0]
+    |-
+    ?~  hol
+      hud
+    =/  rnk  ?|  =(%duke (clan:title i.hol))
+                 =(%duke (clan:title i.hol))
+                 =(%duke (clan:title i.hol))
+             ==
+    $(hol t.hol, hud ?:(rnk +(hud) hud))
+  --
+::
+++  javas
   |=  giv=?([%id gid=gora-id] [%none ~] [%success =term] [%failure =term])
   |^
   :_  state
@@ -372,9 +410,10 @@
         [%json !>(`json`jon)]
       ==  ==
   ^-  jon=json
-  =+  :+  p=(~(rep by pita) pita-filter)
-          q=(roll ~(tap in offer-log) offer-map)
-          r=(roll (sort ~(tap bi pend) pend-sort) wire-maker)
+  =+  :^  p=(~(rep by pita) pfil)
+          q=(roll ~(tap in offer-log) omap)
+          r=(roll (sort ~(tap bi pend) port) line)
+          s=tugs
   %-  pairs:enjs:format
   ?-    -.giv
       %id
@@ -382,8 +421,9 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
-        ['reqs' `json`a/gibs]
+        ['reqs' `json`a/give]
         ['newg' `json`s/(scot %uv +.giv)]
+        ['tags' `json`tugs]
     ==
   ::
       %none
@@ -391,7 +431,8 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
-        ['reqs' `json`a/gibs]
+        ['reqs' `json`a/give]
+        ['tags' `json`tugs]
     ==
   ::  
       %failure
@@ -399,8 +440,9 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
-        ['reqs' `json`a/gibs]
+        ['reqs' `json`a/give]
         ['fail' `json`s/(scot %tas +.giv)]
+        ['tags' `json`tugs]
     ==
   ::
       %success
@@ -408,84 +450,63 @@
         ['offd' `json`a/(~(rep by q) hedl)]
         ['wire' `json`a/r]
         ['pita' `json`a/(~(rep by pita) hedl)]
-        ['reqs' `json`a/gibs]
+        ['reqs' `json`a/give]
         ['succ' `json`s/(scot %tas +.giv)]
+        ['tags' `json`tugs]
     ==
   ==
   ::
-  ++  gibs
-    ^-  (list json)
-    =+  [muny=~(tap in ~(key by request-log)) out=*(list json)]
-    |-
-    ?~  muny
-      out
-    =+  want=~(tap in (~(get ju request-log) i.muny))
-    %=    $
-        muny
-      t.muny
+  ++  omap
+    |=  [in=gora-id out=^pita]
+    ?:  (~(has by pita) in)
+      (~(put by out) in (~(got by pita) in))
+    out
+  ::
+  ++  pfil
+    |=  [[p=gora-id q=gora] out=^pita]
+    ?:  (~(has in hodl-list.q) our.bol)
+      (~(put by out) p q)
+    out
+  ::
+  ++  dias
+    |=  [y=@ud m=@ud d=@ud]
+    ^-  json
+    %-  pairs:enjs:format
+    :~  ['year' (numb:enjs:format y)]
+        ['month' (numb:enjs:format m)]
+        ['day' (numb:enjs:format d)]
+    ==
+  ::
+  ++  tugs
+    =+  tor=tag-store
+    |^
+    =+  kez=~(tap in ~(key by tor))
+    =+  dez=(roll kez duz)
+    =+  nez=~(tap by (roll dez nuz))
+    ~&  nez
+    ::[%s 'test']
+    (pairs:enjs:format (roll nez puz))
     ::
+    ++  nuz
+      |=  [inn=[=tag gid=gora-id] out=(jug gora-id @t)]
+      (~(put ju out) [gid.inn `@t`tag.inn])
+    ::
+    ++  duz
+      |=  [inn=tag out=(list [=tag gid=gora-id])]
+      =+  haz=~(tap in (~(get ju tor) inn))
+      |-
+      ?~  haz
         out
-      =+  oot=*(list json)
-      %+  weld  out
-      |-  ^-  (list json)
-      ?~  want
-        oot
-      %=    $
-          want
-        t.want
-      ::
-          oot
-        :_  oot
-        %-  pairs:enjs:format
-        :~  ['id' [%s `@t`(scot %uv i.want)]]
-            ['ship' (ship:enjs:format i.muny)]
-        ==
-      ==
-    ==  
-  ::
-  ++  hedl
-    |=  [[key=@ goz=gora] out=(list json)]
-    :_  out
-    %-  pairs:enjs:format
-    :~  ['id' [%s `@t`(scot %uv gora-id.goz)]]
-        ['goraName' [%s name.goz]]
-        ['url' [%s gora-img.goz]]
-        ['host' (ship:enjs:format host.goz)]
-        ['date' (date-parse issue-date.goz)]
-        ['public' [%b host-public.goz]]
-        ::
-        :-  'owners'
-          :-  %a
-        (turn ~(tap in hodl-list.goz) ship:enjs:format)
-        :-  'max-hodl'
-        ?~  max-hodl.goz
-          [%s 'unlimited']
-        (numb:enjs:format u.max-hodl.goz)
-        ['req-behave' [%s `@t`request-behavior.goz]]
-        ['giv-behave' [%s `@t`give-permissions.goz]]
-    ==
-  ::
-  ++  wire-maker
-    |=  $:
-          $:
-            x=@uv
-            y=[@p ?(%chain-it %give-ack %proxy-it %send-ask %send-giv)]
-            v=[wen=@da dun=?(%.y %.n)]
-          ==
-        ::
-          out=(list json)
-        ==
-    =+  yor=(yore wen.v)
-    :_  out
-    %-  pairs:enjs:format
-    :~  ['g-id' s+(scot %uv x)]
-        ['targ' s+(scot %p -.y)]
-        ['acts' s+(scot %tas +.y)]
-        ['date' (date-parse [y.yor m.yor d.t.yor])]
-        ['ackd' b+dun.v]
-    ==
-  ::
-  ++  pend-sort
+      $(haz t.haz, out [[inn i.haz] out])
+    ::
+    ++  puz
+      |=  [inn=[gid=gora-id taz=(set tag)] out=(list [@t json])]
+      =+  tal=~(tap in taz.inn)
+      =/  taj=json
+        [%a (roll tal |=(=[@t (list json)] [[%s +<-..] +<+..]))]
+      [[`@t`(scot %uv gid.inn) taj] out]
+    --
+  ++  port
     |=  $:
           $:
             x=@uv
@@ -501,74 +522,88 @@
     =+  [a=+<-.. b=+<+..]
     (gth wen.v.b wen.v.a)
   ::
-  ++  offer-map
-    |=  [in=gora-id out=^pita]
-    ?:  (~(has by pita) in)
-      (~(put by out) in (~(got by pita) in))
-    out
-  ::
-  ++  pita-filter
-    |=  [[p=gora-id q=gora] out=^pita]
-    ?:  (~(has in hodl-list.q) our.bol)
-      (~(put by out) p q)
-    out
-  ::
-  ++  pending-requests
-    |=  [[p=gora-id q=(set [ship ?(%ask %giv)])] out=(list json)]
-    ^-  (list json)
-    ~|  [%unexpected-web-request %missing-gora]
-    ?>  (~(has by pita) p)
-    =+  [req=~(tap in q) goz=(~(got by pita) p)]
-    |-
-    ?~  req
-      out
-    ?:  =(~ (find [host.goz %ask]~ req))
-      $(req t.req)
-    %=  $
-      req  t.req
-      out  :_  out
-           %-  pairs:enjs:format
-           :~  ['id' [%s (scot %uv gora-id.goz)]]
-               ['goraName' [%s name.goz]]
-               ['url' [%s gora-img.goz]]
-               ['host' [%s (scot %p host.goz)]]
-               ['date' (date-parse issue-date.goz)]
-               ['host-public' [%b host-public.goz]]
-               ::
-               :-  'owners'
-                 :-  %a
-               (turn ~(tap in hodl-list.goz) ship:enjs:format)
-               :-  'max-hodl'
-               ?~  max-hodl.goz
-                 [%s 'unlimited']
-               [%s (scot %ud u.max-hodl.goz)]
-               ['req-behave' [%s request-behavior.goz]]
-               ['giv-behave' [%s give-permissions.goz]]
-           ==
-    ==
-  ++  date-parse
-    |=  [y=@ud m=@ud d=@ud]
-    ^-  json
+  ++  line
+    |=  $:
+          $:
+            x=@uv
+            y=[@p ?(%chain-it %give-ack %proxy-it %send-ask %send-giv)]
+            v=[wen=@da dun=?(%.y %.n)]
+          ==
+        ::
+          out=(list json)
+        ==
+    =+  yor=(yore wen.v)
+    :_  out
     %-  pairs:enjs:format
-    :~  ['year' (numb:enjs:format y)]
-        ['month' (numb:enjs:format m)]
-        ['day' (numb:enjs:format d)]
+    :~  ['g-id' s+(scot %uv x)]
+        ['targ' s+(scot %p -.y)]
+        ['acts' s+(scot %tas +.y)]
+        ['date' (dias [y.yor m.yor d.t.yor])]
+        ['ackd' b+dun.v]
+    ==
+  ::
+  ++  hedl
+    |=  [[key=@ goz=gora] out=(list json)]
+    :_  out
+    %-  pairs:enjs:format
+    :~  ['id' [%s `@t`(scot %uv gora-id.goz)]]
+        ['goraName' [%s name.goz]]
+        ['url' [%s gora-img.goz]]
+        ['host' (ship:enjs:format host.goz)]
+        ['date' (dias issue-date.goz)]
+        ['public' [%b host-public.goz]]
+        ::
+        :-  'owners'
+          :-  %a
+        (turn ~(tap in hodl-list.goz) ship:enjs:format)
+        :-  'max-hodl'
+        ?~  max-hodl.goz
+          [%s 'unlimited']
+        (numb:enjs:format u.max-hodl.goz)
+        ['req-behave' [%s `@t`request-behavior.goz]]
+        ['giv-behave' [%s `@t`give-permissions.goz]]
+    ==
+  ::
+  ++  give
+    ^-  (list json)
+    =+  [muny=~(tap in ~(key by request-log)) out=*(list json)]
+    |-
+    ?~  muny  out
+    =+  want=~(tap in (~(get ju request-log) i.muny))
+    %=  $
+      muny  t.muny
+      out   =+  oot=*(list json)
+            %+  weld  out
+            |-  ^-  (list json)
+            ?~  want
+              oot
+            %=    $
+                want
+              t.want
+            ::
+                oot
+              :_  oot
+              %-  pairs:enjs:format
+              :~  ['id' [%s `@t`(scot %uv i.want)]]
+                  ['ship' (ship:enjs:format i.muny)]
+              ==
+            ==
     ==
   --
 ::
-++  transact-handle
+++  trans-0
   |=  transaction=transact:zero
   ^-  (quip card _state)
   =,  transaction
   ?-    -.+<
       %giv-ack
-    (transact-handle-1 [%giv-ack gora-id] ~)
+    (trans [%giv-ack gora-id] ~)
   ::
       %receive-gora
-    (transact-handle-1 [%receive-gora gora-id.gora %none] ~)
+    (trans [%receive-gora gora-id.gora %none] ~)
   ::
       %receive-request
-    (transact-handle-1 [%receive-request gora-id] ~)
+    (trans [%receive-request gora-id] ~)
   ::
       %proxy-approve
     ~|  [%unexpected-proxy-attempt ~]
@@ -589,9 +624,10 @@
         %none
         %none
       ==
-    (transact-handle-1 [%update %upd [~ [%initialize goz]]] ~)
+    (trans [%update %upd [~ [%initialize goz]]] ~)
   ==
-++  transact-handle-1
+::
+++  trans
   |=  [transaction=transact-1 pat=(unit path)]
   ^-  (quip card _state)
   =,  transaction
@@ -612,7 +648,7 @@
     =.  offer-log
       (~(put in offer-log) gora-id)
     =^  cards  state
-      (json-handle [%success 'gora-received'])
+      (javas [%success 'gora-received'])
     :_  state
     %+  welp  cards
     :~  :*  
@@ -629,7 +665,7 @@
     =.  pita
       (~(put by pita) gora-id.gora gora)
     =^  cards  state
-      (json-handle [%success 'spam-received'])
+      (javas [%success 'spam-received'])
     [cards state]
   ::
       %giv-ack
@@ -656,7 +692,7 @@
     =.  pita
       (~(put by pita) gora-id.goz goz)
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %p src.bol) ' accepted gora')])
+      (javas [%success (cat 3 (scot %p src.bol) ' accepted gora')])
     :_  state
     %+  welp  cards
     :~  :*  
@@ -673,7 +709,7 @@
     ?>  =(our.bol host:(~(got by pita) gora-id))
     ?:  (~(has in hodl-list.goz) src.bol)
       =^  cards  state
-        (json-handle [%success (cat 3 (scot %p src.bol) ' resubscribed')])
+        (javas [%success (cat 3 (scot %p src.bol) ' resubscribed')])
       :_  state
       %+  welp  cards
       :~  :*
@@ -700,7 +736,7 @@
       =.  pita
         (~(put by pita) gora-id goz(request-behavior behav))
       =^  cards  state
-        %-  json-handle
+        %-  javas
         [%success (cat 3 (scot %p src.bol) ' auto-approved for gora')]
       :_  state
       %+  welp  cards
@@ -714,7 +750,7 @@
     ::
         %reject
       =^  cards  state
-        %-  json-handle
+        %-  javas
         [%success (cat 3 (scot %p src.bol) ' requested a full gora')]
       :_  state
       %+  welp  cards
@@ -732,7 +768,7 @@
         =.  pita
           (~(put by pita) gora-id goz(request-behavior %reject))
         =^  cards  state
-          %-  json-handle
+          %-  javas
           [%success :((cury cat 3) (scot %p src.bol) ' requested ' name.goz)]
         :_  state
         %+  welp  cards
@@ -742,7 +778,7 @@
           `src.bol
         ==  ==
       =^  cards  state
-        %-  json-handle
+        %-  javas
         [%success :((cury cat 3) (scot %p src.bol) ' requests ' name.goz)]
       =.  request-log
         (~(put ju request-log) src.bol gora-id)
@@ -777,7 +813,7 @@
         (~(del in offer-log) gid)
       ==
       =^  cards  state
-        (json-handle [%success (cat 3 (scot %uv gid) ' gora deleted')])
+        (javas [%success (cat 3 (scot %uv gid) ' gora deleted')])
       :_  state
       %+  welp  cards
       :~  :*  
@@ -805,7 +841,7 @@
         =.  goz
           goz(host-public pub.up)
         =^  cards  state
-          (json-handle [%success (cat 3 name.goz ' made public by host')])
+          (javas [%success (cat 3 name.goz ' made public by host')])
         [cards state]
       ::
           %new-hodlr
@@ -822,7 +858,7 @@
             ==
           (~(del ju request-log) src.bol gora-id.goz)
         =^  cards  state
-          %-  json-handle
+          %-  javas
           [%success :((cury cat 3) (scot %p ship.up) ' owns ' name.goz)]
         [cards state]
       ::
@@ -835,7 +871,7 @@
             ==
           (~(del ju request-log) src.bol gora-id.gora.up)
         =^  cards  state
-          %-  json-handle
+          %-  javas
           [%success :((cury cat 3) src.bol ' initialized ' name.gora.up)]
         [cards state]
       ::
@@ -870,7 +906,7 @@
     ==
   ==
 ::
-++  http-handle
+++  https
   |=  [=eyre-id =inbound-request:eyre]
   =/  send
     (cury response:schooner eyre-id)
@@ -889,14 +925,14 @@
               [%manx (build:reject %not-found ~)]
   ::
       [%apps %gora %public ~]
-    call-public-index
+    pub
       [%apps %gora %public %$ ~]
     :_  state
     %-  send
     [302 ~ [%redirect '/apps/gora/public']]
   ==
   ::
-  ++  call-public-index
+  ++  pub
     ?+    method.request.inbound-request
       [(send [405 ~ [%stock ~]]) state]
     ::
@@ -932,7 +968,7 @@
     ==
   --
 ::
-++  manage-handle-1
+++  mange
   |=  v=manage-gora-1
   ^-  (quip card _state)
   ?>  (team:title our.bol src.bol)
@@ -942,8 +978,8 @@
       mode.v
     =^  cards  state
       ?:  mode.v
-        (json-handle [%success 'spam-mode activated'])
-      (json-handle [%success 'spam-mode terminated'])
+        (javas [%success 'spam-mode activated'])
+      (javas [%success 'spam-mode terminated'])
     [cards state]
   ::
       %resubscribe-all
@@ -969,12 +1005,12 @@
       =.  my-public
         (~(put in my-public) gora-id.v)
       =^  cards  state
-        (json-handle [%success (cat 3 (scot %uv gora-id.v) ' made public')])
+        (javas [%success (cat 3 (scot %uv gora-id.v) ' made public')])
       [cards state]
     =.  my-public
       (~(del in my-public) gora-id.v)
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %uv gora-id.v) ' made private')])
+      (javas [%success (cat 3 (scot %uv gora-id.v) ' made private')])
     [cards state]
   ::
       %set-max-hodl
@@ -985,13 +1021,13 @@
         ==
     ?.  (gte max.v (lent ~(tap in hodl-list.goz)))
       =^  cards  state
-        %-  json-handle
+        %-  javas
         [%failure (cat 3 (scot %uv gora-id.v) ' max was set too low')]
       [cards state]
     =.  pita
       (~(put by pita) gora-id.v goz(max-hodl [~ max.v]))
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %uv gora-id.v) ' max set')])
+      (javas [%success (cat 3 (scot %uv gora-id.v) ' max set')])
     :_  state
     %+  welp  cards
     :~  :*
@@ -1024,7 +1060,7 @@
       =.  tag-set  ~(key by tag-store)
       [coz state]
     =^  cards  state
-      %-  json-handle
+      %-  javas
       [%success :((cury cat 3) (scot %uv i.tag-me) ' tag ' (scot %tas tag.v))]
     %=  $
       tag-me     t.tag-me
@@ -1040,7 +1076,7 @@
       =.  tag-set  ~(key by tag-store)
       [coz state]
     =^  cards  state
-      %-  json-handle
+      %-  javas
       [%success (cat 3 'removed tag from ' (scot %uv i.fre-me))]
     %=  $
       fre-me  t.fre-me
@@ -1052,7 +1088,7 @@
   ::
       %mkgora
     ~|  [%failed-gora-make name.v %identical-hash]
-    =+  id=(mkgora-id name.v gora-img.v max.v req.v giv.v ~ our.bol) 
+    =+  id=(mkgor name.v gora-img.v max.v req.v giv.v ~ our.bol) 
     =+  date=(yore now.bol)
     =?    max.v
         ?~(max.v %.y =(0 u.max.v))
@@ -1074,7 +1110,7 @@
       ==
     ~&  >  [%gora (trip name.v) %created (scow %uv id)]
     =^  cards  state
-      %-  json-handle
+      %-  javas
       [%success :((cury cat 3) name.v ' made with id ' (scot %uv id))]
     [cards state]
   ::
@@ -1085,7 +1121,7 @@
       =+  (~(got by pita) gora-id.v)
       =.  pita  (~(del by pita) gora-id.v)
       =^  cards  state
-        (json-handle [%success (cat 3 (scot %uv gora-id.v) ' deleted')])
+        (javas [%success (cat 3 (scot %uv gora-id.v) ' deleted')])
       :_  state
       %+  welp  cards
       :~  :*  
@@ -1103,7 +1139,7 @@
     =/  host  host:(~(got by pita) gora-id.v)
     =.  pita  (~(del by pita) gora-id.v)
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %uv gora-id.v) ' deleted')])
+      (javas [%success (cat 3 (scot %uv gora-id.v) ' deleted')])
     :_  state
     %+  welp  cards
     :~  :*  
@@ -1133,7 +1169,7 @@
       ==
     =^  cards  state
       =+  msg=:((cury cat 3) name.goz ' sent to ' (scot %p i.my-ships))
-      (json-handle [%success msg])
+      (javas [%success msg])
     %=    $
         pend
       (~(put bi pend) gora-id.v [i.my-ships %send-giv] [now.bol %.n])
@@ -1169,7 +1205,7 @@
       (~(put ju request-log) ship.v gora-id.v)
     ==
     =^  cards  state
-      (json-handle [%success 'request sent'])
+      (javas [%success 'request sent'])
     :_  state
     %+  welp  cards
     :~  :* 
@@ -1209,7 +1245,7 @@
       (~(del ju request-log) ship.v gora-id.v)
     ==
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %p src.bol) 'request approved')])
+      (javas [%success (cat 3 (scot %p src.bol) 'request approved')])
     :_  state
     %+  welp  cards
     :~  :*
@@ -1239,7 +1275,7 @@
       (~(put bi pend) gora-id.v [host.goz %give-ack] [now.bol %.n])
     ==
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %p src.bol) ' request approved')])
+      (javas [%success (cat 3 (scot %p src.bol) ' request approved')])
     :_  state
     %+  welp  cards
     :~  :*  
@@ -1261,7 +1297,7 @@
       (~(put in blacklist) gora-id.v)
     ==
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %uv gora-id.v) ' give rejected')])
+      (javas [%success (cat 3 (scot %uv gora-id.v) ' give rejected')])
     :_  state
     %+  welp  cards
     :~  :*
@@ -1276,7 +1312,7 @@
     =.  request-log
       (~(del ju request-log) ship.v gora-id.v)
     =^  cards  state
-      (json-handle [%success (cat 3 (scot %p src.bol) 'request approved')])
+      (javas [%success (cat 3 (scot %p src.bol) 'request approved')])
     :_  state
     %+  welp  cards
     :~  :*
@@ -1323,7 +1359,7 @@
       =.  pend
         (~(put bi pend) gora-id.v [host.goz %proxy-it] [now.bol %.n])
       =^  cards  state
-        (json-handle [%success (cat 3 name.goz ' reissue sent')])
+        (javas [%success (cat 3 name.goz ' reissue sent')])
       :_  state
       %+  welp  cards
       :~  :*
@@ -1337,7 +1373,7 @@
     =.  pend
       (~(put bi pend) gora-id.v [host.goz %proxy-it] [now.bol %.n])
     =^  cards  state
-      (json-handle [%success (cat 3 name.goz ' reissue sent')])
+      (javas [%success (cat 3 name.goz ' reissue sent')])
     :_  state
     %+  welp  cards
     :~  :*
@@ -1404,7 +1440,7 @@
         (~(put bi pend) gora-id.v [i.nez %chain-it] [now.bol %.n])
       ==
     =^  cuz  state
-      (json-handle [%success (cat 3 name.goz ' spam sent')])
+      (javas [%success (cat 3 name.goz ' spam sent')])
     [(welp cards cuz) state]
   ==
 --
