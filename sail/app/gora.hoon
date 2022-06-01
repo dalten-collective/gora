@@ -569,7 +569,6 @@
     ==
   ::
       %update
-    ~&  >>  [transaction pat]
     ?-    act.transaction
         %del
       ~|  [%unexpected-update %del %no-path]
@@ -1013,7 +1012,6 @@
         [[%mkgora-success -]]~
       ::
           %send-give
-        ~&  >>>  "I'ma sendin my give"
         ?.  (~(has by mop) 'gora-id')
           :_  state
           %-  send
@@ -1205,7 +1203,6 @@
 ++  mange
   |=  v=manage-gora-1
   ^-  (quip card _state)
-  ~&  src.bol
   ?>  (team:title our.bol src.bol)
   ?-    -.v
       %usps-mode
@@ -1351,7 +1348,6 @@
     ==  ==
   ::
       %send-give
-    ~&  >  [%send-give %happening]
     ~|  [%unexpected-give %check-max ~]
     =/  my-ships=(list ship)  ~(tap in new.v)
     =+  [caz=*(list card:agent:gall) goz=(~(got by pita) gora-id.v)]
@@ -1370,7 +1366,6 @@
         /(scot %uv gora-id.v)
         /(scot %p i.my-ships)
       ==
-    ~&  >  wir
     %=    $
         pend
       (~(put bi pend) gora-id.v [i.my-ships %send-giv] [now.bol %.n])
@@ -1531,7 +1526,6 @@
         /(scot %uv gora-id.v)
         /(scot %p host.goz)
       ==
-    ~&  host.goz
     ?~  max-hodl.goz
       :_  %=    state
               pend
@@ -1546,7 +1540,6 @@
     ::
     ~|  [%unexpected-reissue %over-max ~]
     ?>  (gte u.max-hodl.goz +((lent ~(tap in hodl-list.goz))))
-    ~&  >  "right branch"
     :_  %=    state
             pend
           (~(put bi pend) gora-id.v [host.goz %proxy-it] [now.bol %.n])

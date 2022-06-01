@@ -483,7 +483,6 @@
     =+  kez=~(tap in ~(key by tor))
     =+  dez=(roll kez duz)
     =+  nez=~(tap by (roll dez nuz))
-    ~&  nez
     ::[%s 'test']
     (pairs:enjs:format (roll nez puz))
     ::

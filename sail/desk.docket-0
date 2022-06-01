@@ -3,7 +3,7 @@
     color+0xff.d966
     site+/apps/gora
     base+'gora'
-    version+[0 1 0]
+    version+[0 1 2]
     website+'https://dalten.org/'
     license+'Get Rekt'
 ==
