@@ -324,6 +324,7 @@
               ;img(src "{(trip gora-img:goz)}", height "75");
             ==
             ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
+            ;p(class "gora-id"):"{(scow %uv gora-id.goz)}"
             ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
             ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
             ;+  ?:  =(give-permissions.goz %transfer)
@@ -384,6 +385,7 @@
                   ;img(src "{(trip gora-img:goz)}", height "75");
                 ==
                 ;p(class "gora-color", style "font-weight: bold;"):"{(trip name.goz)}"
+                ;p(class "gora-id"):"{(scow %uv gora-id.goz)}"
                 ;p(class "gora-color"):"Host: {(scow %p host.goz)}"
                 ;p(class "gora-color"):"{:(weld "Issued: " daz)}"
                 ;+  ?:  =(give-permissions.goz %transfer)
@@ -529,6 +531,10 @@
     }
     .gora-color { 
       color: #997300;
+    }
+    .gora-id {
+      color: #997300;
+      font-size: 6pt;
     }
     .gora-title {
       font-size: 20pt;
