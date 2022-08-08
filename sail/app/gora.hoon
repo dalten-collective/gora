@@ -306,6 +306,13 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+    path  (on-peek:def path)
+      [%y %slam ~]
+    =-  ``noun+!>(`(list [@t @t @p])`-)
+    %-  ~(rep by pita)
+    |=  [[@uv g=gora] l=(list [@t @t @p])]
+    ?.  (~(has in hodl-list.g) our.bowl)  l
+    :_(l [name.g gora-img.g host.g])
+  ::
       [%y %pub ~]
     =-  ``noun+!>(`(list [name=@t url=@t])`-)
     (~(rep by pita) pfpic:hc)
