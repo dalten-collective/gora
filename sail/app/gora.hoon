@@ -1,14 +1,12 @@
 ::
-::  %gora - by ~dalten Collective (sail version)
-::  %gora is a proof of presence protocol (POPP) that is
-::  intended to be extensible, flexible and educational
-::  (at least for new hooners). %gora has two distros in
-::  circulation - these can be found at:
+::  %gora - by ~dalten collective (sail version)
+::  %gora is a proof of presence protocol.
+::  %gora has two versions in circulation to be found at:
 ::  ~laddys-dozzod-dalten (Vue.js frontend)
 ::  ~mister-dozzod-dalten (sail frontend)
 ::
-::  %gora relies on schooner, a library also produced by
-::  ~dalten Collective.
+::  %gora's sail version has moved to utilizing rudder,
+::  by paldev. more here: 
 ::
 ::  %gora has several available methods including:
 ::    &gora-man-1 actions:
@@ -65,9 +63,37 @@
 ::
 |%
 +$  versioned-state
-  $%  state-one
+  $%  state-two
+      state-one
       state-zero
   ==
+::
+:: state-two structures
+::
++$  state-two
+  $:  %2
+      =pita                                             :: held gorae
+      =public                                           :: public gorae
+      =meigora                                          :: meigora map
+      =blacklist                                        :: blocked gorae
+      =logs                                             :: logging information
+      =tags                                             :: tagging information
+  ==
++$  tags       (jug tag gora-id)
++$  pita       (map gora-id gora)
++$  public     (set gora-id)
++$  meigora    (mip ship ship @ud)
++$  blacklist  (set gora-id)
++$  logs                                                :: activity log
+  $:  offers=(set gora-id)                              ::  - incoming offers
+      requests=(jug ship gora-id)                       ::  - incoming requests
+      $=  outgoing                                      ::  - outgoing
+      $:  offer=(jug gora-id [ship ack=(unit @da)])     ::    * offers
+          request=(jug ship [gora-id ack=(unit @da)])   ::    * requests
+      ==
+  ==
+::
+:: old state
 ::
 +$  state-one
   $:  %1
@@ -80,11 +106,20 @@
 ::
 +$  state-zero
   $:  %0            
-      pita-zero=(map gora-id gora-zero)  =request-log
-      =offer-log                         =sent-log
+      =pita-zero  =request-log
+      =offer-log  =sent-log
       =blacklist
   ==
 ::
++$  tag-set      (set tag)
++$  sent-log     (jug gora-id [ship ?(%ask %giv)])
++$  offer-log    (set gora-id)
++$  usps-mode    ?
++$  request-log  (jug ship gora-id)
++$  pend
+  (mip gora-id (map [ship gib] [wen=@da dun=?]))
+::
++$  pita-zero=(map gora-id gora-zero)
 +$  gora-zero
   $:  =gora-id     name=@t
       =gora-img    host=ship
@@ -120,7 +155,6 @@
 ++  on-load
   |=  ole=vase
   |^  ^-  (quip card _this)
-  ~&  >>  [%gora %reload %sail]
   =/  old=versioned-state  !<(versioned-state ole)
   =/  caz=(list card)
       :~
@@ -135,6 +169,11 @@
       ==
   |-
   ?-    -.old
+      %2
+    %-  (slog '%gora -sail-version-loaded')
+    :_  this(state old)
+    [(manage [%resubscribe-all ~]) caz]
+  ::
       %1
     :-  caz
     this(state old)
@@ -356,6 +395,9 @@
 --
 ::
 |_  bol=bowl:gall
+++  manage
+  |=  man=manage-gora-2
+  --
 ++  mkgor
   |=  $:  name=@t
           img=gora-img
