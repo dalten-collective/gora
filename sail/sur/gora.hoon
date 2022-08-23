@@ -5,7 +5,7 @@
 /+  *mip
 ::
 |%
-:: defining gora
+:: defining gora (v2)
 ::
 +$  id    @uv
 +$  pic   cord
@@ -16,9 +16,12 @@
 +$  stak  (map ship @ud)
 +$  made  [y=@ud m=@ud d=@ud]
 ::
+::  %g gorae are standard gorae
+::  %s gorae are stakable gorae
+::
 +$  gora
-  $%  [%g =id =name =pic =host =made =hodl =max]        :: standard
-      [%s =id =name =pic =host =made =stak]             :: stakable
+  $%  [%g =id =name =pic =host =made =hodl =max]
+      [%s =id =name =pic =host =made =stak]
   ==
 ::
 ::    poke actions
@@ -115,16 +118,13 @@
   ==
 :: old state actions, objects
 ::
-  :: clean-log actions
-  ::
-  +$  log
++$  log
   $%  [%offer-log =id]
       [%blacklist =id]
       [%request-log =ship =id]
   ==
 ++  one
   |%
-  :: user actions
   ::
   +$  manage-gora-1
     $%  [%set-max-hodl =id max=@ud]
@@ -145,7 +145,7 @@
         [%send-transfer =id new=(set ship)]
         ::
         [%delgora =id]
-        :: change these names to be more lined up
+        ::
         $:  %mkgora
             name=@t
             =pic
@@ -159,7 +159,6 @@
         [%usps-mode mode=?]
         [%resubscribe-all ~]
     ==
-  :: ship actions
   ::
   +$  transact-1
     $%  [%giv-ack =id]
@@ -177,6 +176,7 @@
         [%initialize =gora]
         [%reissue =id new=(set ship)]
     ==
+  ::
   +$  gora
     $:  =id
         =name
@@ -211,18 +211,11 @@
         [%proxy-approve =id =ship]
         [%update act=?(%upd %del) =gora]
     ==
-  :: state 0 format - applied in agent separately
+  ::
   +$  gora
     $:  =id    =name
         =pic   =host
         =made  =hodl
     ==
   --
-:: Related to Sail
-::
-:: +$  webpage
-::   $_  ^|
-::   |_  [bowl:gall usps-mode pita my-public request-log offer-log blacklist tag-set tag-store pend]
-::   ++  build  |~([@tas (list [k=@t v=@t])] *manx)
-::   --
 --

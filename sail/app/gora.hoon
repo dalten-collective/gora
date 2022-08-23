@@ -311,8 +311,8 @@
 ::
 ++  on-agent
   |=  [=wire =sign:agent:gall]
+  ^-  (quip card _this)
   `this
-  :: ^-  (quip card _this)
   :: ?-  -.sign
   ::     %fact
   ::   =^  cards  state
