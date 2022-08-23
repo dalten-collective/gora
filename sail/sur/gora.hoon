@@ -2,161 +2,135 @@
 ::
 /-  *docket
 ::
-/+  *pal
-::
 |%
-
+:: defining gora
 ::
-:: Block List:
-::
-+$  blacklist  (set gora-id)
-::
-:: Manage Your Goras:
-::
-+$  manage-gora-1
-  $%  [%set-max-hodl =gora-id max=@ud]
-      [%pubmod-host =gora-id public=?]
-      [%pubmod-hodl =gora-id public=?]
-      [%add-tag =tag gorae=(set gora-id)]
-      [%del-tag =tag gorae=(set gora-id)]
-      ::
-      [%reject-give =gora-id]
-      [%approve-give =gora-id]
-      [%send-give =gora-id new=(set ship)]
-      ::
-      [%send-request =gora-id =ship]
-      [%reject-request =gora-id =ship]
-      [%approve-request =gora-id =ship]
-      ::
-      [%send-reissue =gora-id new=(set ship)]
-      [%send-transfer =gora-id new=(set ship)]
-      ::
-      [%delgora =gora-id]
-      :: change these names to be more lined up
-      $:  %mkgora
-          name=@t
-          =gora-img
-          public=?
-          max=(unit @ud)
-          req=?(%approve %reject %none)
-          giv=?(%transfer %reissue %none)
-      ==
-      ::
-      [%clean-log =log]
-      [%usps-mode mode=?]
-      [%resubscribe-all ~]
-  ==
-::
-:: Manage Interstellar Activity
-::
-+$  transact-1
-  $%  [%giv-ack =gora-id]
-      [%receive-transfer =gora]
-      [%receive-request =gora-id]
-      [%receive-gora =gora-id giv=?(%transfer %reissue %none)]
-      [%proxy-approve =gora-id =ship]
-      [%update act=?(%upd %del) jot=(unit update)]
-  ==
-::
-:: Update Types
-::
-+$  update
-  $%  [%update-image ~]
-      [%host-public pub=?]
-      [%new-hodlr =ship]
-      [%initialize =gora]
-      [%reissue id=gora-id new=(set ship)]
-  ==
-
-
-:: Used Types:
-::
-:: Log Names
-::
-+$  log
-  $%  [%offer-log =gora-id]
-      [%blacklist =gora-id]
-      [%request-log =ship =gora-id]
-  ==
-::
-:: Defining Gora
-::
-+$  gora-id      @uv
-+$  gora-img     cord
-+$  hodl-list    (set ship)
-+$  my-public    (set gora-id)
-+$  pita         (map gora-id gora)
-+$  issue-date   [y=@ud m=@ud d=@ud]
-::
-:: State 1 Format
++$  id    @uv
++$  pic   cord
++$  max   (unit @ud)
++$  name  cord
++$  host  ship
++$  hodl  (set ship)
++$  stak  (map ship @ud)
++$  made  [y=@ud m=@ud d=@ud]
 ::
 +$  gora
-  $:  =gora-id
-      name=@t
-      =gora-img
-      host=ship
-      =issue-date
-      =hodl-list
-      host-public=?
-      max-hodl=(unit @ud)
-      request-behavior=?(%approve %reject %none)
-      give-permissions=?(%transfer %reissue %none)
+  $%  [%g =id =name =pic =host =made =hodl =max]
+      [%s =id =name =pic =host =made =stak]
   ==
+
+
+
+:: old state actions, objects
 ::
-:: Controlling Issuance
-::
-+$  offer-log    (set gora-id)
-+$  request-log  (jug ship gora-id)
-+$  sent-log     (jug gora-id [ship ?(%ask %giv)])
-+$  usps-mode    ?
-::
-:: Tagging Functionality
-::
-+$  tag        @tas
-+$  tag-set    (set tag)
-+$  tag-store  (jug tag gora-id)
-::
-:: Outstanding Transactions
-::
-+$  gib
-  ?(%send-ask %send-giv %give-ack %chain-it %proxy-it)
-+$  pend  (mip gora-id (map [ship gib] [wen=@da dun=?]))
-::
-:: Last-Version Structures/Marks
-::
+  :: clean-log actions
+  ::
+  +$  log
+  $%  [%offer-log =id]
+      [%blacklist =id]
+      [%request-log =ship =id]
+  ==
+++  one
+  |%
+  :: user actions
+  ::
+  +$  manage-gora-1
+    $%  [%set-max-hodl =id max=@ud]
+        [%pubmod-host =id public=?]
+        [%pubmod-hodl =id public=?]
+        [%add-tag tag=@tas gorae=(set id)]
+        [%del-tag tag=@tas gorae=(set id)]
+        ::
+        [%reject-give =id]
+        [%approve-give =id]
+        [%send-give =id new=(set ship)]
+        ::
+        [%send-request =id =ship]
+        [%reject-request =id =ship]
+        [%approve-request =id =ship]
+        ::
+        [%send-reissue =id new=(set ship)]
+        [%send-transfer =id new=(set ship)]
+        ::
+        [%delgora =id]
+        :: change these names to be more lined up
+        $:  %mkgora
+            name=@t
+            =pic
+            public=?
+            max=(unit @ud)
+            req=?(%approve %reject %none)
+            giv=?(%transfer %reissue %none)
+        ==
+        ::
+        [%clean-log =log]
+        [%usps-mode mode=?]
+        [%resubscribe-all ~]
+    ==
+  :: ship actions
+  ::
+  +$  transact-1
+    $%  [%giv-ack =id]
+        [%receive-transfer =gora]
+        [%receive-request =id]
+        [%receive-gora =id giv=?(%transfer %reissue %none)]
+        [%proxy-approve =id =ship]
+        [%update act=?(%upd %del) jot=(unit update)]
+    ==
+  ::
+  +$  update
+    $%  [%update-image ~]
+        [%host-public pub=?]
+        [%new-hodlr =ship]
+        [%initialize =gora]
+        [%reissue =id new=(set ship)]
+    ==
+  +$  gora
+    $:  =id
+        =name
+        =pic
+        =host
+        =made
+        =hodl
+        host-public=?
+        =max
+        request-behavior=?(%approve %reject %none)
+        give-permissions=?(%transfer %reissue %none)
+    ==
+  --
 ++  zero
   |%
-  ::+$  manage-gora
-  ::  $%  [%clean-log =log]
-  ::      [%delgora =gora-id]
-  ::      [%reject-give =gora-id]
-  ::      [%approve-give =gora-id]
-  ::      [%mkgora name=@t =gora-img]
-  ::      [%send-give =gora-id =ship]
-  ::      [%send-request =gora-id =ship]
-  ::      [%reject-request =gora-id =ship]
-  ::      [%approve-request =gora-id =ship]
-  ::  ==
+  +$  manage-gora
+   $%  [%clean-log =log]
+       [%delgora =id]
+       [%reject-give =id]
+       [%approve-give =id]
+       [%mkgora name=@t =pic]
+       [%send-give =id =ship]
+       [%send-request =id =ship]
+       [%reject-request =id =ship]
+       [%approve-request =id =ship]
+   ==
   ::
   +$  transact
-    $%  [%giv-ack =gora-id]
+    $%  [%giv-ack =id]
         [%receive-gora =gora]
-        [%receive-request =gora-id]
-        [%proxy-approve =gora-id =ship]
+        [%receive-request =id]
+        [%proxy-approve =id =ship]
         [%update act=?(%upd %del) =gora]
     ==
-  :: State 0 Format - applied in agent separately
-  +$  gora  
-    $:  =gora-id     name=@t
-        =gora-img    host=ship
-        =issue-date  =hodl-list
+  :: state 0 format - applied in agent separately
+  +$  gora
+    $:  =id    =name
+        =pic   =host
+        =made  =hodl
     ==
   --
 :: Related to Sail
 ::
-+$  webpage
-  $_  ^|
-  |_  [bowl:gall usps-mode pita my-public request-log offer-log blacklist tag-set tag-store pend]
-  ++  build  |~([@tas (list [k=@t v=@t])] *manx)
-  --
+:: +$  webpage
+::   $_  ^|
+::   |_  [bowl:gall usps-mode pita my-public request-log offer-log blacklist tag-set tag-store pend]
+::   ++  build  |~([@tas (list [k=@t v=@t])] *manx)
+::   --
 --
