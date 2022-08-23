@@ -53,6 +53,7 @@
       [%send-gora =id who=(set ship)]
       [%send-plea =id =host]
     ::
+      [%set-dunbar dun=@ud]
       [%kick ~]
   ==
 ::    gora-handle
