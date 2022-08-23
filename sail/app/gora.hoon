@@ -1,61 +1,60 @@
+::  /app/gora
 ::
-::  %gora - by ~dalten collective (sail version)
-::  %gora is a proof of presence protocol.
-::  %gora has two versions in circulation to be found at:
-::  ~laddys-dozzod-dalten (Vue.js frontend)
-::  ~mister-dozzod-dalten (sail frontend)
+::  %gora - a proof of presence protocol (sail version)
+::    by quartus and the dalten collective
+::
+::  %gora has two versions in circulation:
+::    ~laddys-dozzod-dalten (Vue.js frontend)
+::    ~mister-dozzod-dalten (sail frontend)
 ::
 ::  %gora's sail version has moved to utilizing rudder,
-::  by paldev. more here: 
+::  by paldev. more here: https://github.com/Fang-/suite
 ::
-::  %gora has several available methods including:
-::    &gora-man-1 actions:
-::   ::  Making your own
-::     $:  %mkgora                               -Make a new gora
-::         name=@t
-::         =gora-img
-::         public=?
-::         max=(unit @ud)
-::         req=?(%approve %reject %none)
-::         giv=?(%transfer %reissue %none)
-::     ==
-::     [%delgora =gora-id]                       -Delete an existing gora
-::     [%reject-request =gora-id ~dev]           -Deny an incoming gora request
-::     [%approve-request =gora-id ~dev]          -Approve an incoming gora request
-::     [%pubmod-host =gora-id public=?]          -Set whether a gora can be public
-::     [%set-max-hodl =gora-id max=@ud]          -Set max hodlers
-::     [%send-give =gora-id new=(set ship)]      -Send a gora to a recipient
-::     [%send-transfer =gora-id new=(set ship)]  -Send a chain letter
+::  %gora's user pokes include the following:
 ::
-::   ::  Working with your collection
-::     [%reject-give =gora-id]                   -Decline an incoming gora gift
-::     [%approve-give =gora-id]                  -Approve an incoming gora gift
-::     [%send-request =gora-id ~dalten]          -Request a gora from a host
-::     [%send-reissue =gora-id new=(set ship)]   -Reissue a gora you hodl
-::     [%send-transfer =gora-id new=(set ship)]  -Send a chain letter
+::  interacting with gora:
+::    - [%ignore-give @uv]
+::        ignore gora @uv sent to you
+::    - [%accept-give @uv]
+::        accept gora @uv sent to you
+::    - [%ignore-request @uv @p]
+::        ignore request for gora @uv from @p
+::    - [%accept-request @uv @p]
+::        accept request for gora @uv from @p
+::    - [%send-gora @uv (set ship)]
+::        send gora @uv to (set ship)
+::    - [%send-plea @uv @p]
+::        ask @p for gora @uv
+::    - [%kick ~]
+::        maybe gora is naughty
 ::
-::   ::  Other necessities
-::     [%clean-log =log]                         -Clean log - (use a log below)
-::                [%offer-log =gora-id]            +Offer Log
-::                [%blacklist =gora-id]            +Blacklist
-::                [%request-log =ship =gora-id]    +Request Log
-::     [%usps-mode mode=?]                       -Turn off incoming chain letters
-::     [%resubscribe-all ~]                      -Resub to all gorae
-::   and others that are more oriented towards machine use.
+::  making & changing gorae:
+::    - [%rm-gora @uv]
+::        delete the gora with id=@uv
+::    - [%set-max @uv (unit @ud)]
+::        set max allowed gorae
+::    - [%add-tag @tas (set id)]
+::        add a tag to some gorae
+::    - [%rem-tag @tas (set id)]
+::        remove a tag from some gorae
+::    - [%stak-em (set id) @t @t]
+::        convert a set of gorae into a stak
+::    - [%mk-gora @t @t ?([%g hodl max] [%s stak])]
+::        make a gora
 ::
-::  %gora has several available scries as well:
-::      [%x %requests @ ~]                          -Get gora-ids for gora requested from specified ship
-::    .^((set @uv) %gx /=gora=/requests/~zod/noun)
-::    ::
-::      [%x %made-gora ~]
-::    =g -build-file  /=gora=/sur/gora/hoon         -Get a set gora of gorae you've made
-::    .^((set gora.g) %gy /=gora=/made-gora)
-::    ::
-::  join ~dalten/dalten-collective-public if you have ideas for others.
-::  Or, swing by the repo: https://github.com/dalten-collective/gora
+::  managing meigora:
+::    - [%give @p @ud]
+::        gives @ud meigora to @p
+::    - [%take @p @ud]
+::        takes @ud meigora from @p
+::
+::  %gora's scry endpoints include:
+::    -  [%y %slam ~]
+::         %slam integration
+::    -  TBD
 ::
 /-  *gora
-/+  server, default-agent, dbug, schooner, *mip
+/+  default-agent, dbug
 ::
 |%
 ::
@@ -88,8 +87,9 @@
 +$  logs                                                :: activity log
   $:  offers=(set id)                                   ::  - incoming offers
       requests=(jug ship id)                            ::  - incoming requests
-      $=  outgoing                                      ::  - outgoing
-      ((mop @da ,[=id =ship act=?(%give %take) ack=?]) gth)
+  ::                                                    ::    -and-
+    $=  outgoing                                        ::  - outgoing actions
+    ((mop @da ,[=id =ship act=?(%give %take) ack=?]) gth)
   ==
 +$  policy  (map id ?(%approve %decline))               :: optional auto-actions
 :: old state structures
@@ -125,7 +125,7 @@
 --
 ::
 %-  agent:dbug
-=|  state-one
+=|  state-two
 =*  state  -
 ^-  agent:gall
 =<
@@ -134,12 +134,12 @@
 +*  this  .
     def   ~(. (default-agent this %|) bowl)
     hc    ~(. +> bowl)
-    ak    ((on @da ,[=id =ship act=?(%give %take) ack=?]) gth)
+    ak    ((on @da ,[id ship ?(%give %take) ?]) gth)
 ::
 ++  on-init
   ^-  (quip card _this)
-  %-  (slog "%gora -sail-start")
-  :_  this
+  %-  (slog leaf+"%gora -sail-start" ~)
+  :_  this(state [%2 ~ ~ ~ ~ [~ ~ ~] ~ ~])
   =-  [%pass /eyre/connect %arvo %e -]~
   [%connect [[~ [%apps %gora ~]] dap.bowl]]
 ::
@@ -161,73 +161,47 @@
   |-
   ?-    -.old
       %2
-    %-  (slog "%gora -sail-loaded")
+    %-  (slog leaf+"%gora -sail-loaded" ~)
     :_  this(state old)
-    %+  welp
-      %~  tap  in
-      ^-  (set card)
-      %-  ~(run in (~(key bi meigora.old) our.bowl))
-      |=  h=host
-      ^-  card
-      :+  %pass  /meigora/(scot %p h)
-      [%agent [h %gora] %watch [%meigora ~]]
-    %+  turn  ~(tap by pita.old)
-    |=  [i=id g=gora]
-    ?-    -.g
-        %g
-      ^-  card
-      :+  %pass  /gora/(scot %uv i)/(scot %p host.g)
-      [%agent [host.g %gora] %watch /updates/(scot %uv i)]
-        %s
-      ^-  card
-      :+  %pass  /stak/(scot %uv i)/(scot %p host.g)
-      [%agent [host.g %gora] %watch /updates/(scot %uv i)]
+    ;:  welp
+      caz
+      (gora:sub:hc pita.old)
+      (meigora:sub:hc meigora.old)
     ==
   ::
       %1
-    %=  $
-        old
-      :*  %2
-         (mk-gora2 pita.old)
-         public.old
-         (mk-policy pita.old)
-         ~
-         [offer-log.old request-log.old (mk-logs pend.old)]
-         tags.old
-         blacklist.old
-      ==
+    =-  $(old -)
+    :*  %2
+        (mk-gora2 pita.old)
+        public.old
+        (mk-policy pita.old)
+        ~
+        [offer-log.old request-log.old (mk-logs pend.old)]
+        tags.old
+        blacklist.old
     ==
   ::
       %0
-    %=    $
-        old
-      :*  %1
-          %.y
-          (mk-gora1 pita-zero.old)
-          ~
-          request-log.old
-          offer-log.old
-          blacklist.old
-          [~ ~ ~]
-      ==
-    ==
+    =-  $(old -)
+    :^  %1  %.y  (mk-gora1 pita.old)
+    [~ request-log.old offer-log.old blacklist.old ~ ~ ~]
   ==
   ::
   ++  mk-gora1
     |=  p=pita-zero
     ^-  pita-one
     %-  ~(run by p)
-    |=  old=gora:zero
+    |=  o=gora:zero
     ^-  gora:one
-    [id.old name.old pic.old host.old made.old hodl.old %.n ~ %none %none]
+    [id.o name.o pic.o host.o made.o hodl.o %.n ~ %none %none]
   ::
   ++  mk-gora2
     |=  p=pita-one
     ^-  _pita
     %-  ~(run by p)
-    |=  old=gora:one
+    |=  o=gora:one
     ^-  gora
-    [%g id.old name.old pic.old host.old made.old hodl.old max.old]
+    [%g id.o name.o pic.o host.o made.o hodl.o max.o]
   ::
   ++  mk-policy
     |=  p=pita-one
@@ -245,57 +219,85 @@
   ::
   ++  mk-logs
     |=  p=(mip id [=ship =gib] [wen=@da dun=?])
-    ^-  ((mop @da [=id =ship act=?(%give %take) ack=?]) gth)
+    ^-  ((mop @da ,[id ship ?(%give %take) ?]) gth)
+    =|  used=(set id)
+    =|  made=(list [@da [id ship ?(%give %take) ?]])
+    =/  have=(list [i=id [s=ship g=gib] [w=@da d=?]])
+      %+  sort  ~(tap bi p)
+      |=([[@ [@ @] a=@da @] [@ [@ @] b=@da @]] (gth a b))
     %+  gas:ak  ~  
-    ^-  (list [@da [=id =ship act=?(%give %take) ack=?]])
-    %+  murn  ~(tap bi p)
-    |=  [i=id [s=ship g=gib] [w=@da d=?]]
-    ?:  =(%send-ask g)     `[w [i s %take d]]
-    ?.  =(%send-giv g)  ~  `[w [i s %give d]]
+    ^-  (list [@da [id ship ?(%give %take) ?]])
+    |-
+    ?~  have
+      made
+    ?:  (~(has in used) i.i.have)
+      $(have t.have)
+    ?:  =(%send-ask g.i.have)
+      %=    $
+        have  t.have
+        used  (~(put in used) i.i.have)
+      ::
+          made
+        :_  made
+        [w.i.have [i.i.have s.i.have %take d.i.have]]
+      ==
+    ?.  =(%send-giv g.i.have)
+      $(have t.have)
+    %=    $
+      have  t.have
+      used  (~(put in used) i.i.have)
+    ::
+        made
+      :_  made
+      [w.i.have [i.i.have s.i.have %give d.i.have]]
+    ==
   --
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
-  `this
-  :: =^  cards  state
-  ::   ?+    mark  (on-poke:def mark vase)
-  ::       %gora-man-1
-  ::     (mange:hc !<(manage-gora-1 vase))
-  ::   ::
-  ::       %gora-transact
-  ::     (trans-0:hc !<(transact:zero vase))
-  ::       %gora-transact-1
-  ::     (trans:hc !<(transact-1 vase) ~)
-  ::   ::
-  ::       %handle-http-request
-  ::     %-  https:hc
-  ::     !<([=eyre-id =inbound-request:eyre] vase)
-  ::   ==
-  :: [cards this]
+  =^  cards  state
+    ?+    mark  (on-poke:def mark vase)
+        %gora-man-2
+      (manage:hc !<(manage-gora-2 vase))
+    ==
+  [cards this]
 ::
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
-  `this
-  :: ?+  path  (on-watch:def path)
-  ::     [%http-response *]
-  ::   `this
-  :: ::
-  ::     [%updates @ *]
-  ::   ~|  [%unexpected-subscription %bad-id `@uv`(slav %uv i.t.path)]
-  ::   =/  id=@uv  (slav %uv i.t.path)
-  ::   ?>  =(our.bowl host:(~(got by pita) id))
-  ::   =+  :+  %update  %upd
-  ::       [~ [%initialize (~(got by pita) (slav %uv i.t.path))]]
-  ::   :_  this
-  ::   :~  :*
-  ::     %give
-  ::     %fact
-  ::     ~
-  ::     [%gora-transact-1 !>(`transact-1`-)]
-  ::   ==  ==
-  :: ==
+  ?+    path  (on-watch:def path)
+      [%updates @ ~]
+    ~_  :-  %leaf
+        """
+        %gora -bad-sub
+        > id: {(trip i.t.path)}
+        > from: {(scow %p src.bowl)}
+        """
+    =/  id=@uv  (slav %uv i.t.path)
+    ?~  gor=(~(get by pita) id)  !!
+    ?>  =(our.bowl host.u.gor)
+    :_  this
+    :_  ~
+    =-  [%give %fact ~ [%gora-transact-2 -]]
+    ?-    -.u.gor
+        %g
+      !>(`transact-2`[%diff [%start-gora +.u.gor]])
+    ::
+        %s
+      !>(`transact-2`[%diff [%start-stak +.u.gor]])
+    ==
+  ::
+      [%meigora @ ~]
+    ~_  :-  %leaf
+        """
+        %gora -bad-mei-sub
+        > from: {(scow %p src.bowl)}
+        """
+    ?>  =(our.bowl (slav %p i.t.path))
+    ::  XX fix this stub
+    `this
+  ==
 ::
 ++  on-arvo
   |=  [=wire =sign-arvo]
@@ -390,15 +392,22 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ~
-  :: ?+    path  (on-peek:def path)
-  ::     [%y %slam ~]
-  ::   =-  ``noun+!>(`(list [@t @t @p])`-)
-  ::   %-  ~(rep by pita)
-  ::   |=  [[@uv g=gora] l=(list [@t @t @p])]
-  ::   ?.  (~(has in hodl-list.g) our.bowl)  l
-  ::   :_(l [name.g gora-img.g host.g])
-  :: ::
+  ?+    path  (on-peek:def path)
+       [%y %slam ~]
+    =-  ``noun+!>(`(list [@t @t @p])`-)
+    %-  ~(rep by pita)
+    |=  [[@uv g=gora] l=(list [@t @t @p])]
+    ?-    -.g
+        %g
+      ?.  (~(has in hodl.g) our.bowl)  l
+      [[name.g pic.g host.g] l]
+    ::
+        %s
+      ?.  (~(has in ~(key by stak.g)) our.bowl)  l
+      [[name.g pic.g host.g] l]
+    ==
+  ==
+  ::
   ::     [%y %pub ~]
   ::   =-  ``noun+!>(`(list [name=@t url=@t])`-)
   ::   (~(rep by pita) pfpic:hc)
@@ -442,7 +451,130 @@
 --
 ::
 |_  bol=bowl:gall
-++  test  1
++*  ak    ((on @da ,[id ship ?(%give %take) ?]) gth)
+++  out
+  |%
+  ++  clean
+    |=  =id
+    ^-  _outgoing.logs
+    %+  gas:ak  ~
+    %+  murn  (bap:ak outgoing.logs)
+    |=  [d=@da i=^id ship ?(%give %take) ?]
+    ?:(=(id i) ~ `+<)
+  --
+++  sub
+  |%
+  ++  has
+    |=  a=?([%mei p=@p] [%gora i=@uv] [%stak i=@uv])
+    ^-  ?
+    ?-    -.a
+        %mei
+      (~(has in paths) [%mei (scot %p p.a) ~])
+    ::
+        ?(%gora %stak)
+      (~(has in paths) [%update (scot %uv i.a) ~])
+    ==
+  ++  paths
+    ^-  (set path)
+    %-  ~(rep by wex.bol)
+    |=  $:  [[w=wire h=ship t=term] [a=? p=path]]
+            o=(set path)
+        ==
+    ?.  ?&  a
+            =(%gora t)
+            |(?=([%mei @ ~] p) ?=([%update @ ~] p))
+        ==
+      o
+    (~(put in o) p)
+  ++  meigora
+    |=  m=_^meigora
+    =+  pat=paths
+    ^-  (list card)
+    %+  murn
+      %~  tap  in
+      %-  ~(uni in ~(key by m))
+      (~(key bi m) our.bol)
+    |=  h=host
+    ?:  (~(has in pat) [%mei (scot %p h) ~])
+      ~ 
+    :-  ~
+    :^  %pass  /meigora/(scot %p h)  %agent
+    [[h %gora] %watch [%mei (scot %p h) ~]]
+  ++  gora
+    |=  p=_pita
+    =+  pat=paths
+    ^-  (list card)
+    %+  murn  ~(tap by p)
+    |=  [i=id g=^gora]
+    ?-    -.g
+        ?(%g %s)
+      ?:  (~(has in pat) [%update (scot %uv i) ~])
+        ~
+      :-  ~
+      :^  %pass  /gora/(scot %uv i)/(scot %p host.g)  %agent
+      [[host.g %gora] %watch [%update (scot %uv i) ~]]
+    ==
+  --
+++  manage
+  |=  man=manage-gora-2
+  |^  ^-  (quip card _state)
+  ?-    -.man
+      ?(%give %take)
+    (m-hand man)
+  ::
+      ?(%rm-gora %set-max %add-tag %rem-tag %stak-em %mk-gora)
+    (g-hand man)
+  ::
+      %ignore-give
+    `state
+      %accept-give
+    `state
+      %ignore-request
+    `state
+      %accept-request
+    `state
+      %send-gora
+    `state
+      %send-plea
+    `state
+      %kick
+    :_  state
+    %+  weld  (gora:sub pita)
+    (meigora:sub meigora)
+  ==
+  ++  m-hand
+    |=  mei=meigora-handle
+    ?-    -.mei
+        %give
+      `state
+    ::
+        %take
+      `state
+    ==
+  ++  g-hand
+    |=  gal=gora-handle
+    ^-  (quip card _state)
+    ?-    -.gal
+        %rm-gora
+      `state
+    ::
+        %set-max
+      `state
+    ::
+        %add-tag
+      `state
+    ::
+        %rem-tag
+      `state
+    ::
+        %stak-em
+      `state
+    ::
+        %mk-gora
+      `state
+    ::
+    ==
+  --
 :: ++  mkgor
 ::   |=  $:  name=@t
 ::           img=gora-img
