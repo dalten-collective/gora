@@ -26,20 +26,20 @@
 ::
 ::    poke actions
 ::  available to users
-::  - [%ignore-give @uv]
-::      ignore gora @uv sent to u
-::  - [%accept-give @uv]
-::      accept gora @uv sent to u
-::  - [%ignore-request @uv @p]
-::      ignore request for gora @uv from @p
-::  - [%accept-request @uv @p]
-::      accept request for gora @uv from @p
-::  - [%send-gora @uv (set ship)]
-::      send gora @uv to (set ship)
-::  - [%send-plea @uv @p]
-::      ask @p for gora @uv
-::  - [%kick ~]
-::      maybe gora is naughty
+::  -  [%ignore-give @uv]
+::    ignore gora @uv sent to u
+::  -  [%accept-give @uv]
+::    accept gora @uv sent to u
+::  -  [%ignore-request @uv @p]
+::    ignore request for gora @uv from @p
+::  -  [%accept-request @uv @p]
+::    accept request for gora @uv from @p
+::  -  [%send-gora @uv (set ship)]
+::    send gora @uv to (set ship)
+::  -  [%send-plea @uv @p]
+::    ask @p for gora @uv
+::  -  [%kick ~]
+::    maybe gora is naughty
 ::
 +$  manage-gora-2
   $%  gora-handle
@@ -57,18 +57,20 @@
   ==
 ::    gora-handle
 ::  for making and changing gorae
-::  - [%rm-gora @uv]
-::      delete the gora with id=@uv
-::  - [%set-max @uv (unit @ud)]
-::      set max allowed gorae
-::  - [%add-tag @tas (set id)]
-::      add a tag to some gorae
-::  - [%rem-tag @tas (set id)]
-::      remove a tag from some gorae
-::  - [%stak-em (set id) @t @t]
-::      convert a set of gorae into a stak
-::  - [%mk-gora @t @t ?([%g hodl max] [%s stak])]
-::      make a gora
+::  -  [%rm-gora @uv]
+::    delete the gora with id=@uv
+::  -  [%set-max @uv (unit @ud)]
+::    set max allowed gorae
+::  -  [%add-tag @tas (set id)]
+::    add a tag to some gorae
+::  -  [%rem-tag @tas (set id)]
+::    remove a tag from some gorae
+::  -  [%stak-em (set id) @t @t]
+::    convert a set of gorae into a stak
+::  -  [%set-pol @uv u?(%approve %decline)]
+::    (un)set a gora's acceptance policy
+::  -  [%mk-gora @t @t ?([%g hodl max] [%s stak])]
+::    make a gora
 ::
 +$  gora-handle
   $%  [%rm-gora =id]
@@ -76,14 +78,15 @@
       [%add-tag tag=@tas gorae=(set id)]
       [%rem-tag tag=@tas gorae=(set id)]
       [%stak-em dez=(set id) =name =pic]
+      [%set-pol =id pol=(unit ?(%approve %decline))]
       [%mk-gora =name =pic type=(each [=hodl =max] =stak)]
   ==
 ::    meigora-handle
 ::  for managing meigora
-::  - [%give @p @ud]
-::      gives @ud meigora to @p
-::  - [%take @p @ud]
-::      takes @ud meigora from @p
+::  -  [%give @p @ud]
+::    gives @ud meigora to @p
+::  -  [%take @p @ud]
+::    takes @ud meigora from @p
 :: 
 +$  meigora-handle
   $%  [%give =ship mei=@ud]
@@ -95,7 +98,7 @@
 +$  transact-2
   $%  [%diff =diff]
       [%request =id]
-      [%offered =id]
+      [%offered =gora]
       [%meigora =m-diff]
   ==
 +$  diff
