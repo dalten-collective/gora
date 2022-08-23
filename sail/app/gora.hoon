@@ -220,7 +220,7 @@
   ++  mk-logs
     |=  p=(mip id [=ship =gib] [wen=@da dun=?])
     ^-  ((mop @da ,[id ship ?(%give %take) ?]) gth)
-    =|  used=(set id)
+    =|  used=(set [id @p])
     =|  made=(list [@da [id ship ?(%give %take) ?]])
     =/  have=(list [i=id [s=ship g=gib] [w=@da d=?]])
       %+  sort  ~(tap bi p)
@@ -230,12 +230,12 @@
     |-
     ?~  have
       made
-    ?:  (~(has in used) i.i.have)
+    ?:  (~(has in used) [i.i.have s.i.have])
       $(have t.have)
     ?:  =(%send-ask g.i.have)
       %=    $
         have  t.have
-        used  (~(put in used) i.i.have)
+        used  (~(put in used) [i.i.have s.i.have])
       ::
           made
         :_  made
@@ -245,7 +245,7 @@
       $(have t.have)
     %=    $
       have  t.have
-      used  (~(put in used) i.i.have)
+      used  (~(put in used) [i.i.have s.i.have])
     ::
         made
       :_  made
