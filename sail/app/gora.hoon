@@ -175,7 +175,7 @@
     %-  (slog leaf+"%gora -sail-loaded" ~)
     =.  state
       old
-    :_  this(outgoing.logs.state +:(clean ~))
+    :_  this(outgoing.logs.state +:(clean:hc ~))
     ;:  welp
       caz
       (gora:sub:hc pita.old)
@@ -260,6 +260,7 @@
     ?:  =(%send-ask g.i.have)
       ?:  (~(has in used) [i.i.have %take s.i.have])
         $(have t.have)
+      ~&  >  "add {<[w.i.have [i.i.have s.i.have %take `d.i.have]]>}"
       %=    $
         have  t.have
         used  (~(put in used) [i.i.have %take s.i.have])
@@ -271,6 +272,7 @@
     ?:  =(%send-giv g.i.have)
       ?:  (~(has in used) [i.i.have %give s.i.have])
         $(have t.have)
+      ~&  >  "add {<[w.i.have [i.i.have s.i.have %take `d.i.have]]>}"
       %=    $
         have  t.have
         used  (~(put in used) [i.i.have %give s.i.have])
@@ -279,6 +281,7 @@
         :_  made
         [w.i.have [i.i.have s.i.have %give `d.i.have]]
       ==
+    ~&  >  "add {<[w.i.have [i.i.have s.i.have %take `d.i.have]]>}"
     ?.  =(%give-ack g.i.have)
       $(have t.have)
     ?:  (~(has in used) [i.i.have %gack s.i.have])
@@ -606,7 +609,9 @@
       ==
   ^-  [(unit [id ship act (unit ?)]) ? (set [id act ship])]
   ?~  wen
-    ?:  (~(has in s) [id.v act.v ship.v])  [~ %.n s]
+    ?:  (~(has in s) [id.v act.v ship.v])
+      ~&  >>>  "delete {<ship.v>}'s {<act.v>} for {<id.v>}"
+      [~ %.n s]
     [`v %.n (~(put in s) [id.v act.v ship.v])]
   ?:  (lth k u.wen)  [`v %.y s]
   ?:  (~(has in s) [id.v act.v ship.v])  [~ %.n s]
