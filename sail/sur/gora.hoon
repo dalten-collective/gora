@@ -14,7 +14,7 @@
 +$  host  ship
 +$  hodl  (set ship)
 +$  stak  (map ship @ud)
-+$  made  [y=@ud m=@ud d=@ud]
++$  made  @da
 ::
 ::  %g gorae are standard gorae
 ::  %s gorae are stakable gorae

@@ -94,7 +94,7 @@
       requests=(jug ship id)                            ::  - incoming requests
   ::                                                    ::   -and-
     $=  outgoing                                        ::  - outgoing actions
-    ((mop @da ,[=id =ship =act ack=?]) gth)
+    ((mop @da ,[=id =ship =act ack=(unit ?)]) gth)
   ==
 +$  policy  (map id ?(%approve %decline))               ::  optional auto-action
 :: old state structures
@@ -139,7 +139,7 @@
 +*  this  .
     def   ~(. (default-agent this %|) bowl)
     hc    ~(. +> bowl)
-    ak    ((on @da ,[id ship act ?]) gth)
+    ak    ((on @da ,[id ship act (unit ?)]) gth)
 ::
 ++  on-init
   ^-  (quip card _this)
@@ -173,7 +173,7 @@
   ?-    -.old
       %2
     %-  (slog leaf+"%gora -sail-loaded" ~)
-    :_  this(state old)
+    :_  this(state old(outgoing.logs (clean ~)))
     ;:  welp
       caz
       (gora:sub:hc pita.old)
@@ -216,11 +216,15 @@
   ::
   ++  mk-gora2
     |=  p=pita-one
-    ^-  _pita
+    |^  ^-  _pita
     %-  ~(run by p)
     |=  o=gora:one
     ^-  gora
-    [%g id.o name.o pic.o host.o made.o hodl.o max.o]
+    [%g id.o name.o pic.o host.o (to-da made.o) hodl.o max.o]
+    ++  to-da
+      |=  [y=@ud m=@ud d=@ud]
+      (slav %da (crip "~{(a-co:co y)}.{<m>}.{<d>}"))
+    --
   ::
   ++  mk-policy
     |=  p=pita-one
@@ -240,14 +244,14 @@
     |=  p=(mip id [=ship =gib] [wen=@da dun=?])
 :: +$  gib
 ::   ?(%send-ask %send-giv %give-ack %chain-it %proxy-it)
-    ^-  ((mop @da ,[id ship act ?]) gth)
+    ^-  ((mop @da ,[id ship act (unit ?)]) gth)
     =|  used=(set [id act @p])
-    =|  made=(list [@da [id ship act ?]])
+    =|  made=(list [@da [id ship act (unit ?)]])
     =/  have=(list [i=id [s=ship g=gib] [w=@da d=?]])
       %+  sort  ~(tap bi p)
       |=([[@ ^ a=@da @] [@ ^ b=@da @]] (gth a b))
     %+  gas:ak  ~  
-    ^-  (list [@da [id ship act ?]])
+    ^-  (list [@da [id ship act (unit ?)]])
     |-
     ?~  have
       made
@@ -260,7 +264,7 @@
       ::
           made
         :_  made
-        [w.i.have [i.i.have s.i.have %take d.i.have]]
+        [w.i.have [i.i.have s.i.have %take `d.i.have]]
       ==
     ?:  =(%send-giv g.i.have)
       ?:  (~(has in used) [i.i.have %give s.i.have])
@@ -271,7 +275,7 @@
       ::
           made
         :_  made
-        [w.i.have [i.i.have s.i.have %give d.i.have]]
+        [w.i.have [i.i.have s.i.have %give `d.i.have]]
       ==
     ?.  =(%give-ack g.i.have)
       $(have t.have)
@@ -283,7 +287,7 @@
     ::
         made
       :_  made
-      [w.i.have [i.i.have s.i.have %gack d.i.have]]
+      [w.i.have [i.i.have s.i.have %gack `d.i.have]]
     ==
   --
 ::
@@ -585,21 +589,35 @@
 --
 ::
 |_  bol=bowl:gall
-+*  ak    ((on @da ,[id ship act ?]) gth)
-++  help
-  |%
-  ++  clean
-    |=  =id
-    ^-  _outgoing.logs
-    %+  gas:ak  ~
-    %+  murn  (bap:ak outgoing.logs)
-    |=  [d=@da i=^id ship act ?]
-    ?:(=(id i) ~ `+<)
-  --
++*  ak    ((on @da ,[id ship act (unit ?)]) gth)
+::    +clean
+::  a cleaner routine for the outgoing.logs state item
+::
+++  clean
+  |=  wen=(unit @da)
+  ^-  [[(set [id act ship]) (unit @da)] _outgoing.logs]
+  %^    (dip:ak [(set [id act ship]) (unit @da)])
+      outgoing.logs
+    [~ wen]
+  |=  $:  s=[p=(set [id act ship]) q=(unit @da)]
+          [k=@da v=[=id =ship =act ack=(unit ?)]]
+      ==
+  ^-  $:  (unit [id ship act (unit ?)])
+          ?
+          [(set [id act ship]) (unit @da)]
+      ==
+  ?~  q.s
+    ?:  (~(has in p.s) [id.v act.v ship.v])  [~ %.n s]
+    [`v %.n [(~(put in p.s) [id.v act.v ship.v]) q.s]]
+  ?:  (lth k q.s)  [`v %.y s]
+  ?:  (~(has in p.s) [id.v act.v ship.v])  [~ %.n s]
+  [`v %.n [(~(put in p.s) [id.v act.v ship.v]) q.s]]
 ::    +deg - degrees of separation
 ::  a helper core for meigora
-::  -  in-dun
-::    call w/ @p, get whether relevant in 4 hops
+::  -  +dunbar
+::    is in dunbar number?
+::  -  +within
+::    is in 4 hops?
 ::
 ++  deg
   |%
@@ -715,16 +733,18 @@
   ::
       %send-gora
     ?~  gor=(~(get by pita) id.man)  !!
+    =+  hu=~(tap in who.man)
     =.  outgoing.logs
       %+  gas:ak  outgoing.logs
-      ^-  (list [@da [id ship act ?]])
+      ^-  (list [@da [id ship act (unit ?)]])
       %~  tap  in
-      ^-  (set [@da [id ship act ?]])
+      ^-  (set [@da [id ship act (unit ?)]])
       %-  ~(run in who.man)
       |=  p=@p
-      ^-  [@da [id ship act ?]]
-      [now.bol [id.u.gor p %give %.n]]
-    :_  state
+      ^-  [@da [id ship act (unit ?)]]
+      ?~  moment=(find ~[p] hu)  !!
+      [(add now.bol u.moment) [id.u.gor p %give ~]]
+    :_  state(outgoing.logs +:(clean `made.u.gora))
     =+  hu=~(tap in who.man)
     %~  tap  in
     ^-  (set card)
