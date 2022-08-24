@@ -173,7 +173,9 @@
   ?-    -.old
       %2
     %-  (slog leaf+"%gora -sail-loaded" ~)
-    :_  this(state old(outgoing.logs (clean ~)))
+    =.  state
+      old
+    :_  this(outgoing.logs.state +:(clean ~))
     ;:  welp
       caz
       (gora:sub:hc pita.old)
@@ -595,23 +597,20 @@
 ::
 ++  clean
   |=  wen=(unit @da)
-  ^-  [[(set [id act ship]) (unit @da)] _outgoing.logs]
-  %^    (dip:ak [(set [id act ship]) (unit @da)])
+  ^-  [(set [id act ship]) _outgoing.logs]
+  %^    (dip:ak ,(set [id act ship]))
       outgoing.logs
-    [~ wen]
-  |=  $:  s=[p=(set [id act ship]) q=(unit @da)]
+    ~
+  |=  $:  s=(set [id act ship])
           [k=@da v=[=id =ship =act ack=(unit ?)]]
       ==
-  ^-  $:  (unit [id ship act (unit ?)])
-          ?
-          [(set [id act ship]) (unit @da)]
-      ==
-  ?~  q.s
-    ?:  (~(has in p.s) [id.v act.v ship.v])  [~ %.n s]
-    [`v %.n [(~(put in p.s) [id.v act.v ship.v]) q.s]]
-  ?:  (lth k q.s)  [`v %.y s]
-  ?:  (~(has in p.s) [id.v act.v ship.v])  [~ %.n s]
-  [`v %.n [(~(put in p.s) [id.v act.v ship.v]) q.s]]
+  ^-  [(unit [id ship act (unit ?)]) ? (set [id act ship])]
+  ?~  wen
+    ?:  (~(has in s) [id.v act.v ship.v])  [~ %.n s]
+    [`v %.n (~(put in s) [id.v act.v ship.v])]
+  ?:  (lth k u.wen)  [`v %.y s]
+  ?:  (~(has in s) [id.v act.v ship.v])  [~ %.n s]
+  [`v %.n (~(put in s) [id.v act.v ship.v])]
 ::    +deg - degrees of separation
 ::  a helper core for meigora
 ::  -  +dunbar
@@ -733,6 +732,7 @@
   ::
       %send-gora
     ?~  gor=(~(get by pita) id.man)  !!
+    :: ?>  ?=(?(%g %s) -.u.gor)
     =+  hu=~(tap in who.man)
     =.  outgoing.logs
       %+  gas:ak  outgoing.logs
@@ -744,7 +744,7 @@
       ^-  [@da [id ship act (unit ?)]]
       ?~  moment=(find ~[p] hu)  !!
       [(add now.bol u.moment) [id.u.gor p %give ~]]
-    :_  state(outgoing.logs +:(clean `made.u.gora))
+    :_  state(outgoing.logs +:(clean `made.u.gor))
     =+  hu=~(tap in who.man)
     %~  tap  in
     ^-  (set card)

@@ -115,11 +115,15 @@
   ==
 :: old state actions, objects
 ::
-+$  log
-  $%  [%offer-log =id]
-      [%blacklist =id]
-      [%request-log =ship =id]
-  ==
+++  old
+  |%
+  +$  log
+    $%  [%offer-log =id]
+        [%blacklist =id]
+        [%request-log =ship =id]
+    ==
+  +$  made  [y=@ud m=@ud d=@ud]
+  --
 ++  one
   |%
   ::
@@ -152,7 +156,7 @@
             giv=?(%transfer %reissue %none)
         ==
         ::
-        [%clean-log =log]
+        [%clean-log =log:old]
         [%usps-mode mode=?]
         [%resubscribe-all ~]
     ==
@@ -179,7 +183,7 @@
         =name
         =pic
         =host
-        =made
+        =made:old
         =hodl
         host-public=?
         =max
@@ -190,7 +194,7 @@
 ++  zero
   |%
   +$  manage-gora
-   $%  [%clean-log =log]
+   $%  [%clean-log =log:old]
        [%delgora =id]
        [%reject-give =id]
        [%approve-give =id]
@@ -212,7 +216,7 @@
   +$  gora
     $:  =id    =name
         =pic   =host
-        =made  =hodl
+        =made:old  =hodl
     ==
   --
 --
