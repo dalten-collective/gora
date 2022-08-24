@@ -111,14 +111,7 @@
   ==
 +$  m-diff
   $%  [%set src=ship snk=ship set=@ud]
-      [%state state=(mip ship ship @ud)]
-  ==
-+$  update
-  $%  [%update-image ~]
-      [%host-public pub=?]
-      [%new-hodlr =ship]
-      [%initialize =gora]
-      [%reissue =id new=(set ship)]
+      [%state state=(map ship @ud)]
   ==
 :: old state actions, objects
 ::

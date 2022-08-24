@@ -76,10 +76,10 @@
       =public                                           ::  public gorae
       =policy                                           ::  gorae policies
       =meigora                                          ::  meigora map
+      =dunbar                                           ::  dunbar number
       =logs                                             ::  logging information
       =tags                                             ::  tagging information
       =blacklist                                        ::  blocked gorae
-      =dunbar                                           ::  dunbar number
   ==
 +$  tag        @tas
 +$  act        ?(%give %take %gack %tack)
@@ -144,9 +144,15 @@
 ++  on-init
   ^-  (quip card _this)
   %-  (slog leaf+"%gora -sail-start" ~)
-  :_  this(state [%2 ~ ~ ~ ~ [~ ~ ~] ~ ~])
-  =-  [%pass /eyre/connect %arvo %e -]~
-  [%connect [[~ [%apps %gora ~]] dap.bowl]]
+  :_  this(state [%2 ~ ~ ~ ~ 150 [~ ~ ~] ~ ~])
+  :~  =-  [%pass /eyre/connect %arvo %e -]
+      [%connect [[~ [%apps %gora ~]] dap.bowl]]
+  ::
+      =-  [%pass /behn/suichi/(scot %da now.bowl) -]
+      :+  %arvo  %b
+      [%wait (add now.bowl ~m5)]
+      ::  XX replace: [%wait (add (sub now (mod now ~d1)) ~d1)]
+  ==
 ::
 ++  on-save
   ^-  vase
@@ -157,7 +163,7 @@
   |^  ^-  (quip card _this)
   =/  old=versioned-state  !<(versioned-state ole)
   =/  caz=(list card)
-      :~  =-  [%pass /eyre/connect %arvo %e -]
+      :~  =-  [%pass /eyre/disconnect %arvo %e -]
           [%disconnect [~ [%apps %gora %public ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
@@ -175,15 +181,23 @@
     ==
   ::
       %1
-    =-  $(old -)
-    :*  %2
-        (mk-gora2 pita.old)
-        public.old
-        (mk-policy pita.old)
-        ~
-        [offer-log.old request-log.old (mk-logs pend.old)]
-        tags.old
-        blacklist.old
+    %=    $
+        old
+      :*  %2
+          (mk-gora2 pita.old)
+          public.old
+          (mk-policy pita.old)
+          ~
+          150
+          [offer-log.old request-log.old (mk-logs pend.old)]
+          tags.old
+          blacklist.old
+      ==
+        caz
+      :_  caz
+      =-  [%pass /behn/suichi/(scot %da now.bowl) -]
+      :+  %arvo  %b
+      [%wait (add now.bowl ~m5)]
     ==
   ::
       %0
@@ -302,18 +316,22 @@
           %request
         ?~  gor=(~(get by pita) id.tan)  !!
         ?>  =(our.bowl host.u.gor)
-        =?    logs
-            ?-    -.gora.tan
-              %g  !(~(has in hodl.gora.tan) our.bowl)
+        ?.  ?-    -.u.gor
+              %g  (~(has in hodl.u.gor) our.bowl)
             ::
                 %s
-              ?!  %.  our.bowl
-              ~(has in ~(key by stak.gora.tan))
+              (~(has in ~(key by stak.u.gor)) our.bowl)
             ==
-          :+  offers.logs  
-            (~(put ju requests.logs) src.bowl id.tan)
-          outgoing.logs
-        `state
+          =.  logs
+            :+  offers.logs  
+              (~(put ju requests.logs) src.bowl id.tan)
+            outgoing.logs
+          `state
+        :_  state
+        =-  [%give %fact ~[/gora/(scot %uv id.tan)] -]~
+        :-  %gora-transact-2
+        !>  ^-  transact-2
+        [%diff [%add-hodler (sy ~[src.bowl])]]
       ==
     ==
   [cards this]
@@ -351,23 +369,84 @@
     ?>  =(our.bowl (slav %p i.t.path))
     :_  this
     =-  [%give %fact ~ [%gora-transact-2 -]]~
-    !>(`transact-2`[%meigora [%state meigora]])
+    !>  ^-  transact-2
+    [%meigora [%state (~(got by meigora) our.bowl)]]
   ==
 ::
 ++  on-arvo
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
-  ?+  sign-arvo  (on-arvo:def wire sign-arvo)
-      [%eyre %bound *]
-    ~?  !accepted.sign-arvo
-      [dap.bowl [%eyre %bind %fail] binding.sign-arvo]
-    `this
+  ?+   wire  (on-arvo:def wire sign-arvo)
+      [%eyre %connect ~]
+    ?+  sign-arvo  (on-arvo:def wire sign-arvo)
+        [%eyre %bound *]
+      ~?  !accepted.sign-arvo
+        [dap.bowl [%eyre %bind %fail] binding.sign-arvo]
+      `this
+    ==
+  ::
+      [%behn %suichi @ ~]
+    ?+  sign-arvo  (on-arvo:def wire sign-arvo)
+        [%behn %wake *]
+      ?~  error.sign-arvo
+        ~&  >  [%behn %suichi ~]
+        :_  this
+        ;:  welp
+          (gora:sub:hc pita)
+          (meigora:sub:hc meigora)
+          =-  [%pass /behn/suichi/(scot %da now.bowl) -]~
+          :+  %arvo  %b
+          [%wait (add now.bowl ~m5)]
+        ==
+      ~&  >>  [%behn %suichi error.sign-arvo]
+      :_  this
+      =-  [%pass /behn/suichi/(scot %da now.bowl) -]~
+      :+  %arvo  %b
+      [%wait (add now.bowl ~m5)]
+    ==
   ==
 ::
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)
-  `this
+  ?+    wire  (on-agent:def wire sign)
+      [%meigora @ ~]
+    ?>  ?=([%fact %gora-transact-2 *] sign)
+    =/  tan=transact-2
+      !<(transact-2 q.cage.sign)
+    ?>  ?=(%meigora -.tan)
+    ?-    -.m-diff.tan
+        %set
+      ?.  (dunbar:deg:hc (~(got by meigora) src.bowl))
+        ?.  =(src.bowl src.m-diff.tan)  `this
+        =.  meigora
+          %+  ~(put bi meigora)  src.m-diff.tan
+          [snk.m-diff.tan set.m-diff.tan]
+        `this
+      ?.  (within:deg:hc src.m-diff.tan)  `this
+      =.  meigora
+        %+  ~(put bi meigora)  src.m-diff.tan
+        [snk.m-diff.tan set.m-diff.tan]
+      `this
+        %state
+      =.  meigora
+        (~(put by meigora) src.bowl state.m-diff.tan)
+      `this
+    ==
+  ::
+      [%gora @ @ ~]
+    `this
+  ::
+      [%offer @ @ @ ~]
+    =+  id=(slav %uv i.t.wire)
+    =+  hu=(slav %p i.t.t.wire)
+    =+  mo=(slav %da i.t.t.t.wire)
+    ?+    -.sign  (on-agent:def wire sign)
+        %poke-ack
+      ::  XX write as (unit ?) where ~ un-ack, ?=ack/nack
+      `this
+    ==
+  ==
   :: ?-  -.sign
   ::     %fact
   ::   =^  cards  state
@@ -507,7 +586,7 @@
 ::
 |_  bol=bowl:gall
 +*  ak    ((on @da ,[id ship act ?]) gth)
-++  out
+++  help
   |%
   ++  clean
     |=  =id
@@ -516,6 +595,45 @@
     %+  murn  (bap:ak outgoing.logs)
     |=  [d=@da i=^id ship act ?]
     ?:(=(id i) ~ `+<)
+  --
+::    +deg - degrees of separation
+::  a helper core for meigora
+::  -  in-dun
+::    call w/ @p, get whether relevant in 4 hops
+::
+++  deg
+  |%
+  ++  dunbar
+    |=  mp=(map ship @ud)
+    ^-  ?
+    =-  (gte ^dunbar -)
+    %-  ~(rep by mp)
+    |=([[ship q=@ud] r=@ud] (add q r))
+  ++  within
+    |=  p=@p
+    ^-  ?
+    ?:  =(our.bol p)
+      %.y
+      ::
+    =|  dun=(set ship)                                  ::  previously completed
+    =|  pil=(set ship)                                  ::  next level
+    =|  hop=@ud                                         ::  hop counter
+    =/  lip=(list ship)                                 ::  this level
+      ~(tap in ~(key by (~(got by meigora) our.bol)))
+    |-  
+    ?~  lip
+      ?:  =(3 +(hop))         %.n
+      ?~  next=~(tap in pil)  %.n
+      $(lip next, hop +(hop))
+    =/  pul=(set ship)
+      %~  key  by
+      (~(got by meigora) i.lip)
+    ?:  (~(has in pul) p)     %.y
+    %=  $
+      pil  (~(uni in pil) (~(dif in pul) dun))
+      dun  (~(put in dun) i.lip)
+      lip  t.lip
+    ==
   --
 ++  sub
   |%
@@ -607,12 +725,16 @@
       ^-  [@da [id ship act ?]]
       [now.bol [id.u.gor p %give %.n]]
     :_  state
+    =+  hu=~(tap in who.man)
     %~  tap  in
     ^-  (set card)
     %-  ~(run in who.man)
     |=  p=@p
     ^-  card
-    =+  wir=/offer/(scot %uv id.u.gor)/(scot %p p)
+    =/  wir=path
+      ?~  moment=(find ~[p] hu)  !!
+      :+  %offer  (scot %uv id.u.gor)
+      /(scot %p p)/(scot %da (add now.bol u.moment))
     :^  %pass  wir  %agent
     :^  [p %gora]  %poke  %gora-transact-2
     !>(`transact-2`[%offered u.gor])
