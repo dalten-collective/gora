@@ -2,8 +2,7 @@
 ::  gora-transact mar file
 ::
 /-  *gora
-=,  zero
-|_  trans=transact
+|_  trans=transact:zero
 ++  grad  %noun
 ++  grow
   |%
@@ -11,6 +10,6 @@
   --
 ++  grab
   |%
-  ++  noun  transact
+  ++  noun  transact:zero
   --
 --

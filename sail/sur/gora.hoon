@@ -15,13 +15,16 @@
 +$  hodl  (set ship)
 +$  stak  (map ship @ud)
 +$  made  @da
++$  nul
+  %-  unit
+  (list [%g =id =name =pic =host =made =hodl =max])
 ::
 ::  %g gorae are standard gorae
 ::  %s gorae are stakable gorae
 ::
 +$  gora
   $%  [%g =id =name =pic =host =made =hodl =max]
-      [%s =id =name =pic =host =made =stak]
+      [%s =id =name =pic =host =made =stak =nul]
   ==
 ::
 ::    poke actions
@@ -43,7 +46,6 @@
 ::
 +$  manage-gora-2
   $%  gora-handle
-      meigora-handle
       [%ignore-give =id]
       [%accept-give =id]
     ::
@@ -53,7 +55,6 @@
       [%send-gora =id who=(set ship)]
       [%send-plea =id =host]
     ::
-      [%set-dunbar dun=@ud]
       [%kick ~]
   ==
 ::    gora-handle
@@ -78,40 +79,26 @@
       [%set-max =id =max]
       [%add-tag tag=@tas gorae=(set id)]
       [%rem-tag tag=@tas gorae=(set id)]
-      [%stak-em dez=(set id) =name =pic]
       [%set-pol =id pol=(unit ?(%approve %decline))]
       [%mk-gora =name =pic type=(each [=hodl =max] =stak)]
+      [%stak-em dez=(set id) which=(each id [=name =pic])]
   ==
-::    meigora-handle
-::  for managing meigora
-::  -  [%give @p @ud]
-::    gives @ud meigora to @p
-::  -  [%take @p @ud]
-::    takes @ud meigora from @p
-:: 
-+$  meigora-handle
-  $%  [%give =ship mei=@ud]
-      [%take =ship mei=@ud]
-  ==
-
 :: agent actions
 ::
 +$  transact-2
-  $%  [%diff =diff]
+  $%  [%gack =id]
+      [%diff =diff]
       [%request =id]
       [%offered =gora]
-      [%meigora =m-diff]
   ==
 +$  diff
   $%  [%illustrate new=pic]
+      [%change-max =max]
       [%give-staks new=stak]
       [%add-hodler new=hodl]
-      [%start-stak =id =name =pic =host =made =stak]
+      [%start-stak =id =name =pic =host =made =stak =nul]
       [%start-gora =id =name =pic =host =made =hodl =max]
-  ==
-+$  m-diff
-  $%  [%set src=ship snk=ship set=@ud]
-      [%state state=(map ship @ud)]
+      [%deleted-me ~]
   ==
 :: old state actions, objects
 ::
@@ -214,8 +201,8 @@
     ==
   ::
   +$  gora
-    $:  =id    =name
-        =pic   =host
+    $:  =id        =name
+        =pic       =host
         =made:old  =hodl
     ==
   --

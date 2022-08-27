@@ -2,7 +2,7 @@
 ::  gora-man mar file
 ::
 /-  *gora
-|_  man=manage-gora-1:one
+|_  man=manage-gora-2
 ++  grad  %noun
 ++  grow
   |%
@@ -10,6 +10,6 @@
   --
 ++  grab
   |%
-  ++  noun  manage-gora-1:one
+  ++  noun  manage-gora-2
   --
 --
