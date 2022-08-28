@@ -15,17 +15,19 @@
 +$  hodl  (set ship)
 +$  stak  (map ship @ud)
 +$  made  @da
-+$  nul
-  %-  unit
-  (list [%g =id =name =pic =host =made =hodl =max])
++$  nul  (unit (list gora-standard))
 ::
 ::  %g gorae are standard gorae
 ::  %s gorae are stakable gorae
 ::
 +$  gora
-  $%  [%g =id =name =pic =host =made =hodl =max]
-      [%s =id =name =pic =host =made =stak =nul]
+  $%  gora-standard
+      gora-stakable
   ==
++$  gora-standard
+  [%g =id =name =pic =host =made =hodl =max]
++$  gora-stakable
+  [%s =id =name =pic =host =made =stak =nul]
 ::
 ::    poke actions
 ::  available to users
