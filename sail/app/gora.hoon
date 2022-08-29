@@ -349,7 +349,9 @@
           %offered
         ?:  ?&  (~(has by pita) id.gora.tan)
                 =(our.bol host.gora.tan)
-                =(our.bol host:(~(got by pita) id.gora.tan))
+            ::
+              ?~  gor=(~(get by pita) id.gora.tan)  %.n
+              =(our.bol host.u.gor)
             ==
           :-  ~
           %=    state
@@ -564,9 +566,9 @@
     `this
   ::
       [%gora @ @ ~]
-    =/  id=@uv   (slav %uv i.t.wire)
+    =/  ud=@uv   (slav %uv i.t.wire)
     =/  ho=ship  (slav %p i.t.t.wire)
-    ?~  gor=(~(get by pita) id)
+    ?~  gor=(~(get by pita) ud)
       ?+    sign  !!
       ::
           [%kick ~]
@@ -577,64 +579,15 @@
           [%watch-ack *]
         ?~  p.sign  `this
         %.  `this
-        (slog leaf+"%gora -watch-nack-580 {<id>}" ~)
+        (slog leaf+"%gora -watch-nack-580 {<ud>} {<src.bowl>}" ~)
       ::
           [%fact %gora-transact-2 *]
-        =/  tan=transact-2
-          !<(transact-2 q.cage.sign)
-        ?+    tan  ~_  leaf+"%gora -strange-exit"  !!
-            [%diff %start-stak *]
-          ?>  ?&  (gte 32.768 (met 3 pic.diff.tan))
-                  =(src.bowl host.diff.tan)
-              ==
-          ?~  nul.diff.tan
-            =?    offers.logs
-                ?&  (~(has in offers.logs) id.diff.tan)
-                ::
-                    %.  our.bowl
-                    ~(has in ~(key by stak.diff.tan))
-                ==
-              (~(del in offers.logs) id.diff.tan)
-            =.  pita
-              (~(put by pita) id.diff.tan [%s +.diff.tan])
-            `this
-            ::
-          ?>  %+  levy  u.nul.diff.tan
-              |=(g=gora =(src.bowl host.g))
-          =/  ids=(set @uv)
-            (sy (turn u.nul.diff.tan |=(g=[%g i=@uv *] i.g)))
-          =?    offers.logs
-              ?&  (~(has in offers.logs) id.diff.tan)
-                  %.  our.bowl
-                  ~(has in ~(key by stak.diff.tan))
-              ==
-            (~(del in offers.logs) id.diff.tan)
-          =.  pita
-            %.  [id.diff.tan [%s +.diff.tan]]
-            %~  put  by
-            ^-  _pita
-            %-  ~(rep by pita)
-            |=  [[k=^id v=gora] r=_pita]
-            ?:((~(has in ids) k) r (~(put by r) k v))
-          `this
-        ::
-            [%diff %start-gora *]
-          ?>  ?&  ?~  max.diff.tan  %.y
-                  %+  gte  u.max.diff.tan
-                  ~(wyt in hodl.diff.tan)
-                ::
-                  (gte 32.768 (met 3 pic.diff.tan))
-                  =(src.bowl host.diff.tan)
-              ==
-          =?    offers.logs
-              ?&  (~(has in offers.logs) id.diff.tan)
-                  (~(has in hodl.diff.tan) our.bowl)
-              ==
-            (~(del in offers.logs) id.diff.tan)
-          =.  pita
-            (~(put by pita) id.diff.tan [%g +.diff.tan])
-          `this
-        ==
+        =^  cards  state
+          =/  tan=transact-2
+            !<(transact-2 q.cage.sign)
+          ?>  ?=([%diff *] tan)
+          (transact:hc [+.tan ud wire gor])
+        [cards this]
       ==
       ::
     ?.  =(host.u.gor src.bowl)
@@ -651,7 +604,7 @@
       ~&  >  "651"
       =-  ((slog leaf+- ~) `this)
       """
-      %gora -watch-nack {<id.u.gor>}
+      %gora -watch-nack-601 {<id.u.gor>}
             -{<host.u.gor>}-version-mismatch}
       """
     ::
@@ -661,7 +614,7 @@
       ?+    -.tan  `this
           %update
         ?-    act.tan
-          %del  `this(pita (~(del by pita) id))
+          %del  `this(pita (~(del by pita) ud))
         ::
             %upd
           ?~  jot.tan  `this
@@ -675,67 +628,12 @@
       ==
     ::
         [%fact %gora-transact-2 *]
-      =/  tan=transact-2
-        !<(transact-2 q.cage.sign)
-      ?>  ?=(%diff -.tan)
-      ?-    -.diff.tan
-          %illustrate
-        ?~  gor=(~(get by pita) id)
-          :_  this
-          [%pass wire %agent [src.bowl %gora] %leave ~]~
-        =.  pita
-          %+  ~(put by pita)
-            id.u.gor
-          u.gor(pic new.diff.tan)
-        `this
-          %change-max
-        ?>  ?=(%g -.u.gor)
-        ?~  max.diff.tan
-          =.  pita
-            %-  ~(put by pita)
-            [id.u.gor u.gor(max max.diff.tan)]
-          `this
-        ?>  (gte u.max.diff.tan ~(wyt in hodl.u.gor))
-        =.  pita
-          %-  ~(put by pita)
-          [id.u.gor u.gor(max max.diff.tan)]
-        `this
-          %give-staks
-        ?>  ?=(%s -.u.gor)
-        =?    offers.logs
-            ?&  (~(has in offers.logs) id.u.gor)
-            ::
-                %.  our.bowl
-                ~(has in ~(key by new.diff.tan))
-            ==
-          (~(del in offers.logs) id.u.gor)
-        =.  pita
-          %+  ~(put by pita)  id.u.gor
-          u.gor(stak (~(uni by stak.u.gor) new.diff.tan))
-        `this
-          %add-hodler
-        ?>  ?=(%g -.u.gor)
-        =?    offers.logs
-            ?&  (~(has in offers.logs) id.u.gor)
-                (~(has in new.diff.tan) our.bowl)
-            ==
-          (~(del in offers.logs) id.u.gor)
-        =.  pita
-          %+  ~(put by pita)  id.u.gor
-          u.gor(hodl (~(uni in hodl.u.gor) new.diff.tan))
-        `this
-      ::
-          %start-stak
-        `this
-      ::
-          %start-gora
-        `this
-      ::
-          %deleted-me
-        =.  pita
-          (~(del by pita) id)
-        `this
-      ==
+      =^  cards  state
+        =/  tan=transact-2
+          !<(transact-2 q.cage.sign)
+        ?>  ?=([%diff *] tan)
+        (transact:hc [+.tan ud wire gor])
+      [cards this]
     ==
   ==
 ::
@@ -839,6 +737,114 @@
     :+  %pass  /gora/(scot %uv i)/(scot %p host.g)
     [%agent [host.g %gora] %watch [%gora (scot %uv i) ~]]
   --
+++  transact
+  |=  [=diff =id =wire gor=(unit gora)]
+  ^-  (quip card _state)
+  ?-    -.diff
+      %illustrate
+    ?~  gor=(~(get by pita) id)
+      :_  state
+      [%pass wire %agent [src.bol %gora] %leave ~]~
+    =.  pita
+      %+  ~(put by pita)
+        id.u.gor
+      u.gor(pic new.diff)
+    `state
+      %change-max
+    ?>  ?=(^ gor)
+    ?>  ?=(%g -.u.gor)
+    ?~  max.diff
+      =.  pita
+        %-  ~(put by pita)
+        [id.u.gor u.gor(max max.diff)]
+      `state
+    ?>  (gte u.max.diff ~(wyt in hodl.u.gor))
+    =.  pita
+      %-  ~(put by pita)
+      [id.u.gor u.gor(max max.diff)]
+    `state
+      %give-staks
+    ?>  ?=(^ gor)
+    ?>  ?=(%s -.u.gor)
+    =?    offers.logs
+        ?&  (~(has in offers.logs) id.u.gor)
+        ::
+            %.  our.bol
+            ~(has in ~(key by new.diff))
+        ==
+      (~(del in offers.logs) id.u.gor)
+    =.  pita
+      %+  ~(put by pita)  id.u.gor
+      u.gor(stak (~(uni by stak.u.gor) new.diff))
+    `state
+      %add-hodler
+    ?>  ?=(^ gor)
+    ?>  ?=(%g -.u.gor)
+    =?    offers.logs
+        ?&  (~(has in offers.logs) id.u.gor)
+            (~(has in new.diff) our.bol)
+        ==
+      (~(del in offers.logs) id.u.gor)
+    =.  pita
+      %+  ~(put by pita)  id.u.gor
+      u.gor(hodl (~(uni in hodl.u.gor) new.diff))
+    `state
+  ::
+      %start-stak
+    ?>  ?&  (gte 32.768 (met 3 pic.diff))
+            =(src.bol host.diff)
+        ==
+    ?~  nul.diff
+      =?    offers.logs
+          ?&  (~(has in offers.logs) id.diff)
+          ::
+              %.  our.bol
+              ~(has in ~(key by stak.diff))
+          ==
+        (~(del in offers.logs) id.diff)
+      =.  pita
+        (~(put by pita) id.diff [%s +.diff])
+      `state
+      ::
+    ?>  %+  levy  u.nul.diff
+        |=(g=gora =(src.bol host.g))
+      ::
+    =-  [~ -]
+    %=    state
+        pita
+      %-  ~(put by (rm-nul:shim u.nul.diff))
+      [id.diff [%s +.diff]]
+    ::
+        offers.logs
+      %-  ~(rep in (sy u.nul.diff))
+      |=  $:  g=gora-standard
+              o=_(~(del in offers.logs) id.diff)
+          ==
+      (~(del in o) id.g)
+    ==
+  ::
+      %start-gora
+    ?>  ?&  ?~  max.diff  %.y
+            %+  gte  u.max.diff
+            ~(wyt in hodl.diff)
+          ::
+            (gte 32.768 (met 3 pic.diff))
+            =(src.bol host.diff)
+        ==
+    =?    offers.logs
+        ?&  (~(has in offers.logs) id.diff)
+            (~(has in hodl.diff) our.bol)
+        ==
+      (~(del in offers.logs) id.diff)
+    =.  pita
+      (~(put by pita) id.diff [%g +.diff])
+    `state
+  ::
+      %deleted-me
+    =.  pita
+      (~(del by pita) id)
+    `state
+  ==
 ++  manage
   |=  man=manage-gora-2
   |^  ^-  (quip card _state)
@@ -979,7 +985,7 @@
             =-  [%give %fact ~[/gora/(scot %uv id.u.gor)] -]
             :-  %gora-transact-2
             !>  ^-  transact-2
-            [%diff [%give-staks (~(dif in stik) stak.u.gor)]]
+            [%diff [%give-staks (~(dif by stik) stak.u.gor)]]
         %=  state
           outgoing.logs  legs
         ::
@@ -1010,6 +1016,8 @@
       %^  ~(put bi outgoing.logs)  id.man
       [host.man %take]  [now.bol ~]
     :_  state
+    :-  :^  %pass  [%gora +.wir]  %agent
+        [[host.man %gora] %watch /gora/(scot %uv id.man)]
     =-  [%pass wir %agent [host.man %gora] %poke -]~
     [%gora-transact-2 !>(`transact-2`[%request id.man])]
   ::
@@ -1068,10 +1076,23 @@
       !>(`transact-2`[%diff [%change-max max.gal]])
     ::
         %add-tag
-      `state
+      ?>  (~(all in gorae.gal) |=(i=id (~(has by pita) i)))
+      =-  [~ -]
+      %=    state
+          tags
+        %+  ~(put by tags)  tag.gal
+        (~(uni in (~(get ju tags) tag.gal)) gorae.gal)
+      ==
     ::
         %rem-tag
-      `state
+      ?>  (~(all in gorae.gal) |=(i=id (~(has by pita) i)))
+      =-  [~ -]
+      %=    state
+          tags
+        %-  ~(rep in gorae.gal)
+        |=  [i=id t=_tags]
+        (~(del in t) tag.gal i)
+      ==
     ::
         %stak-em
       ~_  '%gora -stak-em-failed'
@@ -1090,8 +1111,8 @@
               :+  +.p.which.gal  our.bol
               [(sub now.bol (mod now.bol ~d1)) stik `goz]
           %-  id-stk:shim
-          :^  -.p.which.gal  our.bol  +.p.which.gal
-          [[stik `goz] (sub now.bol (mod now.bol ~d1))]
+          :+  -.p.which.gal  our.bol 
+          [+.p.which.gal [stik `goz] now.bol]
           ::
 
         :-  (weld caz (mk-coz ~(key by stak.new) id.new new))
@@ -1112,19 +1133,22 @@
         ^-  [(set ship) stak]
         ((mk-stk stak.g.ole) dez.gal)
         ::
-      :-  %+  weld  caz
-          =-  (mk-coz - id.g.ole g.ole)
-          (~(dif in new) ~(key by s.ole))
-      %=    state
-          pita
-        %+  ~(put by (rm-nul:shim goz))  id.g.ole
+      =/  gnu=gora-stakable
         %=    g.ole
             nul
           ?~(nul.g.ole [~ goz] `(weld u.nul.g.ole goz))
         ==
+      :-  
+        :-  (mk-upd ~(key by s.ole) id.gnu gnu)
+        %+  weld  caz
+        =-  (mk-coz ~ id.gnu gnu)
+        (~(dif in new) ~(key by s.ole))
+      %=    state
+          pita
+        (~(put by (rm-nul:shim goz)) id.gnu gnu)
       ::
           outgoing.logs
-        (ch-log (~(dif in new) ~(key by s.ole)) id.g.ole)
+        (ch-log (~(dif in new) ~(key by s.ole)) id.gnu)
       ==
       ::
       ++  ck-stk
@@ -1143,6 +1167,13 @@
         ^-  card
         =-  [%pass wir %agent [who %gora] %poke -]
         [%gora-transact-2 !>(`transact-2`[%offered g])]
+      ::
+      ++  mk-upd
+        |=  [s=(set ship) i=id g=gora-stakable]
+        ^-  card
+        =-  [%give %fact ~[/gora/(scot %uv i)] -]
+        :-  %gora-transact-2
+        !>(`transact-2`[%diff [%start-stak +.g]])
       ::
       ++  ch-log
         |=  [s=(set ship) i=id]
@@ -1165,11 +1196,8 @@
         ^-  stak
         %-  ~(rep in hodl.gor)
         |=  [p=ship q=_s]
-        ~&  >  [%p p %q q]
         ?~  had=(~(get by q) p)
-          ~&  >>  [%p %get %one]
           (~(put by q) p 1)
-        ~&  >>>  [%p %add %one +(u.had)]
         (~(put by q) p +(u.had))
       ::
       ++  rm-gor
@@ -1195,11 +1223,85 @@
       --
     ::
         %set-pol
-      `state
+      ~_  leaf+"%gora -set-pol-failed -maybe-bad-id {<id.gal>}"
+      ?~  gor=(~(get by pita) id.gal)  !!
+      ?>  =(our.bol host.u.gor)
+      ~_  leaf+"                      -maybe-gora-stakable"
+      ?~  pol.gal
+        ?.  ?=(%g -.u.gor)  !!
+        ?~  max.u.gor
+          `state(policy (~(del by policy) id.gal))
+        ?.  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+          `state(policy (~(put by policy) id.gal %decline))
+        `state(policy (~(del by policy) id.gal))
+      ?.  ?=(%g -.u.gor)  !!
+      ?~  max.u.gor
+        `state(policy (~(put by policy) id.gal u.pol.gal))
+      ?-    u.pol.gal
+          %approve
+        ?.  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+          `state(policy (~(put by policy) id.gal %decline))
+        `state(policy (~(put by policy) id.gal u.pol.gal))
+      ::
+          %decline
+        `state(policy (~(put by policy) id.gal u.pol.gal))
+      ==
     ::
         %mk-gora
-      `state
-    ::
+      |^  ^-  (quip card _state)
+      ?:  ?=(%.n -.type.gal)
+        =;  new=gora-stakable
+          ~_  leaf+"%gora -mk-gora-failed -maybe-bad-id"
+          ?<  (~(has by pita) id.new)
+          =^  cards  outgoing.logs
+            (ca-off ~(key by stak.p.type.gal) new)
+          [cards state(pita (~(put by pita) id.new new))]
+          ::
+        =/  stik=stak
+          ?.  (~(has in ~(key by stak.p.type.gal)) our.bol)
+          ~  (my [our.bol 1]~)
+        :+  %s
+          %-  id-stk:shim
+          [name.gal our.bol pic.gal [stik ~] now.bol]
+        :^  name.gal  pic.gal  our.bol
+        [(sub now.bol (mod now.bol ~d1)) stik ~]
+        
+      =;  new=gora-standard
+        ~_  leaf+"%gora -mk-gora-failed -maybe-bad-id"
+        ?<  (~(has by pita) id.new)
+        =^  cards  outgoing.logs
+          (ca-off hodl.p.type.gal new)
+        [cards state(pita (~(put by pita) id.new new))]
+        ::
+      =/  hedl=hodl
+        ?.  (~(has in hodl.p.type.gal) our.bol)
+        ~  (sy ~[our.bol])
+      :+  %g
+        %+  id-stn:shim
+          name.gal
+        [our.bol pic.gal [hedl max.p.type.gal] now.bol]
+      :^  name.gal  pic.gal  our.bol
+      [(sub now.bol (mod now.bol ~d1)) hedl max.p.type.gal]
+      ++  ca-off
+        |=  [s=(set ship) g=gora]
+        ^-  (quip card _outgoing.logs)
+        %-  ~(rep in s)
+        |=  [sip=@p [q=(list card) r=_outgoing.logs]]
+        ?:  =(our.bol sip)  [q r]
+        =/  wir=path
+          /offer/(scot %uv id.g)/(scot %p sip)
+        :-
+          ^-  (list card)
+          :_  q
+          ^-  card
+          =-  [%pass wir %agent [sip %gora] %poke -]
+          [%gora-transact-2 !>(`transact-2`[%offered g])]
+        %=    outgoing.logs
+            .
+          %-  ~(put bi outgoing.logs)
+          [id.g [sip %give] [now.bol ~]]
+        ==
+      --
     ==
   --
 --
