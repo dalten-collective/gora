@@ -345,17 +345,15 @@
       ::  - if we don't have the gora, put it in
       ::  - if we aren't already owners, put it in offers
       ::  - run the sub function to sub to the gora
-      ::  >  XX help needed here
-      ::  write an update to offers.logs to store 
-      ::  a (map id gora) such that we wouldn't
-      ::  automatically inject the gora into pita
       ::
           %offered
         ?:  ?&  (~(has by pita) id.gora.tan)
                 =(our.bol host.gora.tan)
                 =(our.bol host:(~(got by pita) id.gora.tan))
             ==
-          =.  pita
+          :-  ~
+          %=    state
+              pita
             ?-    -.gora.tan
                 %g  
               %+  ~(put by pita)  id.gora.tan
@@ -369,25 +367,45 @@
                   stak
                 ?~  had=(~(get by stak.gora.tan) our.bowl)
                   (~(put by stak.gora.tan) our.bowl 1)
-                (~(put by stak.gora.tan) [our.bowl +(u.had)])
+                (~(put by stak.gora.tan) [our.bowl u.had])
               ==
             ==
-          `state
-        =?    pita
-            !(~(has by pita) id.gora.tan)
-          (~(put by pita) id.gora.tan gora.tan)
-        =?    logs
-            ?-    -.gora.tan
-              %g  !(~(has in hodl.gora.tan) our.bowl)
-            ::
-                %s
-              ?!  %.  our.bowl
-              ~(has in ~(key by stak.gora.tan))
-            ==
-          :-  (~(put in offers.logs) id.gora.tan)
-          [requests.logs outgoing.logs]
-        :_  state
-        (gora:subs:hc pita)
+          ==
+        ?>  =(host.gora.tan src.bowl)
+        ?-   -.gora.tan
+            %g
+          :-  (gora:subs:hc pita)
+          %=    state
+              offers.logs
+            ?:  (~(has in hodl.gora.tan) our.bowl)
+              offers.logs
+            (~(put in offers.logs) id.gora.tan)
+          ::
+              pita
+            ?~  go=(~(get by pita) id.gora.tan)
+              (~(put by pita) id.gora.tan gora.tan)
+            ?>  =(host.u.go src.bowl)
+            (~(put by pita) id.gora.tan gora.tan)
+          ==
+        ::
+            %s
+          :-  (gora:subs:hc pita)
+          %=    state
+              offers.logs
+            ?:  (~(has in ~(key by stak.gora.tan)) our.bowl)
+              offers.logs
+            (~(put in offers.logs) id.gora.tan)
+          ::
+              pita
+            ?~  nul.gora.tan
+              ?~  go=(~(get by pita) id.gora.tan)
+                (~(put by pita) id.gora.tan gora.tan)
+              ?>  =(host.u.go src.bowl)
+              (~(put by pita) id.gora.tan gora.tan)
+            %-  ~(put by (rm-nul:shim:hc u.nul.gora.tan))
+            [id.gora.tan gora.tan]
+          ==
+        ==
       ::
           %request
         ?~  gor=(~(get by pita) id.tan)  !!
@@ -559,7 +577,7 @@
           [%watch-ack *]
         ?~  p.sign  `this
         %.  `this
-        (slog leaf+"%gora -watch-nack-506 {<id>}" ~)
+        (slog leaf+"%gora -watch-nack-580 {<id>}" ~)
       ::
           [%fact %gora-transact-2 *]
         =/  tan=transact-2
@@ -626,13 +644,16 @@
         [%kick ~]
       :_  this
       =-  [%pass wire %agent [src.bowl %gora] -]~
-      [%watch [%updates i.t.wire ~]]
+      [%watch [%gora i.t.wire ~]]
     ::
         [%watch-ack *]
       ?~  p.sign  `this
-      %.  `this
-      ~&  >  "557"
-      (slog leaf+"%gora -watch-nack {<id.u.gor>}" ~)
+      ~&  >  "651"
+      =-  ((slog leaf+- ~) `this)
+      """
+      %gora -watch-nack {<id.u.gor>}
+            -{<host.u.gor>}-version-mismatch}
+      """
     ::
         [%fact %gora-transact-1 *]
       =/  tan=transact-1:one
@@ -775,6 +796,14 @@
   ++  id-stn
     |=  [n=name h=host p=pic r=[h=hodl m=max] m=@da]
     (sham n h p r m)
+  ++  rm-nul
+    |=  l=(list gora-standard)
+    ^-  _pita
+    |-  ?~  l  pita
+    %=  $
+      l     t.l
+      pita  (~(del by pita) id.i.l)
+    ==
   --
 ++  subs
   |%
@@ -1067,7 +1096,7 @@
 
         :-  (weld caz (mk-coz ~(key by stak.new) id.new new))
         %=  state
-          pita           (~(put by (rm-pit goz)) id.new new)
+          pita           (~(put by (rm-nul:shim goz)) id.new new)
           outgoing.logs  (ch-log ~(key by stak.new) id.new)
         ==
         ::
@@ -1088,7 +1117,7 @@
           (~(dif in new) ~(key by s.ole))
       %=    state
           pita
-        %+  ~(put by (rm-pit goz))  id.g.ole
+        %+  ~(put by (rm-nul:shim goz))  id.g.ole
         %=    g.ole
             nul
           ?~(nul.g.ole [~ goz] `(weld u.nul.g.ole goz))
@@ -1103,15 +1132,6 @@
         ^-  [stak gora-stakable]
         =-  ?>(?=(%s -.-) [stak.- -])
         (~(got by pita) i)
-      ++  rm-pit
-        |=  l=(list gora-standard)
-        ^-  _pita
-        |-
-        ?~  l  pita
-        %=  $
-          l     t.l
-          pita  (~(del by pita) id.i.l)
-        ==
       ::
       ++  mk-coz
         |=  [s=(set ship) i=id g=gora]
