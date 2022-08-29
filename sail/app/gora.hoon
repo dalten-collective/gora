@@ -397,13 +397,13 @@
             (~(put in offers.logs) id.gora.tan)
           ::
               pita
-            ?~  nul.gora.tan
-              ?~  go=(~(get by pita) id.gora.tan)
-                (~(put by pita) id.gora.tan gora.tan)
-              ?>  =(host.u.go src.bowl)
+            ?^  nul.gora.tan
+              %-  ~(put by (rm-nul:shim:hc u.nul.gora.tan))
+              [id.gora.tan gora.tan]
+            ?~  go=(~(get by pita) id.gora.tan)
               (~(put by pita) id.gora.tan gora.tan)
-            %-  ~(put by (rm-nul:shim:hc u.nul.gora.tan))
-            [id.gora.tan gora.tan]
+            ?>  =(host.u.go src.bowl)
+            (~(put by pita) id.gora.tan gora.tan)
           ==
         ==
       ::
