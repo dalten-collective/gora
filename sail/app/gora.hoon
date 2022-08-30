@@ -481,7 +481,6 @@
           outgoing+out:stat:j-web:hc
       ==
     ==
-
   ::
       [%update @ ~]
     =/  id=@uv  (slav %uv i.t.path)
@@ -729,6 +728,7 @@
       pita  (~(del by pita) id.i.l)
     ==
   --
+::
 ++  subs
   |%
   ++  pivot
@@ -808,17 +808,6 @@
         (pairs ~[who+s+(scot %p whu) has+(numb hud)])
       ==
     --
-:: state-2 structures
-::
-:: +$  state-2
-::   $:  %2
-::       =pita                                             ::  known gorae
-::       =public                                           ::  public gorae
-::       =policy                                           ::  gorae policies
-::       =logs                                             ::  logging information
-::       =tags                                             ::  tagging information
-::       =blacklist                                        ::  blocked gorae
-::   ==
   ::                                                    ::  +stat:j-web
   ++  stat                                              ::  state objects
     |%
@@ -913,7 +902,135 @@
         (turn ~(tap in v) |=(i=id s+(scot %uv i)))
       ==
     --
+  ::
+  ++  diff                                              ::  %+  diff:j-web
+    |=  stol=state-2                                    ::    old-state
+    |=  stew=state-2                                    ::  new-state
+    |^
+    %-  rap
+    %-  pairs
+    :~  set+d-set
+        rem+d-rem
+    ==
+    ::
+    ++  rap
+      |=  j=json
+      ^-  card
+      [%give %fact ~[/website] %json !>((frond diff+j))]
+    ++  j-don
+      %-  pairs
+      :~  pita+all:stat
+          owned+own:stat
+          made+mad:stat
+          public+pub:stat
+          policy+pol:stat
+          tags+tag:stat
+      ::
+        :-  %logs
+        %-  pairs
+        :~  offers+off:stat
+            requests+req:stat
+            outgoing+out:stat
+        ==
+      ==
+    ::
+    ++  d-set
+      ^-  json
+      =.  state
+        %=  state
+          pita    (c-pit %.y)
+          public  (~(dif in public.stew) public.stol)
+          policy  (~(dif by policy.stew) policy.stol)
+          tags    (c-tag %.y)
+            logs
+          :+  (~(dif in offers.logs.stew) offers.logs.stol)
+            (c-req %.y)
+          (c-mip %.y)
+        ==
+      j-don
+    ::
+    ++  d-rem
+      ^-  json
+      =.  state
+        %=  state
+          pita    (c-pit %.n)
+          public  (~(dif in public.stol) public.stew)
+          policy  (~(dif by policy.stol) policy.stew)
+          tags    (c-tag %.n)
+            logs
+          :+  (~(dif in offers.logs.stol) offers.logs.stew)
+            (c-req %.n)
+          (c-mip %.n)
+        ==
+      j-don
+    ::
+    ++  c-pit                                           ::  +c-pit
+      |=  chg=?                                         ::  make pita changes
+      ^-  _pita
+      ?:  chg
+        %-  ~(rep by pita.stew)
+        |=  [[k=id v=gora] o=(map id gora)]
+        ?~  ole=(~(get by pita.stol) k)
+          (~(put by o) k v)
+        ?:(=(u.ole v) o (~(put by o) k v))
+      %-  ~(rep by pita.stol)
+      |=  [[k=id v=gora] o=(map id gora)]
+      ?:  (~(has by pita.stew) k)  o
+      (~(put by o) k v)
+    ::
+    ++  c-req                                           ::  +c-req
+      |=  chg=?                                         ::  make request changes
+      ^-  _requests.logs
+      ?:  chg
+        %-  ~(rep by requests.logs.stew)
+        |=  [[k=@p v=(set id)] o=(jug @p id)]
+        ?~  ole=(~(get by requests.logs.stol) k)
+          (~(put by o) k v)
+        (~(put by o) k (~(dif in v) u.ole))
+      %-  ~(rep by requests.logs.stol)
+      |=  [[k=@p v=(set id)] o=(jug @p id)]
+      ?~  neu=(~(get by requests.logs.stew) k)
+        (~(put by o) k v)
+      (~(put by o) k (~(dif in u.neu) v))
+    ::
+    ++  c-tag                                           ::  +c-tag
+      |=  chg=?                                         ::  make tags changes
+      ^-  _tags
+      ?:  chg
+        %-  ~(rep by tags.stew)
+        |=  [[k=@tas v=(set id)] o=(jug @tas id)]
+        ?~  ole=(~(get by tags.stol) k)
+          (~(put by o) k v)
+        (~(put by o) k (~(dif in v) u.ole))
+      %-  ~(rep by tags.stol)
+      |=  [[k=@tas v=(set id)] o=(jug @tas id)]
+      ?~  neu=(~(get by tags.stew) k)
+        (~(put by o) k v)
+      (~(put by o) k (~(dif in u.neu) v))
+    ::
+    ++  c-mip                                           ::  +c-mip
+      |=  chg=?                                         ::  make sent changes
+      ^-  _outgoing.logs
+      ?:  chg
+        %-  ~(rep by outgoing.logs.stew)
+        |=  $:  [k=id v=(map [@p act] [@da (unit ?)])]
+                o=(mip id [@p act] [@da (unit ?)])
+            ==
+        ?~  ole=(~(get by outgoing.logs.stol) k)
+          (~(put by o) k v)
+        %+  ~(put by o)  k
+        %.  (~(dif by v) u.ole)
+        ~(uni by (~(uni by u.ole) v))
+      %-  ~(rep by outgoing.logs.stew)
+      |=  $:  [k=id v=(map [@p act] [@da (unit ?)])]
+              o=(mip id [@p act] [@da (unit ?)])
+          ==
+      ?~  neu=(~(get by outgoing.logs.stew) k)
+        (~(put by o) k v)
+      (~(put by o) k (~(dif by v) u.neu))
+    --
   --
+::
 ++  transact
   |=  [=diff =id =wire gor=(unit gora)]
   ^-  (quip card _state)
@@ -1022,6 +1139,7 @@
       (~(del by pita) id)
     `state
   ==
+::
 ++  manage
   |=  man=manage-gora-2
   |^  ^-  (quip card _state)
@@ -1203,6 +1321,7 @@
     %-  (slog leaf+"%gora -ouch" ~)
     [(gora:subs pita) state]
   ==
+  ::
   ++  g-hand
     |=  gal=gora-handle
     ^-  (quip card _state)
@@ -1414,14 +1533,14 @@
       ?~  gor=(~(get by pita) id.gal)  !!
       ?>  =(our.bol host.u.gor)
       ~_  leaf+"                      -maybe-gora-stakable"
+      ?>  ?=(%g -.u.gor)
       ?~  pol.gal
-        ?.  ?=(%g -.u.gor)  !!
         ?~  max.u.gor
           `state(policy (~(del by policy) id.gal))
         ?.  (gth u.max.u.gor ~(wyt in hodl.u.gor))
           `state(policy (~(put by policy) id.gal %decline))
         `state(policy (~(del by policy) id.gal))
-      ?.  ?=(%g -.u.gor)  !!
+        ::
       ?~  max.u.gor
         `state(policy (~(put by policy) id.gal u.pol.gal))
       ?-    u.pol.gal
