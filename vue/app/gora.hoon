@@ -933,7 +933,7 @@
       ==
     --
   ::
-  ++  diff                                              ::  %+  diff:j-web
+  ++  diff                                              ::  %-  %-  diff:j-web
     |=  stol=state-2                                    ::    old-state
     |=  stew=state-2                                    ::  new-state
     |^
