@@ -32,21 +32,14 @@
 ::    poke actions
 ::  available to users
 ::  -  gora-handle
-::    advanced user actions
-::  -  [%ignore-give @uv]
-::    ignore gora @uv sent to u
-::  -  [%accept-give @uv]
-::    accept gora @uv sent to u
-::  -  [%ignore-request @uv @p]
-::    ignore request for gora @uv from @p
-::  -  [%accept-request @uv @p]
-::    accept request for gora @uv from @p
-::  -  [%send-gora @uv (set ship)]
-::    send gora @uv to (set ship)
-::  -  [%send-plea @uv @p]
-::    ask @p for gora @uv
-::  -  [%kick ~]
-::    maybe gora is naughty
+::  gora-handle                    advanced user actions
+::  [%ignore-give @uv]             ignores a given gorae
+::  [%accept-give @uv]             accepts a given gorae
+::  [%ignore-request @uv @p]       ignore pleas for gora
+::  [%accept-request @uv @p]       accept pleas for gora
+::  [%send-gora @uv (set ship)]    give a gora to people
+::  [%send-plea @uv @p]            ask ship for gora @uv
+::  [%kick ~]                      maybe gora is naughty
 ::
 +$  manage-gora-2
   $%  gora-handle
@@ -63,20 +56,13 @@
   ==
 ::    gora-handle
 ::  for making and changing gorae
-::  -  [%rm-gora @uv]
-::    delete the gora with id=@uv
-::  -  [%set-max @uv (unit @ud)]
-::    set max allowed gorae
-::  -  [%add-tag @tas (set id)]
-::    add a tag to some gorae
-::  -  [%rem-tag @tas (set id)]
-::    remove a tag from some gorae
-::  -  [%stak-em (set id) @t @t]
-::    convert a set of gorae into a stak
-::  -  [%set-pol @uv u?(%approve %decline)]
-::    (un)set a gora's acceptance policy
-::  -  [%mk-gora @t @t ?([%g hodl max] [%s stak])]
-::    make a gora
+::  [%rm-gora @uv]                               deletes a gora, local or remote
+::  [%set-max @uv (unit @ud)]                    sets max hodlers, gora-standard
+::  [%add-tag @tas (set id)]                     adds a tag across a set of gora
+::  [%rem-tag @tas (set id)]                     remove a tag from a set of gora
+::  [%stak-em (set id) @t @t]                    convert a set gorae into a stak
+::  [%set-pol @uv u?(%approve %decline)]         (un)set a gora's request policy
+::  [%mk-gora @t @t ?([%g hodl max] [%s stak])]  start a new gora with hodl/stak
 ::
 +$  gora-handle
   $%  [%rm-gora =id]

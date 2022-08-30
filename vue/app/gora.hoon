@@ -13,13 +13,13 @@
 ::  %gora's user pokes include the following:
 ::
 ::    interacting with gora:
-::  [%ignore-give @uv]           ignores a given gorae
-::  [%accept-give @uv]           accepts a given gorae
-::  [%ignore-request @uv @p]     ignore pleas for gora
-::  [%accept-request @uv @p]     accept pleas for gora
-::  [%send-gora @uv (set ship)]  give a gora to people
-::  [%send-plea @uv @p]          ask ship for gora @uv
-::  [%kick ~]                    maybe gora is naughty
+::  [%ignore-give @uv]             ignores a given gorae
+::  [%accept-give @uv]             accepts a given gorae
+::  [%ignore-request @uv @p]       ignore pleas for gora
+::  [%accept-request @uv @p]       accept pleas for gora
+::  [%send-gora @uv (set ship)]    give a gora to people
+::  [%send-plea @uv @p]            ask ship for gora @uv
+::  [%kick ~]                      maybe gora is naughty
 ::
 ::    making & changing gorae:
 ::  [%rm-gora @uv]                               deletes a gora, local or remote
