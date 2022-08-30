@@ -31,6 +31,8 @@
 ::
 ::    poke actions
 ::  available to users
+::  -  gora-handle
+::    advanced user actions
 ::  -  [%ignore-give @uv]
 ::    ignore gora @uv sent to u
 ::  -  [%accept-give @uv]
@@ -79,6 +81,7 @@
 +$  gora-handle
   $%  [%rm-gora =id]
       [%set-max =id =max]
+      [%pub-gor =id how=?]
       [%add-tag tag=@tas gorae=(set id)]
       [%rem-tag tag=@tas gorae=(set id)]
       [%set-pol =id pol=(unit ?(%approve %decline))]

@@ -459,7 +459,31 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
-  ?:  ?=([%update @ ~] path)
+  ?+    path  (on-watch:def path)
+      [%website ~]
+    ?>  (team:title our.bowl src.bowl)
+    :_  this
+    =-  [%give %fact ~ %json !>(`json`-)]~
+    %-  pairs:enjs:format
+    :~  pita+all:stat:j-web:hc
+      ::
+        owned+own:stat:j-web:hc
+        made+mad:stat:j-web:hc
+      ::
+        public+pub:stat:j-web:hc
+        policy+pol:stat:j-web:hc
+        tags+tag:stat:j-web:hc
+    ::
+      :-  %logs
+      %-  pairs:enjs:format
+      :~  offers+off:stat:j-web:hc
+          requests+req:stat:j-web:hc
+          outgoing+out:stat:j-web:hc
+      ==
+    ==
+
+  ::
+      [%update @ ~]
     =/  id=@uv  (slav %uv i.t.path)
     ?~  gor=(~(get by pita) id)  !!
     ?>  &(?=(%g -.u.gor) =(our.bowl host.u.gor))
@@ -474,24 +498,26 @@
       ::
         [%give %kick ~ ~]
     ==
-  ?.  ?=([%gora @ ~] path)  (on-watch:def path)
-  ~_  :-  %leaf
-      """
-      %gora -bad-sub
-      > id: {(trip i.t.path)}
-      > from: {(scow %p src.bowl)}
-      """
-  =/  id=@uv  (slav %uv i.t.path)
-  ?~  gor=(~(get by pita) id)  !!
-  ?>  =(our.bowl host.u.gor)
-  :_  this
-  =-  [%give %fact ~ [%gora-transact-2 -]]~
-  ?-    -.u.gor
-      %g
-    !>(`transact-2`[%diff [%start-gora +.u.gor]])
   ::
-      %s
-    !>(`transact-2`[%diff [%start-stak +.u.gor]])
+      [%gora @ ~]
+    ~_  :-  %leaf
+        """
+        %gora -bad-sub
+        > id: {(trip i.t.path)}
+        > from: {(scow %p src.bowl)}
+        """
+    =/  id=@uv  (slav %uv i.t.path)
+    ?~  gor=(~(get by pita) id)  !!
+    ?>  =(our.bowl host.u.gor)
+    :_  this
+    =-  [%give %fact ~ [%gora-transact-2 -]]~
+    ?-    -.u.gor
+        %g
+      !>(`transact-2`[%diff [%start-gora +.u.gor]])
+    ::
+        %s
+      !>(`transact-2`[%diff [%start-stak +.u.gor]])
+    ==
   ==
 ::
 ++  on-arvo
@@ -737,6 +763,157 @@
     :+  %pass  /gora/(scot %uv i)/(scot %p host.g)
     [%agent [host.g %gora] %watch [%gora (scot %uv i) ~]]
   --
+::                                                      ::  +j-web
+++  j-web                                               ::  json handlers
+  =,  enjs:format
+  |%
+  ++  gson                                              ::  +gson:j-web
+    |=  gun=gora                                        ::  gora handlers
+    |^  ^-  json
+    ?-   -.gun
+      %g  (stn gun)
+      %s  (sht gun)
+    ==
+    ++  stn                                             ::  +stn:gson:j-web
+      |=  g=gora-standard                               ::  standard gora
+      ^-  json
+      %-  pairs
+      :~  type+s+'g'
+          pic+s+pic.g
+          name+s+name.g
+          made+(sect made.g)
+          id+s+(scot %uv id.g)
+          host+s+(scot %p host.g)
+          max+?~(max.g ~ (numb u.max.g))
+      ::
+        :+  %hodl  %a
+        (turn ~(tap in hodl.g) |=(s=@p s+(scot %p s)))
+      ==
+    ::
+    ++  sht                                             ::  +sht:gson:j-web
+      |=  g=gora-stakable                               ::  stakable gora
+      ^-  json
+      %-  pairs
+      :~  type+s+'s'
+          pic+s+pic.g
+          name+s+name.g
+          made+(sect made.g)
+          id+s+(scot %uv id.g)
+          host+s+(scot %p host.g)
+          nul+?~(nul.g ~ a+(turn u.nul.g stn))
+      ::
+        :+  %stak  %a
+        %+  turn  ~(tap by stak.g)
+        |=  [whu=@p hud=@ud]
+        (pairs ~[who+s+(scot %p whu) has+(numb hud)])
+      ==
+    --
+:: state-2 structures
+::
+:: +$  state-2
+::   $:  %2
+::       =pita                                             ::  known gorae
+::       =public                                           ::  public gorae
+::       =policy                                           ::  gorae policies
+::       =logs                                             ::  logging information
+::       =tags                                             ::  tagging information
+::       =blacklist                                        ::  blocked gorae
+::   ==
+  ::                                                    ::  +stat:j-web
+  ++  stat                                              ::  state objects
+    |%
+    ::                                                  ::  -  pita
+    ++  all                                             ::  +all:stat:j-web
+      ^-  json                                          ::  gorae, as map
+      a+(turn ~(val by pita) gson)
+    ::                                                  ::  +  logic about pita
+    ++  own                                             ::  +own:stat:j-web
+      ^-  json                                          ::  gorae you own
+      :-  %a
+      %+  murn  ~(tap by pita)
+      |=  [k=id v=gora]
+      ?-    -.v
+          %g
+        ?.  (~(has in hodl.v) our.bol)  ~
+        `s+(scot %uv id.v)
+          %s
+        ?.  (~(has in ~(key by stak.v)) our.bol)  ~
+        `s+(scot %uv id.v)
+      ==
+    ::                                                  ::  +  logic about pita
+    ++  mad                                             ::  +mad:stat:j-web
+      ^-  json                                          ::  hosted goraes
+      :-  %a
+      %+  murn  ~(tap by pita)
+      |=  [k=id v=gora]
+      ?.  =(our.bol host.v)  ~
+      `s+(scot %uv id.v)
+    ::                                                  ::  -  public
+    ++  pub                                             ::  +pub:stat:j-web
+      ^-  json                                          ::  public goraes
+      a+(turn ~(tap in public) |=(i=id s+(scot %uv i)))
+    ::                                                  ::  -  policy
+    ++  pol                                             ::  +pol:stat:j-web
+      ^-  json                                          ::  auto-approve?
+      :-  %a
+      %+  turn  ~(tap by policy)
+      |=  [k=id v=?(%approve %decline)]
+      %-  pairs
+      :~  id+s+(scot %uv k)
+      ::
+        :-  %policy
+        ?:  ?=(%approve v)  b+%.y
+        ~_  "%gora -strange-policy"
+        ?>(?=(%decline v) b+%.n)
+      ==
+    ::                                                  ::  -  logs
+    ++  off                                             ::  +off:stat:j-web
+      ^-  json                                          ::  offered gorae
+      :-  %a
+      %+  turn  ~(tap in offers.logs)
+      |=(i=id s+(scot %uv i))
+    ::
+    ++  req                                             ::  +req:stat:j-web
+      ^-  json                                          ::  request inbox
+      :-  %a
+      %+  turn  ~(tap by requests.logs)
+      |=  [k=@p v=(set id)]
+      %-  pairs
+      :~  requester+s+(scot %p k)
+      ::
+        :+  %id-list  %a
+        (turn ~(tap in v) |=(i=id s+(scot %uv i)))
+      ==
+    ::
+    ++  out                                             ::  +out:stat:j-web
+      ^-  json                                          ::  sorted sended
+      :-  %a
+      %+  turn
+        %+  sort  ~(tap bi outgoing.logs)
+        |=  [a=[@ ^ [w=@da *]] b=[@ ^ [w=@da *]]]
+        (gth w.a w.b)
+      |=  [i=id [p=@p a=act] [w=@da dun=(unit ?)]]
+      %-  pairs
+      :~  when+(sect w)
+          id+s+(scot %uv i)
+          who+s+(scot %p p)
+          act+s+(scot %tas a)
+          status+?~(dun s+'pending' b+u.dun)
+      ==
+    ::                                                  ::  -  tags
+    ++  tag                                             ::  +tag:stat:jweb
+      ^-  json                                          ::  ur categories
+      :-  %a
+      %+  turn  ~(tap by tags)
+      |=  [k=@tas v=(set id)]
+      %-  pairs
+      :~  tag+s+(scot %tas k)
+      ::
+        :+  %id-list  %a
+        (turn ~(tap in v) |=(i=id s+(scot %uv i)))
+      ==
+    --
+  --
 ++  transact
   |=  [=diff =id =wire gor=(unit gora)]
   ^-  (quip card _state)
@@ -851,6 +1028,7 @@
   ?-    -.man
       $?  %rm-gora
           %set-max
+          %pub-gor
           %add-tag
           %rem-tag
           %stak-em
@@ -1029,6 +1207,15 @@
     |=  gal=gora-handle
     ^-  (quip card _state)
     ?-    -.gal
+        %pub-gor
+      :-  ~
+      %=    state
+          public
+        ?:  =(%.y how.gal)
+          (~(put in public) id.gal)
+        (~(del in public) id.gal)
+      ==
+    ::
         %rm-gora
       ~_  "%gora -rm-{<id.gal>}-gora-not-found"
       =/  gor=gora
