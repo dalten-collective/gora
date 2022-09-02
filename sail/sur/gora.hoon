@@ -8,6 +8,7 @@
 :: defining gora (v2)
 ::
 +$  id    @uv
++$  tag   @tas
 +$  pic   cord
 +$  max   (unit @ud)
 +$  name  cord
@@ -15,7 +16,8 @@
 +$  hodl  (set ship)
 +$  stak  (map ship @ud)
 +$  made  @da
-+$  nul  (unit (list gora-standard))
++$  act   ?(%give %take %gack)
++$  nul   (unit (list gora-standard))
 ::
 ::  %g gorae are standard gorae
 ::  %s gorae are stakable gorae
@@ -91,6 +93,25 @@
       [%start-gora =id =name =pic =host =made =hodl =max]
       [%deleted-me ~]
   ==
+::  state for rudder
+::
++$  tack
+  $:  pita=(map id gora)
+      public=(set id)
+      policy=(map id ?(%approve %decline))
+  ::
+    $=  logs
+    $:  offers=(set id)
+        requests=(jug ship id)
+    ::
+      $=  outgoing
+      (mip id [ship act] [@da (unit ?)])
+    ==
+  ::
+    tags=(jug @tas id)
+    blacklist=(set id)
+  ==
+::
 :: old state actions, objects
 ::
 ++  old

@@ -36,7 +36,8 @@
 ::    -  TBD
 ::
 /-  *gora
-/+  default-agent, dbug
+/+  default-agent, dbug, rudder
+/~  pages  (page:rudder tack manage-gora-2)  /app/gora
 ::
 |%
 ::
@@ -59,8 +60,6 @@
       =tags                                             ::  tagging information
       =blacklist                                        ::  blocked gorae
   ==
-+$  tag        @tas
-+$  act        ?(%give %take %gack)
 +$  tags       (jug tag id)
 +$  pita       (map id gora)
 +$  public     (set id)
@@ -249,6 +248,42 @@
   ^-  (quip card _this)
   =^  cards  state
     ?+    mark  (on-poke:def mark vase)
+    ::    %handle-http-request mark handled in helper   ::  sail -vue-ignores
+    ::                                                  ::
+        %handle-http-request
+      =;  out=(quip card tack)
+        ::  we get back a regular ole (quip card _state)
+        ::  we handle like this, not tisket bcuz reasons
+        ::
+        [-.out [%2 +.out]]
+      ::
+      %.  [bowl !<(order:rudder vase) +.state]
+      %:  (steer:rudder tack manage-gora-2)
+        pages
+      ::
+        |=  =trail:rudder
+        ^-  (unit place:rudder)
+        ?~  site=(decap:rudder /apps/gora site.trail)  ~
+        ?+  u.site  ~
+          ~           `[%page & %pita]                  ::  main pita
+          [%$ ~]      `[%away /apps/gora]               ::  main pita
+          [%index ~]  `[%away (snip site.trail)]        ::  main pita
+          [%offer ~]  `[%page & %offer]                 ::  my offers
+          [%asked ~]  `[%page & %asked]                 ::  she asked
+          [%mkstd ~]  `[%page & %mkstd]                 ::  make gstd
+          [%mkstk ~]  `[%page & %mkstk]                 ::  make gstk
+          [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
+          [%poser ~]  `[%page | %poser]                 ::  my public
+        ==
+      ::
+        |=  =order:rudder
+        ^-  [[(unit reply:rudder) (list card)] tack]
+        =;  msg=@t  [[`[%code 404 msg] ~] +.state]
+        %+  rap  3
+        ~['%gora page ' url.request.order ' not found']
+      ::
+        skipper:hc
+      ==
     ::    %gora-man-2 mark handled in helper core
     ::
         %gora-man-2
@@ -462,6 +497,8 @@
   |=  =path
   ^-  (quip card _this)
   ?+    path  (on-watch:def path)
+    [%http-response *]  `this
+  ::
       [%website ~]
     ?>  (team:title our.bowl src.bowl)
     :_  this
@@ -1060,6 +1097,102 @@
       (~(put by o) k (~(dif by v) u.neu))
     --
   --
+::
+++  skipper
+  |=  act=manage-gora-2
+  ::  $@(@t [brief:rudder (list card) state])
+  ::  - either error or,
+  ::  - some status message, a list cards, and state
+  ::
+  ^-  $@(@t [brief:rudder (list card) tack])
+  ?-    -.act
+      %ignore-give
+    ?.  (~(has in offers.logs) id.act)
+      'missing offer for ignore'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ignored offer of {(trip name:(~(got by pita) id.act))}
+    - from {(scow %p host:(~(got by pita) id.act))}
+    - id {(scow %uv id.act)}
+    """
+  ::
+      %accept-give
+    ?.  ?&  (~(has in offers.logs) id.act)
+            (~(has by pita) id.act)
+        ==
+      'missing gora to accept'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    accepted offer of {(trip name:(~(got by pita) id.act))}
+    - added %gack to outgoing-logs
+    - waiting for {(scow %p host:(~(got by pita) id.act))}
+    """
+  ::
+      %ignore-request
+    ?.  (~(has ju requests.logs) ship.act id.act)
+      'missing request to ignore'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ignored request for {(trip name:(~(got by pita) id.act))}
+    - from {(scow %p ship.act)}
+    - id {(scow %uv id.act)}
+    """
+  ::
+      %accept-request
+    ?.  (~(has ju requests.logs) ship.act id.act)
+      'missing request to accept'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    accepted request for {(trip name:(~(got by pita) id.act))}
+    - sent updated owner information on [%updates {(scow %uv id.act)} ~]
+    """
+  ::
+      %send-gora
+    ``+.state
+  ::
+      %send-plea
+    ``+.state
+  ::
+      %kick
+    ``+.state
+  ::
+      %rm-gora
+    ``+.state
+  ::
+      %set-max
+    ``+.state
+  ::
+      %pub-gor
+    ``+.state
+  ::
+      %add-tag
+    ``+.state
+  ::
+      %rem-tag
+    ``+.state
+  ::
+      %set-pol
+    ``+.state
+  ::
+      %mk-gora
+    ``+.state
+  ::
+      %stak-em
+    ``+.state
+  ::
+  ==
 ::
 ++  transact
   |=  [=diff =id =wire gor=(unit gora)]
