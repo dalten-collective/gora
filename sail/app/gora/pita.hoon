@@ -23,9 +23,129 @@
           msgs=(unit [gud=? txt=@])
       ==
   ^-  reply:rudder
+  =/  pag=@ud
+    ?~(p=(~(get by (malt args)) 'page') 0 (slav %ud u.p))
+
+  =/  hos=(unit @p)
+    ?~(h=(~(get by (malt args)) 'host') ~ `(slav %p u.h))
+
+  =/  tog=(unit @tas)
+    ?~(p=(~(get by (malt args)) 'tags') ~ p)
+  ~&  >  [%page pag 'ship' 'term']
   |^  
-  ~&  >  sat
   [%page page]
+  ++  make
+    |%
+    ++  last
+      =;  neu
+        ;a(id "last", class "page-button", href "./gora{(trip neu)}")
+          ;svg(xmlns "http://www.w3.org/2000/svg", height "24", width "24")
+            ;path(fill "#bb8c02", d "m12.2 17.1 2.125-2.125L12.85 13.5h3.875v-3.025H12.85l1.475-1.45-2.125-2.15L7.1 12Zm-.2 5.5q-2.225 0-4.15-.837-1.925-.838-3.35-2.263-1.425-1.425-2.262-3.35Q1.4 14.225 1.4 12q0-2.225.838-4.15Q3.075 5.925 4.5 4.5t3.35-2.263Q9.775 1.4 12 1.4q2.225 0 4.15.837 1.925.838 3.35 2.263 1.425 1.425 2.263 3.35.837 1.925.837 4.15 0 2.225-.837 4.15-.838 1.925-2.263 3.35-1.425 1.425-3.35 2.263-1.925.837-4.15.837Zm0-3.025q3.2 0 5.388-2.2 2.187-2.2 2.187-5.375 0-3.2-2.187-5.388Q15.2 4.425 12 4.425q-3.175 0-5.375 2.187Q4.425 8.8 4.425 12q0 3.175 2.2 5.375t5.375 2.2ZM12 12Z");
+          ==
+        ==
+      %+  rap  3
+      :~  (cat 3 '?page=' (scot %ud ?:(=(0 pag) 0 (sub pag 1))))
+          ?~(hos '' (cat 3 '&host=' (scot %p u.hos)))
+          ?~(tog '' (cat 3 '&tags=' u.tog))
+      ==
+    ++  next
+      =;  neu
+        ;a(id "next", class "page-button", href "./gora{(trip neu)}")
+          ;svg(xmlns "http://www.w3.org/2000/svg", height "24", width "24")
+            ;path(fill "#bb8c02", d "m11.8 17.1 5.125-5.1L11.8 6.875l-2.1 2.15 1.45 1.45H7.3V13.5h3.85L9.7 14.975Zm.2 5.5q-2.225 0-4.15-.837-1.925-.838-3.35-2.263-1.425-1.425-2.262-3.35Q1.4 14.225 1.4 12q0-2.225.838-4.15Q3.075 5.925 4.5 4.5t3.35-2.263Q9.775 1.4 12 1.4q2.225 0 4.15.837 1.925.838 3.35 2.263 1.425 1.425 2.263 3.35.837 1.925.837 4.15 0 2.225-.837 4.15-.838 1.925-2.263 3.35-1.425 1.425-3.35 2.263-1.925.837-4.15.837Zm0-3.025q3.2 0 5.388-2.2 2.187-2.2 2.187-5.375 0-3.2-2.187-5.388Q15.2 4.425 12 4.425q-3.175 0-5.375 2.187Q4.425 8.8 4.425 12q0 3.175 2.2 5.375t5.375 2.2ZM12 12Z");
+          ==
+        ==
+      %+  rap  3
+      :~  (cat 3 '?page=' (scot %ud +(pag)))
+          ?~(hos '' (cat 3 '&host=' (scot %p u.hos)))
+          ?~(tog '' (cat 3 '&tags=' u.tog))
+      ==
+
+    ::
+    ++  pads
+      |=  m=marl
+      ^-  marl
+      |-
+      ?:  (gte (lent m) 7)  m
+      $(m `marl`[m-te m])
+    ++  m-te
+      ^-  manx
+      ;div(class "badge")
+        ;div(class "in-set");
+      ::
+        ;div(class "set-in")
+          ;div(class "glint");
+        ::
+          ;div(class "shadow");
+        ==
+      ==
+  ++  gora
+      |=  [p=@ud s=(unit @p) t=(unit @tas) o=(unit ?)]
+      ^-  marl
+      =;  lora=(list ^gora)
+        =.  lora  
+          (scag 7 (slag (mul p 8) lora))
+        %-  ~(rep in (silt lora))
+        |=  [g=^gora m=marl]
+        :_  m
+        ;div(class "badge")
+          ;div(class "in-set");
+        ::
+          ;div(class "set-in")
+            ;div(class "glint");
+          ::
+            ;div(class "shadow");
+          ::
+            ;img(src "{(trip pic.g)}");
+          ==
+        ==
+      =-  %+  sort  -
+          |=  [a=^gora b=^gora]
+          ?:  =(made.a made.b)
+            (gth id.a id.b)
+          (gth made.a made.b)
+      %~  val  by
+      =?    pita.sat
+          !?=(~ t)
+        ?.  (~(has in ~(key by tags.sat)) (need t))
+          ~
+        ^-  _pita.sat
+        %-  malt
+        %+  murn  ~(tap by pita.sat)
+        |=  [k=id v=^gora]
+        ?.  (~(has in (~(got by tags.sat) (need t))) k)
+          ~
+        `[k v]
+      =?    pita.sat
+          !?=(~ s)
+        ^-  _pita.sat
+        %-  malt
+        %+  murn  ~(tap by pita.sat)
+        |=  [k=id v=^gora]
+        ?.(=((need s) host.v) ~ `[k v])
+      =?    pita.sat
+          !?=(~ o)
+        ?.  (need o)
+          %-  malt
+          %+  murn  ~(tap by pita.sat)
+          |=  [k=id v=^gora]
+          ?-    -.v
+            %g  ?:((~(has in hodl.v) our.bol) ~ `[k v])
+          ::
+              %s
+            ?:((~(has in ~(key by stak.v)) our.bol) ~ `[k v])
+          ==
+        %-  malt
+        %+  murn  ~(tap by pita.sat)
+        |=  [k=id v=^gora]
+        ?-    -.v
+          %g  ?.((~(has in hodl.v) our.bol) ~ `[k v])
+        ::
+            %s
+          ?.((~(has in ~(key by stak.v)) our.bol) ~ `[k v])
+        ==
+      pita.sat
+    --
   ++  page
     ^-  manx
     ;html
@@ -66,89 +186,7 @@
                 ==
               ==
             ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2021.12.28..21.13.26-Team%20Red%20Gem.png");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://dalten.sfo2.digitaloceanspaces.com/sicdev-pilnup/2021.11.19..04.27.12-seattle-urbit-meetup-2021-11-18.png");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://previews.123rf.com/images/jeremywhat/jeremywhat1106/jeremywhat110600966/9895276-round-half-tone-images-round-black-white-pattern-design.jpg");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://freedom-club.sfo2.digitaloceanspaces.com/rabsef-bicrym/2021.12.18..19.10.55-11%2C24%2Cdalten.png");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2021.12.28..21.13.26-Team%20Red%20Gem.png");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "https://dalten.sfo2.digitaloceanspaces.com/sicdev-pilnup/2021.11.19..04.27.12-seattle-urbit-meetup-2021-11-18.png");
-                ==
-              ==
-            ::
-              ;div(class "badge")
-                ;div(class "in-set");
-              ::
-                ;div(class "set-in")
-                  ;div(class "glint");
-                ::
-                  ;div(class "shadow");
-                ::
-                  ;img(src "");
-                ==
-              ==
+            ;*  (pads:make (gora:make [pag ~ ~ ~]))
             ==
           ==
         ::
@@ -156,11 +194,7 @@
             ;div(class "last")
               ;div(class "last-layout")
                 ;div(class "last-wrapper")
-                  ;a(id "last", class "page-button", href "localhost")
-                    ;svg(xmlns "http://www.w3.org/2000/svg", height "24", width "24")
-                      ;path(d "m12.2 17.1 2.125-2.125L12.85 13.5h3.875v-3.025H12.85l1.475-1.45-2.125-2.15L7.1 12Zm-.2 5.5q-2.225 0-4.15-.837-1.925-.838-3.35-2.263-1.425-1.425-2.262-3.35Q1.4 14.225 1.4 12q0-2.225.838-4.15Q3.075 5.925 4.5 4.5t3.35-2.263Q9.775 1.4 12 1.4q2.225 0 4.15.837 1.925.838 3.35 2.263 1.425 1.425 2.263 3.35.837 1.925.837 4.15 0 2.225-.837 4.15-.838 1.925-2.263 3.35-1.425 1.425-3.35 2.263-1.925.837-4.15.837Zm0-3.025q3.2 0 5.388-2.2 2.187-2.2 2.187-5.375 0-3.2-2.187-5.388Q15.2 4.425 12 4.425q-3.175 0-5.375 2.187Q4.425 8.8 4.425 12q0 3.175 2.2 5.375t5.375 2.2ZM12 12Z");
-                    ==
-                  ==
+                  ;+  last:make
                 ==
               ==
             ==
@@ -196,11 +230,7 @@
             ;div(class "next")
               ;div(class "next-layout")
                 ;div(class "next-wrapper")
-                  ;a(id "next", class "page-button", href "localhost")
-                    ;svg(xmlns "http://www.w3.org/2000/svg", height "24", width "24")
-                      ;path(d "m11.8 17.1 5.125-5.1L11.8 6.875l-2.1 2.15 1.45 1.45H7.3V13.5h3.85L9.7 14.975Zm.2 5.5q-2.225 0-4.15-.837-1.925-.838-3.35-2.263-1.425-1.425-2.262-3.35Q1.4 14.225 1.4 12q0-2.225.838-4.15Q3.075 5.925 4.5 4.5t3.35-2.263Q9.775 1.4 12 1.4q2.225 0 4.15.837 1.925.838 3.35 2.263 1.425 1.425 2.263 3.35.837 1.925.837 4.15 0 2.225-.837 4.15-.838 1.925-2.263 3.35-1.425 1.425-3.35 2.263-1.925.837-4.15.837Zm0-3.025q3.2 0 5.388-2.2 2.187-2.2 2.187-5.375 0-3.2-2.187-5.388Q15.2 4.425 12 4.425q-3.175 0-5.375 2.187Q4.425 8.8 4.425 12q0 3.175 2.2 5.375t5.375 2.2ZM12 12Z");
-                    ==
-                  ==
+                  ;+  next:make
                 ==
               ==
             ==
@@ -437,7 +467,7 @@
       height: 20vw;
 
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 49%, #fcfcfc, #cccfd0 36%, #bab8b3 91%);
+      background: url("https://freedom-club.sfo2.digitaloceanspaces.com/props/gora/pattern.png");
 
       display: flex;
       justify-content: center;
@@ -501,7 +531,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 5px 5px -1px rgb(255 255 255 / 50%),
         inset -3px -3px 5px -1px rgb(0 0 0 / 99%),
@@ -518,7 +547,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 3px 3px -1px rgb(255 255 255 / 50%),
         inset -7px -1px 8px 1px rgb(0 0 0 / 99%),
@@ -818,7 +846,7 @@
       height: 12vw;
 
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 49%, #fcfcfc, #cccfd0 36%, #bab8b3 91%);
+      background: url("https://freedom-club.sfo2.digitaloceanspaces.com/props/gora/pattern.png");
 
       display: flex;
       justify-content: center;
@@ -883,7 +911,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 5px 5px -1px rgb(255 255 255 / 50%),
         inset -3px -3px 5px -1px rgb(0 0 0 / 99%),
@@ -900,7 +927,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 3px 3px -1px rgb(255 255 255 / 50%),
         inset -7px -1px 8px 1px rgb(0 0 0 / 99%),
@@ -1174,6 +1200,11 @@
       transform: rotate(0deg);
     }
 
+    /* .badge - hover */
+    .badge:hover {
+      transform: rotate(0deg);
+    }
+
     /*   in-set - holds a badge in the box */
     .in-set {
       z-index: 0;
@@ -1190,7 +1221,7 @@
       height: 15vw;
 
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 49%, #fcfcfc, #cccfd0 36%, #bab8b3 91%);
+      background: url("https://freedom-club.sfo2.digitaloceanspaces.com/props/gora/pattern.png");
 
       display: flex;
       justify-content: center;
@@ -1254,7 +1285,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 5px 5px -1px rgb(255 255 255 / 50%),
         inset -3px -3px 5px -1px rgb(0 0 0 / 99%),
@@ -1271,7 +1301,6 @@
       border-radius: 50%;
       padding: 10px;
 
-      fill: #bb8c02;
       box-shadow:
         inset 3px 3px 3px -1px rgb(255 255 255 / 50%),
         inset -7px -1px 8px 1px rgb(0 0 0 / 99%),
