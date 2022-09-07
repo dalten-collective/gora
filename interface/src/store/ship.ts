@@ -36,6 +36,8 @@ export default {
         (data) => {
           console.log("agentName ", agentName);
           console.log("response ", data);
+
+          dispatch("pita/handleSubscriptionData", data, { root: true })
         },
         (subscriptionNumber: number) => {
           console.log("got subscription number ", subscriptionNumber);
