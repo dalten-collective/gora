@@ -126,7 +126,7 @@
   %-  (slog leaf+"%gora -sail-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
-      [%connect [[~ [%apps %gora ~]] dap.bowl]]
+      [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
   ::
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]
       :+  %arvo  %b
@@ -144,10 +144,10 @@
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
       :~  =-  [%pass /eyre/disconnect %arvo %e -]
-          [%disconnect [~ [%apps %gora %public ~]]]
+          [%connect [~ [%apps %gora %public ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [[~ [%apps %gora ~]] dap.bowl]]  
+          [%disconnect [[~ [%apps %gora ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
