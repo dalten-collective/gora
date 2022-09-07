@@ -141,7 +141,7 @@
   |^  ^-  (quip card _this)
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
-      :~  =-  [%pass /eyre/disconnect %arvo %e -]
+      :~  =-  [%pass /eyre/connect %arvo %e -]
           [%disconnect [~ [%apps %gora %public ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
@@ -1523,7 +1523,10 @@
           %+  ~(put by pita)  id.u.gor
           u.gor(hodl (~(put in hodl.u.gor) ship.man))
         ==
-      ?>  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+      ?.  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+        =.  requests.logs
+          (~(del ju requests.logs) ship.man id.man)
+        `state
       =/  pat=path
         /gora/(scot %uv id.u.gor)
       :-

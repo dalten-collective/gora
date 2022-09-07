@@ -37,6 +37,10 @@
       ==
     ::
       ;body
+        ;div(class "modal-container")
+          ;+  failure:modals:make
+          ;+  success:modals:make
+        ==
         ;div(class "container")
           ;div(class "title-bar")
             ;div(class "title-pane")
@@ -70,10 +74,58 @@
                 ;path(fill "#bb8c02", d "M5.625 20.775q-.975 0-1.687-.713-.713-.712-.713-1.687 0-.975.713-1.675.712-.7 1.687-.7.975 0 1.675.7.7.7.7 1.675 0 .975-.7 1.687-.7.713-1.675.713Zm6.375 0q-.975 0-1.675-.713-.7-.712-.7-1.687 0-.975.7-1.675.7-.7 1.675-.7.975 0 1.675.7.7.7.7 1.675 0 .975-.7 1.687-.7.713-1.675.713Zm6.375 0q-.975 0-1.675-.713-.7-.712-.7-1.687 0-.975.7-1.675.7-.7 1.675-.7.975 0 1.687.7.713.7.713 1.675 0 .975-.713 1.687-.712.713-1.687.713Zm-12.75-6.4q-.975 0-1.687-.7-.713-.7-.713-1.675 0-.975.713-1.675.712-.7 1.687-.7.975 0 1.675.7.7.7.7 1.675 0 .975-.7 1.675-.7.7-1.675.7Zm6.375 0q-.975 0-1.675-.7-.7-.7-.7-1.675 0-.975.7-1.675.7-.7 1.675-.7.975 0 1.675.7.7.7.7 1.675 0 .975-.7 1.675-.7.7-1.675.7Zm6.375 0q-.975 0-1.675-.7-.7-.7-.7-1.675 0-.975.7-1.675.7-.7 1.675-.7.975 0 1.687.7.713.7.713 1.675 0 .975-.713 1.675-.712.7-1.687.7ZM5.625 8q-.975 0-1.687-.7-.713-.7-.713-1.675 0-.975.713-1.688.712-.712 1.687-.712.975 0 1.675.712.7.713.7 1.688T7.3 7.3q-.7.7-1.675.7ZM12 8q-.975 0-1.675-.7-.7-.7-.7-1.675 0-.975.7-1.688.7-.712 1.675-.712.975 0 1.675.712.7.713.7 1.688t-.7 1.675q-.7.7-1.675.7Zm6.375 0Q17.4 8 16.7 7.3q-.7-.7-.7-1.675 0-.975.7-1.688.7-.712 1.675-.712.975 0 1.687.712.713.713.713 1.688T20.062 7.3q-.712.7-1.687.7Z");
               ==
         ==
+      ::
+        ;script:"{(trip script)}"
       ==
     ==
   ++  make
     |%
+    ++  modals
+      |%
+      ++  failure
+        ^-  manx
+        ?~  msgs  ;div;
+        ?:  gud.u.msgs  ;div;
+        ;div(id "fail-message", class "modal", style "display: block;")
+          ;div(class "modal-center")
+            ;div(class "modal-header-error")
+              ;div(class "name")
+                ;p:"ゴラ失敗"
+              ==
+            ==
+          ::
+            ;div(class "modal-body")
+            ::
+              ;div(class "delete-command")
+                ;p:"{(trip txt.u.msgs)}"
+              ==
+            ==
+          ==
+        ==
+      ::
+      ++  success
+        ^-  manx
+        ?~  msgs  ;div;
+        ?.  gud.u.msgs  ;div;
+        ;div(id "succ-message", class "modal", style "display: block;")
+          ;div(class "modal-center")
+            ;div(class "modal-header-success")
+              ;div(class "name")
+                ;p:"ゴラ成功"
+              ==
+            ==
+          ::
+            ;div(class "modal-body")
+            ::
+              ;div(class "delete-command")
+                ;div
+                  ;pre:"{(trip txt.u.msgs)}"
+                ==
+              ==
+            ==
+          ==
+        ==
+      --
     ++  circle
       ::  use  fill "#bb8c02", in svg
       ::
@@ -183,7 +235,7 @@
         ;+  ?~  a
               ;td(class "status", style "color: white;"):"pend"
             ?:  u.a
-              ;td(class "status", style "color: #72ff13;"):"ackd"
+              ;td(class "status", style "color: #72ff13;"):"ack"
             ;td(class "status", style "color: #c70000;"):"nack"
       ==
     --
@@ -896,8 +948,89 @@
       .outTable > table > tbody > tr:nth-child(odd) {
         box-shadow: 0px 0px 0px 1px #a58e4b, inset 0px 0px 50px 5px #a58e4b;
       }
+
+      /* modal (background) */
+      .modal {
+        padding-top: 20vh;
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
+        background-color: rgb(0,0,0); /* fallback color */
+        background-color: rgba(0,0,0,0.4); /* black w/ opacity */
+      }
+
+      /* modal headers */
+      .modal-header-error {
+        width: 80vw;
+        height: 4vh;
+
+        border: 1px solid #888;
+        background-color: rgba(255, 59, 59, 0.5);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .modal-header-success {
+        width: 80vw;
+        height: 4vh;
+
+        border: 1px solid #888;
+        background-color: rgba(59, 255, 59, 0.5);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* modal content/box */
+      .modal-body {
+        width: 80vw;
+        height: 10vh;
+
+        border: 1px solid #888;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        display: flex;
+        overflow: auto;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
     }
 
+    '''
+  ++  script
+    '''
+    var fails = document.getElementById("fail-message");
+    var succs = document.getElementById("succ-message");
+
+    window.onclick = function(event) {
+      if (event.target == fails) {
+        fails.style.display = "none";
+      } else if (event.target == succs) {
+        succs.style.display = "none";
+      }
     '''
   --
 --

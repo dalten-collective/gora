@@ -36,7 +36,8 @@
 ::    -  TBD
 ::
 /-  *gora
-/+  default-agent, dbug
+/+  default-agent, dbug, rudder
+/~  pages  (page:rudder tack manage-gora-2)  /app/gora
 ::
 |%
 ::
@@ -59,8 +60,6 @@
       =tags                                             ::  tagging information
       =blacklist                                        ::  blocked gorae
   ==
-+$  tag        @tas
-+$  act        ?(%give %take %gack)
 +$  tags       (jug tag id)
 +$  pita       (map id gora)
 +$  public     (set id)
@@ -123,15 +122,14 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  %-  (slog leaf+"%gora -sail-start" ~)
+  %-  (slog leaf+"%gora -vue-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
       [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
   ::
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]
       :+  %arvo  %b
-  ::  XX replace: [%wait (add (sub now (mod now ~d1)) ~d1)]
-      [%wait (add now.bowl ~m1)]
+      [%wait (add (sub now.bowl (mod now.bol ~d1)) ~d1)]
   ==
 ::
 ++  on-save
@@ -143,18 +141,18 @@
   |^  ^-  (quip card _this)
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
-      :~  =-  [%pass /eyre/disconnect %arvo %e -]
-          [%connect [~ [%apps %gora %public ~]]]
+      :~  =-  [%pass /eyre/connect %arvo %e -]
+          [%disconnect [~ [%apps %gora ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%disconnect [[~ [%apps %gora ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
   =^  coz  old
     ?:(?=(%1 -.old) (from-1 old) [~ old])
   ?>  ?=(%2 -.old)
-  %-  (slog leaf+"%gora -sail-loaded" ~)
+  %-  (slog leaf+"%gora -vue-loaded" ~)
   [:(welp coz caz cards) this(state old)]
   ::
   ++  from-0
@@ -177,7 +175,8 @@
       (mk-gora2 pita.sta)
     :-  :_  (weld pivot:subs:hc (gora:subs:hc new-pita))
         =-  [%pass /behn/suichi/(scot %da now.bowl) -]
-        [%arvo %b [%wait (add now.bowl ~m1)]]
+        :+  %arvo  %b
+        [%wait (add (sub now.bowl (mod now.bol ~d1)) ~d1)]
     :*  %2
         new-pita
         public.sta
@@ -249,6 +248,42 @@
   ^-  (quip card _this)
   =^  cards  state
     ?+    mark  (on-poke:def mark vase)
+    ::    %handle-http-request mark handled in helper   ::  sail -vue-ignores
+    ::                                                  ::
+        %handle-http-request
+      =;  out=(quip card tack)
+        ::  we get back a regular ole (quip card _state)
+        ::  we handle like this, not tisket bcuz reasons
+        ::
+        [-.out [%2 +.out]]
+      ::
+      %.  [bowl !<(order:rudder vase) +.state]
+      %:  (steer:rudder tack manage-gora-2)
+        pages
+      ::
+        |=  =trail:rudder
+        ^-  (unit place:rudder)
+        ?~  site=(decap:rudder /apps/gora site.trail)  ~
+        ?+  u.site  ~
+          ~           `[%page & %pita]                  ::  main pita
+          [%$ ~]      `[%away /apps/gora]               ::  main pita
+          [%index ~]  `[%away (snip site.trail)]        ::  main pita
+          [%asked ~]  `[%page & %asked]                 ::  she asked
+          [%plead ~]  `[%page & %plead]                 ::  begs them
+          [%maker ~]  `[%page & %maker]                 ::  make gora
+          [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
+          [%tiket ~]  `[%page & %tiket]                 ::  your logs
+          [%poser ~]  `[%page | %poser]                 ::  my public
+        ==
+      ::
+        |=  =order:rudder
+        ^-  [[(unit reply:rudder) (list card)] tack]
+        =;  msg=@t  [[`[%code 404 msg] ~] +.state]
+        %+  rap  3
+        ~['%gora page ' url.request.order ' not found']
+      ::
+        skipper:hc
+      ==
     ::    %gora-man-2 mark handled in helper core
     ::
         %gora-man-2
@@ -291,6 +326,12 @@
               %-  ~(has ju requests.logs)
               [src.bowl id.u.gor]
             (~(del ju requests.logs) src.bowl id.u.gor)
+          =?    requests.logs
+              ?~  max.u.gor  %.n
+              =(u.max.u.gor +(~(wyt in hodl.u.gor)))
+            %-  ~(run by requests.logs)
+            |=  v=(set id)
+            ?.((~(has in v) id.u.gor) v (~(del in v) id.u.gor))
           =?    policy
               ?~  max.u.gor  %.n
               =(u.max.u.gor +(~(wyt in hodl.u.gor)))
@@ -342,10 +383,21 @@
         ?:  ?&  (~(has by pita) id.gora.tan)
                 =(our.bol host.gora.tan)
             ::
-              ?~  gor=(~(get by pita) id.gora.tan)  %.n
+              ?~  gor=(~(get by pita) id.gora.tan)
+                %.n
               =(our.bol host.u.gor)
             ==
-          :-  ~
+          =;  sat=_state
+            :_  sat
+            =-  [%give %fact ~[/gora/(scot %uv id.gora.tan)] -]~
+            :-  %gora-transact-2
+            ?-    chg=(~(got by pita.sat) id.gora.tan)
+                [%g *]
+              !>(`transact-2`[%diff [%add-hodler hodl.chg]])
+            ::
+                [%s *]
+              !>(`transact-2`[%diff [%give-staks stak.chg]])
+            ==
           %=    state
               pita
             ?-    -.gora.tan
@@ -361,7 +413,7 @@
                   stak
                 ?~  had=(~(get by stak.gora.tan) our.bowl)
                   (~(put by stak.gora.tan) our.bowl 1)
-                (~(put by stak.gora.tan) [our.bowl u.had])
+                (~(put by stak.gora.tan) [our.bowl +(u.had)])
               ==
             ==
           ==
@@ -462,6 +514,8 @@
   |=  =path
   ^-  (quip card _this)
   ?+    path  (on-watch:def path)
+    [%http-response *]  `this
+  ::
       [%website ~]
     ?>  (team:title our.bowl src.bowl)
     :_  this
@@ -542,12 +596,14 @@
         ;:  welp
           (gora:subs:hc pita)
           =-  [%pass /behn/suichi/(scot %da now.bowl) -]~
-          [%arvo %b [%wait (add now.bowl ~m1)]]
+          :+  %arvo  %b
+          [%wait (add (sub now.bowl (mod now.bol ~d1)) ~d1)]
         ==
       ~&  >>  [%behn %suichi error.sign-arvo]
       :_  this
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]~
-      [%arvo %b [%wait (add now.bowl ~m1)]]
+      :+  %arvo  %b
+      [%wait (add (sub now.bowl (mod now.bol ~d1)) ~d1)]
     ==
   ==
 ::
@@ -581,9 +637,11 @@
         [((diff:j-web:hc state) state.+.neu) -.neu]     ::
     =/  id=@uv   (slav %uv i.t.wire)
     =/  hu=ship  (slav %p i.t.t.wire)
-    ?.  ?=(%poke-ack -.sign)  (on-agent:def wire sign)
+    ~&  >>  %handling-poke-ack
+    ?.  ?=(%poke-ack -.sign)  ~&  >>>  %poke-ack-fail  (on-agent:def wire sign)
     ?~  got=(~(get bi outgoing.logs) id [hu %give])
       ~_  leaf+"%gora -missing-offer-for-ack"  !!
+    ~&  >  %poke-ack-success
     :-  ~
     %=    this
         outgoing.logs
@@ -647,7 +705,6 @@
     ::
         [%watch-ack *]
       ?~  p.sign  `this
-      ~&  >  "651"
       =-  ((slog leaf+- ~) `this)
       """
       %gora -watch-nack-601 {<id.u.gor>}
@@ -710,6 +767,10 @@
       [[name.g pic.g host.g] l]
     ==
   ::
+      [%x %subscribed @ ~]
+    ?>  (team:title our.bowl src.bowl)
+    ``noun+!>((hears:subs:hc (slav %uv i.t.t.path)))
+  ::
       [%x %offers ~]
     ?>  (team:title our.bowl src.bowl)
     =-  ``json+!>(`json`a+-)
@@ -727,6 +788,14 @@
     ?>  (team:title our.bowl src.bowl)
     =-  ``json+!>(`json`a+-)
     (turn ~(tap in ~(key by tags)) |=(t=@tas s+t))
+  ::
+      [%x %tags @ ~]
+    =-  ``noun+!>(`(list @tas)`-)
+    =/  gor=gora
+      (~(got by pita) (slav %uv i.t.t.path))
+    %+  murn  ~(tap by tags)
+    |=  [k=@tas v=(set id)]
+    ?.((~(has in v) id.gor) ~ `k)
   ::
       [%x %made-gora ~]
     ?>  (team:title our.bowl src.bowl)
@@ -761,6 +830,12 @@
 ::
 ++  subs
   |%
+  ++  hears
+    |=  i=@uv
+    ^-  ?
+    ?:  =(our.bol host:(~(got by pita) i))
+      %.y
+    (~(has in paths) /gora/(scot %uv i))
   ++  pivot
     ^-  (list card)
     %-  ~(rep by wex.bol)
@@ -1061,6 +1136,167 @@
     --
   --
 ::
+++  skipper
+  |=  act=manage-gora-2
+  ::  $@(@t [brief:rudder (list card) state])
+  ::  - either error or,
+  ::  - some status message, a list cards, and state
+  ::
+  ^-  $@(@t [brief:rudder (list card) tack])
+  ?-    -.act
+      %ignore-give
+    ?.  (~(has in offers.logs) id.act)
+      '不足しているオファー'
+    =/  name=tape
+      (trip name:(~(got by pita) id.act))
+    =/  host=tape
+      (scow %p host:(~(got by pita) id.act))
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ゴラの供物を無視 {name}
+    - から {host}
+    - 識別番号 {(scow %uv id.act)}
+    """
+  ::
+      %accept-give
+    ?.  ?&  (~(has in offers.logs) id.act)
+            (~(has by pita) id.act)
+        ==
+      '不足しているオファー'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ❗アラート: Asynchronous Operation❗
+    公認奉納ゴラ {(trip name:(~(got by pita) id.act))}
+    - 出力ログに %gack を追加
+    - からの応答を待っています:
+      {(scow %p host:(~(got by pita) id.act))}
+    """
+  ::
+      %ignore-request
+    ?.  (~(has ju requests.logs) ship.act id.act)
+      '不足しているリクエスト'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    拒否されたリクエスト {(trip name:(~(got by pita) id.act))}
+    - から {(scow %p ship.act)}
+    - 識別番号 {(scow %uv id.act)}
+    """
+  ::
+      %accept-request
+    ?.  (~(has ju requests.logs) ship.act id.act)
+      '不足しているリクエスト'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    承認されたリクエスト {(trip name:(~(got by pita) id.act))}
+    - 発送された更新 ⇶ [%updates {(scow %uv id.act)} ~]
+    """
+  ::
+      %send-gora
+    ?~  gor=(~(get by pita) id.act)  '行方不明のゴラ'
+    ?.  =(our.bol host.u.gor)  '無効な権限'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    %+  weld
+      """
+      ゴラをパイロットに送った: {(trip name.u.gor)}
+      パイロット:
+      """
+    ^-  tape
+    %-  zing  %~  tap  in
+    ^-  (set tape)
+    %-  ~(run in who.act)
+    |=(p=@p (weld ~(rend co %$ %p p) " "))
+  ::
+      %send-plea
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ❗アラート: Asynchronous Operation❗
+    ❗あなたは待たなければなりません❗
+    ❗Do the needful: wait❗
+    """
+  ::
+      %kick
+    ``+.state
+  ::
+      %rm-gora
+    ``+.state
+  ::
+      %set-max
+    ``+.state
+  ::
+      %pub-gor
+    ?.  (~(has by pita) id.act)
+      'いたずらゴラ'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ゴラ マーク付き公開 {<how.act>}
+    """
+  ::
+      %add-tag
+    =+  wic=~(tap in gorae.act)
+    ?<  ?=(~ wic)
+    ?.  (~(has by pita) i.wic)
+      'いたずらゴラ'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ゴラ に {<tag.act>} を適用するタグ
+    """
+  ::
+      %rem-tag
+    =+  wic=~(tap in gorae.act)
+    ?<  ?=(~ wic)
+    ?.  (~(has by pita) i.wic)
+      'いたずらゴラ'
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ゴラ に {<tag.act>} 削除するタグ
+    """
+  ::
+      %set-pol
+    ``+.state
+  ::
+      %mk-gora
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    私たちはそれを作りました
+    
+    ピタをチェックしてください
+    """
+  ::
+      %stak-em
+    ``+.state
+  ::
+  ==
+::
 ++  transact
   |=  [=diff =id =wire gor=(unit gora)]
   =;  neu=(quip card _state)                            ::  json -sail-removes
@@ -1120,10 +1356,13 @@
       u.gor(hodl (~(uni in hodl.u.gor) new.diff))
     ::
         offers.logs
+      ?:  ?~(max.u.gor %.n (gte ~(wyt in hodl.u.gor) u.max.u.gor))
+        (~(del in offers.logs) id.u.gor)
       ?.  ?&  (~(has in offers.logs) id.u.gor)
               (~(has in new.diff) our.bol)
           ==
-      offers.logs  (~(del in offers.logs) id.u.gor)
+        offers.logs
+      (~(del in offers.logs) id.u.gor)
     ==
   ::
       %start-stak
@@ -1210,7 +1449,9 @@
       %=  state
         offers.logs  (~(del in offers.logs) id.man)
       ==
-    :-  ~
+    =/  wir=path
+      /gora/(scot %uv id.man)/(scot %p host.u.gor)
+    :-  [%pass wir %agent [host.u.gor %gora] %leave ~]~
     %=  state
       pita         (~(del by pita) id.man)
       offers.logs  (~(del in offers.logs) id.man)
@@ -1282,7 +1523,10 @@
           %+  ~(put by pita)  id.u.gor
           u.gor(hodl (~(put in hodl.u.gor) ship.man))
         ==
-      ?>  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+      ?.  (gth u.max.u.gor ~(wyt in hodl.u.gor))
+        =.  requests.logs
+          (~(del ju requests.logs) ship.man id.man)
+        `state
       =/  pat=path
         /gora/(scot %uv id.u.gor)
       :-
@@ -1337,7 +1581,7 @@
         %g
       =;  [offers=(list card) legs=_outgoing.logs]
         :_  state(outgoing.logs legs)
-        ?:  =(who.man (~(dif in who.man) hodl.u.gor))
+        ?~  (~(dif in who.man) hodl.u.gor)
           :_  offers
           ((diff:j-web state) state(outgoing.logs legs))
         %+  weld  offers
@@ -1500,9 +1744,10 @@
       :-  ~
       %=    state
           tags
-        %-  ~(rep in gorae.gal)
-        |=  [i=id t=_tags]
-        (~(del in t) tag.gal i)
+        ?.  (~(has by tags) tag.gal)
+          tags
+        %+  ~(put by tags)  tag.gal
+        (~(dif in (~(got by tags) tag.gal)) gorae.gal)
       ==
     ::
         %stak-em
@@ -1713,11 +1958,7 @@
           ^-  card
           =-  [%pass wir %agent [sip %gora] %poke -]
           [%gora-transact-2 !>(`transact-2`[%offered g])]
-        %=    outgoing.logs
-            .
-          %-  ~(put bi outgoing.logs)
-          [id.g [sip %give] [now.bol ~]]
-        ==
+        (~(put bi r) [id.g [sip %give] [now.bol ~]])
       --
     ==
   --
