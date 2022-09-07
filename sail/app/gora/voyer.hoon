@@ -2641,13 +2641,13 @@
     var offerButton = document.getElementById("givload")
 
     // When the user clicks the button, open the modal 
-    if (offerButton) {
+    if (deleteButton) {
         deleteButton.onclick = function() {
         modal.style.display = "block";
       }
     }
 
-    if (offerButton) {
+    if (tagButton) {
         tagButton.onclick = function() {
         taggs.style.display = "block";
       }
