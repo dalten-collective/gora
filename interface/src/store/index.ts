@@ -1,11 +1,11 @@
-import { createStore as createVuexStore } from "vuex";
+import { createStore } from "vuex";
 
 import ship from "./ship";
 
-export const createStore = () => {
-  return createVuexStore({
-    modules: {
-      ship,
-    },
-  });
-};
+const store = createStore({
+  modules: {
+    ship,
+  },
+});
+
+export default store;

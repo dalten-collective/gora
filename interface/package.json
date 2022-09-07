@@ -1,21 +1,28 @@
 {
-  "name": "vite-vue3-urbit-template",
+  "name": "gora-vue",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "lint": "vue-cli-service lint",
+    "lint-fix": "vue-cli-service lint --fix"
   },
   "dependencies": {
+    "@mdi/font": "5.9.55",
     "@urbit/api": "^2.1.0",
     "@urbit/http-api": "^2.1.0",
     "core-js": "^3.8.3",
+    "roboto-fontface": "*",
     "vue": "^3.2.25",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuetify": "^3.0.0-beta.0",
+    "vuex": "^4.0.0",
+    "webfontloader": "^1.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.2",
+    "@types/webfontloader": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@urbit/vite-plugin-urbit": "^0.8.0",
@@ -32,10 +39,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.0.3",
     "prettier": "^2.4.1",
-    "typescript": "~4.5.5",
-    "vite": "^2.9.9",
-    "vue-tsc": "^0.29.8",
     "prettier-plugin-tailwindcss": "^0.1.5",
-    "vitawind": "^2.2.4"
+    "typescript": "~4.5.5",
+    "vitawind": "^2.2.4",
+    "vite": "^2.9.9",
+    "vite-plugin-vuetify": "^1.0.0-alpha.0",
+    "vue-cli-plugin-vuetify": "~2.5.1",
+    "vue-tsc": "^0.29.8"
   }
 }

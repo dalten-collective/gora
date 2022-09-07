@@ -7,7 +7,7 @@ if [[ ${GORA_DESK_PATH} && ${GORA_DESK_PATH-x} ]]; then
   DESK_PATH=$GORA_DESK_PATH
 else
   while true; do    # TODO
-    printf "\nEnter the path to your desk (like ~/urbit/keep-zod/keep): "
+    printf "\nEnter the path to your desk (like ~/urbit/gora-zod/gora): "
     read USER_PATH
     printf "\nYou entered: $USER_PATH. Okay? (y/n)"
     read -n 1 decision
