@@ -82,6 +82,7 @@
           ==
         ==
       ==
+    ::
     ++  ple
       =;  rows=marl
         ;table
@@ -108,6 +109,7 @@
           ==
         ==
       ==
+    ::
     ++  wat
       =;  rows=marl
         ;table
@@ -166,6 +168,7 @@
           ==
         ==
       ==
+    ::
     ++  pick
       ^-  manx
       ;div(class "container")
@@ -217,6 +220,7 @@
               ==
         ==
       ==
+    ::
     ++  take
       ^-  manx
       ;div(class "container")
@@ -250,6 +254,50 @@
           ==
         ==
       ==
+    ::
+    ++  failure
+      ^-  manx
+      ?~  msgs  ;div;
+      ?:  gud.u.msgs  ;div;
+      ;div(id "fail-message", class "modal", style "display: block;")
+        ;div(class "modal-center")
+          ;div(class "modal-header-error")
+            ;div(class "name")
+              ;p:"ゴラ失敗"
+            ==
+          ==
+        ::
+          ;div(class "modal-body")
+          ::
+            ;div(class "modal-message")
+              ;p:"{(trip txt.u.msgs)}"
+            ==
+          ==
+        ==
+      ==
+    ::
+    ++  success
+      ^-  manx
+      ?~  msgs  ;div;
+      ?.  gud.u.msgs  ;div;
+      ;div(id "succ-message", class "modal", style "display: block;")
+        ;div(class "modal-center")
+          ;div(class "modal-header-success")
+            ;div(class "name")
+              ;p:"ゴラ成功"
+            ==
+          ==
+        ::
+          ;div(class "modal-body")
+          ::
+            ;div(class "modal-message")
+              ;div
+                ;pre:"{(trip txt.u.msgs)}"
+              ==
+            ==
+          ==
+        ==
+      ==
     --
   ++  page
     ^-  manx
@@ -264,11 +312,33 @@
       ==
     ::
       ;body
+        ;div(class "modal-container")
+          ;+  failure:make
+          ;+  success:make
+        ==
+      ::
         ;+  ?~  sip
               pick:make
+            ?.  (~(has in ~(key by requests.logs.sat)) u.sip)
+              pick:make
             take:make
+      ::
+        ;script:"{(trip script)}"
       ==
     ==
+  ::
+  ++  script
+    '''
+    var fails = document.getElementById("fail-message");
+    var succs = document.getElementById("succ-message");
+
+    window.onclick = function(event) {
+      if (event.target == fails) {
+        fails.style.display = "none";
+      } else if (event.target == succs) {
+        succs.style.display = "none";
+      }
+    '''
   ++  style
     '''
     * {
@@ -481,6 +551,7 @@
         margin-bottom: 15px;
 
         border-radius: 10px;
+        overflow: hidden;
         box-shadow: 0px 2px 5px 2px #bb8c0282;
         backdrop-filter: blur(2px) invert(.1);
 
@@ -509,6 +580,395 @@
       .buttons {
         display: flex;
         flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    /* computer square */
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 16/9) {
+    
+    
+      /* modal (background) */
+      .modal {
+        padding-top: 20vh;
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
+        background-color: rgb(0,0,0); /* fallback color */
+        background-color: rgba(0,0,0,0.4); /* black w/ opacity */
+      }
+
+      /* modal headers */
+      .modal-header-error {
+        width: 80vw;
+        height: 4vh;
+
+        border: 1px solid #888;
+        background-color: rgba(255, 59, 59, 0.5);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .modal-header-success {
+        width: 80vw;
+        height: 4vh;
+
+        border: 1px solid #888;
+        background-color: rgba(59, 255, 59, 0.5);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* modal content/box */
+      .modal-body {
+        width: 80vw;
+        height: 10vh;
+
+        border: 1px solid #888;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(1.5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        display: flex;
+        overflow: auto;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .modal-message {
+        text-align: left;
+      }
+
+    /* page container */
+      .container {
+        width: 99vw;
+        height: 99vh;
+
+        display: flex;
+        flex-direction: column;
+
+        background-image: radial-gradient(#9e7703 1px, transparent 1px), radial-gradient(#9e7703 1px, transparent 1px);
+        background-size: 59px 59px;
+        background-position: 0 0, 29.5px 29.5px;
+
+        animation: pulse 12s infinite;
+      }
+
+      .head {
+        width: 100%;
+        height: 15vw;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* title format */
+      .title-bar {
+        width: 75vw;
+        height: 15vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title-pane {
+        width: 75vw;
+        height: 10vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 3px outset rgba(194,166,90,.8);
+        border-radius: 10px;
+
+        background: radial-gradient(circle, transparent 20%, #35383582 80%, #35383582 80%, transparent 80%, transparent),
+                    radial-gradient(circle, transparent 20%, #35383582 80%, #35383582 80%, transparent 80%, transparent) 20px 20px,
+                    linear-gradient(#ffd900 1.6px, transparent 1.6px) 0 -0.8px,
+                    linear-gradient(90deg, #ffd900 1.6px, #35383582 1.6px) -0.8px 0;
+        background-size: 40px 40px,
+                         40px 40px,
+                         20px 20px,
+                         20px 20px;
+        box-shadow: 0px 0px 0px 2px #000,
+                    inset 0px 1px 20px 5px #000;
+      }
+
+      .title-glass {
+        z-index: 10;
+        width: 75vw;
+        height: 10vw;
+        position: absolute;
+        backdrop-filter: grayscale(0%) blur(2px);
+      }
+
+      .title {
+        z-index: 20;
+        font-size: 7vw;
+        color: #ffc107;
+        font-family: Lucida Console;
+        font-weight: bold;
+        text-shadow: 0px 0px 0 rgb(227, 165, 0),
+          0px 1px 0 rgb(199, 137, 0),
+          0px 2px 0 rgb(171, 109, 0),
+          0px 3px 0 rgb(143, 81, 0),
+          0px 4px 3px rgba(0, 0, 0, 0.6),
+          0px 4px 1px rgba(0, 0, 0, 0.5),
+          0px 0px 3px rgba(0, 0, 0, .2);
+      }
+
+      .main {
+        width: 100%;
+        height: 80%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .ships {
+        height: 80px;
+        width: 30vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .icon-container {
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 3px outset rgba(248,204,27,.5);
+        border-radius: 10px;
+
+        box-shadow: 0px 0px 0px 0px #fff,
+                    inset 0px 0px 0px 0px #fff;
+        
+      }
+
+      /* requests */
+      .requests-container {
+        width: 55vw;
+        height: 55vh;
+        margin-bottom: 15px;
+
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 2px 5px 2px #bb8c0282;
+        backdrop-filter: blur(2px) invert(.1);
+
+      }
+
+      .reqTable {
+        width: 55vw;
+        height: 55vh;
+      }
+
+      .reqTable > table > thead > tr > th {
+        box-shadow: 0px 0px 0px 1px #edcc6a,
+            inset 0px 0px 30px 2px #edcc6a;
+        border-radius: 2px;
+      }
+
+      .reqTable > table > tbody > tr:nth-child(even) {
+        box-shadow: 0px 0px 0px 1px #f2dda3,
+                    inset 0px 0px 50px 2px #f2dda3;
+      }
+      .reqTable > table > tbody > tr:nth-child(odd) {
+        box-shadow: 0px 0px 0px 1px #a58e4b,
+            inset 0px 0px 50px 5px #a58e4b;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+        /* phone - horizontal */
+    @media (min-aspect-ratio: 16/9) {
+
+    /* page container */
+      .container {
+        width: 99vw;
+        height: 98vh;
+
+        display: flex;
+        flex-direction: row;
+
+        background-image: radial-gradient(#9e7703 1px, transparent 1px), radial-gradient(#9e7703 1px, transparent 1px);
+        background-size: 59px 59px;
+        background-position: 0 0, 29.5px 29.5px;
+
+        animation: pulse 12s infinite;
+      }
+
+      .head {
+        width: 15vw;
+        height: 97vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* title format */
+      .title-bar {
+        width: 95vh;
+        height: 10vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: rotate(90deg);
+      }
+
+      .title-pane {
+        width: 90vh;
+        height: 10vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 3px outset rgba(194,166,90,.8);
+        border-radius: 10px;
+
+        background: radial-gradient(circle, transparent 20%, #35383582 80%, #35383582 80%, transparent 80%, transparent),
+                    radial-gradient(circle, transparent 20%, #35383582 80%, #35383582 80%, transparent 80%, transparent) 20px 20px,
+                    linear-gradient(#ffd900 1.6px, transparent 1.6px) 0 -0.8px,
+                    linear-gradient(90deg, #ffd900 1.6px, #35383582 1.6px) -0.8px 0;
+        background-size: 40px 40px,
+                         40px 40px,
+                         20px 20px,
+                         20px 20px;
+        box-shadow: 0px 0px 0px 2px #000,
+                    inset 0px 1px 20px 5px #000;
+      }
+
+      .title-glass {
+        z-index: 10;
+        width: 90vh;
+        height: 10vw;
+        position: absolute;
+        backdrop-filter: grayscale(0%) blur(2px);
+      }
+
+      .title {
+        z-index: 20;
+        font-size: 4vw;
+        color: #ffc107;
+        font-family: Lucida Console;
+        font-weight: bold;
+        text-shadow: 0px 0px 0 rgb(227, 165, 0),
+          0px 1px 0 rgb(199, 137, 0),
+          0px 2px 0 rgb(171, 109, 0),
+          0px 3px 0 rgb(143, 81, 0),
+          0px 4px 3px rgba(0, 0, 0, 0.6),
+          0px 4px 1px rgba(0, 0, 0, 0.5),
+          0px 0px 3px rgba(0, 0, 0, .2);
+      }
+
+      .main {
+        width: 80vw;
+        height: 97vh;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .ships {
+        height: 95px;
+        width: 15vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .icon-container {
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 3px outset rgba(248,204,27,.5);
+        border-radius: 10px;
+
+        box-shadow: 0px 0px 0px 0px #fff,
+                    inset 0px 0px 0px 0px #fff;
+        
+      }
+
+      /* requests */
+      .requests-container {
+        width: 55vw;
+        height: 55vh;
+        margin-bottom: 15px;
+
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 2px 5px 2px #bb8c0282;
+        backdrop-filter: blur(2px) invert(.1);
+
+      }
+
+      .reqTable {
+        width: 55vw;
+        height: 55vh;
+      }
+
+      .reqTable > table {
+        width: 55vw;
+        height: 55vh;
+      }
+
+      .reqTable > table > thead > tr > th {
+        box-shadow: 0px 0px 0px 1px #edcc6a,
+            inset 0px 0px 30px 2px #edcc6a;
+        border-radius: 2px;
+      }
+
+      .reqTable > table > tbody > tr:nth-child(even) {
+        box-shadow: 0px 0px 0px 1px #f2dda3,
+                    inset 0px 0px 50px 2px #f2dda3;
+      }
+      .reqTable > table > tbody > tr:nth-child(odd) {
+        box-shadow: 0px 0px 0px 1px #a58e4b,
+            inset 0px 0px 50px 5px #a58e4b;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
       }
