@@ -787,7 +787,7 @@
       [%x %tags ~]
     ?>  (team:title our.bowl src.bowl)
     =-  ``json+!>(`json`a+-)
-    (turn ~(tap in ~(key by tags)) |=(t=@tas s+t))
+    (turn ~(tap in ~(key by tags)) (lead %s))
   ::
       [%x %tags @ ~]
     =-  ``noun+!>(`(list @tas)`-)
@@ -1746,8 +1746,9 @@
           tags
         ?.  (~(has by tags) tag.gal)
           tags
-        %+  ~(put by tags)  tag.gal
-        (~(dif in (~(got by tags) tag.gal)) gorae.gal)
+        ?~  lef=(~(dif in (~(got by tags) tag.gal)) gorae.gal)
+          (~(del by tags) tag.gal)
+        (~(put by tags) tag.gal lef)
       ==
     ::
         %stak-em
