@@ -1,12 +1,12 @@
 import {
-  PitaState,
+  OwnedState,
 } from "@/types";
 
 export default {
   namespaced: true,
   state() {
     return {
-      pita: [] as PitaState,
+      owned: [] as OwnedState,
     };
   },
 
@@ -17,8 +17,8 @@ export default {
   },
 
   mutations: {
-    setPita(state, payload: PitaState) {
-      state.pita = payload;
+    setOwned(state, payload: OwnedState) {
+      state.owned = payload;
     },
     //addSubscription(state, payload: AgentSubscription) {
       //state.subscriptions.push(payload);
@@ -31,10 +31,10 @@ export default {
   },
 
   actions: {
-    handleSubscriptionData({ commit, dispatch }, payload: PitaState) {
-      console.log('in pita ', payload)
+    handleSubscriptionData({ commit, dispatch }, payload: OwnedState) {
+      console.log('in owned ', payload)
 
-      commit('setPita', payload)
+      commit('setOwned', payload)
     },
   },
 };

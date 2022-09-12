@@ -1,8 +1,6 @@
 import airlock from "../api";
 
-import {
-  AgentSubscription,
-} from "@/types";
+import { AgentSubscription, InitResponse } from "@/types";
 
 export default {
   namespaced: true,
@@ -14,7 +12,7 @@ export default {
 
   getters: {
     agentSubscriptions(state): Array<AgentSubscription> | [] {
-      return state.subscriptions
+      return state.subscriptions;
     },
   },
 
@@ -33,11 +31,18 @@ export default {
     openAirlockToAgent({ dispatch }, agentName: string) {
       airlock.openAirlockTo(
         agentName,
-        (data) => {
+        (data: InitResponse) => {
           console.log("agentName ", agentName);
           console.log("response ", data);
 
-          dispatch("pita/handleSubscriptionData", data, { root: true })
+          dispatch("pita/handleSubscriptionData", data.pita, { root: true });
+          dispatch("owned/handleSubscriptionData", data.owned, { root: true });
+          dispatch("made/handleSubscriptionData", data.made, { root: true });
+          dispatch(
+            "meta/handleSubscriptionData",
+            { public: data.public, policy: data.policy, tags: data.tags },
+            { root: true }
+          );
         },
         (subscriptionNumber: number) => {
           console.log("got subscription number ", subscriptionNumber);

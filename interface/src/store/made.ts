@@ -1,12 +1,12 @@
 import {
-  PitaState,
+  MadeState,
 } from "@/types";
 
 export default {
   namespaced: true,
   state() {
     return {
-      pita: [] as PitaState,
+      made: [] as MadeState,
     };
   },
 
@@ -17,8 +17,8 @@ export default {
   },
 
   mutations: {
-    setPita(state, payload: PitaState) {
-      state.pita = payload;
+    setMade(state, payload: MadeState) {
+      state.made = payload;
     },
     //addSubscription(state, payload: AgentSubscription) {
       //state.subscriptions.push(payload);
@@ -31,10 +31,10 @@ export default {
   },
 
   actions: {
-    handleSubscriptionData({ commit, dispatch }, payload: PitaState) {
-      console.log('in pita ', payload)
+    handleSubscriptionData({ commit, dispatch }, payload: MadeState) {
+      console.log('in made ', payload)
 
-      commit('setPita', payload)
+      commit('setMade', payload)
     },
   },
 };

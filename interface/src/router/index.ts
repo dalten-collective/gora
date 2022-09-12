@@ -10,12 +10,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Pita,
   },
   {
-    path: "/",
+    path: "/held",
     name: "held",
     component: Held,
   },
   {
-    path: "/",
+    path: "/mine",
     name: "mine",
     component: Mine,
   },
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory("/apps/gora/"),
   routes,
 });
 
