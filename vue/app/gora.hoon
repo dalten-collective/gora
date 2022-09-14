@@ -122,7 +122,7 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  %-  (slog leaf+"%gora -sail-start" ~)
+  %-  (slog leaf+"%gora -vue-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
       [%connect [[~ [%apps %gora ~]] dap.bowl]]
@@ -152,7 +152,7 @@
   =^  coz  old
     ?:(?=(%1 -.old) (from-1 old) [~ old])
   ?>  ?=(%2 -.old)
-  %-  (slog leaf+"%gora -sail-loaded" ~)
+  %-  (slog leaf+"%gora -vue-loaded" ~)
   :_  this(state old)
   :(welp coz caz cards (gora:subs:hc pita.old))
   ::
@@ -1600,8 +1600,6 @@
       !>(`transact-2`[%offered u.gor])
     ::
         %s
-      =;  neu=(quip card _state)                        ::  json -sail-removes
-        [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       =;  [offers=(list card) stik=stak legs=_outgoing.logs]
         :-  :_  offers
             =-  [%give %fact ~[/gora/(scot %uv id.u.gor)] -]
@@ -1632,8 +1630,6 @@
     ==
   ::
       %send-plea
-    =;  neu=(quip card _state)                          ::  json -sail-removes
-      [[((diff:j-web state) +.neu) -.neu] +.neu]        ::
     =/  wir=path
       /plead/(scot %uv id.man)/(scot %p host.man)
     :_  %=    state
