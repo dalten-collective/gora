@@ -266,6 +266,7 @@
       font-family: monospace;
     }
 
+    /* table basics */
     .offTable { overflow: auto; }
     .offTable thead th { position: sticky; top: 0; z-index: 1; }
 

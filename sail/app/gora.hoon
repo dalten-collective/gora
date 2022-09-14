@@ -153,7 +153,8 @@
     ?:(?=(%1 -.old) (from-1 old) [~ old])
   ?>  ?=(%2 -.old)
   %-  (slog leaf+"%gora -sail-loaded" ~)
-  [:(welp coz caz cards) this(state old)]
+  :_  this(state old)
+  :(welp coz caz cards (gora:subs:hc pita.old))
   ::
   ++  from-0
     |=  sta=state-0
@@ -273,6 +274,7 @@
           [%maker ~]  `[%page & %maker]                 ::  make gora
           [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
           [%tiket ~]  `[%page & %tiket]                 ::  your logs
+          [%stakd ~]  `[%page & %stakd]                 ::  burn pile
           [%poser ~]  `[%page | %poser]                 ::  my public
         ==
       ::
@@ -435,7 +437,7 @@
           ==
         ::
             %s
-          :-  (gora:subs:hc pita)
+          =-  [(gora:subs:hc pita.-) -]
           %=    state
               offers.logs
             ?:  (~(has in ~(key by stak.gora.tan)) our.bowl)
