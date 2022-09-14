@@ -225,18 +225,19 @@ export interface STypeScaffold {
   stak: Array<Stackers>;
 }
 
-interface NewGType {
+export interface NewGType {
   g: GTypeScaffold
 }
-interface NewSType {
+export interface NewSType {
   s: STypeScaffold
 }
 
 // [%mk-gora @t @t ?([%g hodl max] [%s stak])]  start a new gora with hodl/stak
+export interface PokeMkGoraPayload {
+  name: string;
+  pic: string;
+  type: NewGType | NewSType;
+}
 export interface PokeMkGora {
-  'mk-gora': {
-    name: string;
-    pic: string;
-    type: NewGType | NewSType;
-  };
+  'mk-gora': PokeMkGoraPayload
 }

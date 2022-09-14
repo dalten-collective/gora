@@ -11,7 +11,11 @@ const base = process.env.VITE_URBIT_DESK;
 import vuetify from "vite-plugin-vuetify";
 
 export default defineConfig({
-  plugins: [vue(), urbitPlugin({ base, target })],
+  plugins: [
+    vue(),
+    urbitPlugin({ base, target }),
+    vuetify({ autoImport: true }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

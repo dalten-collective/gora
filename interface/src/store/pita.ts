@@ -1,5 +1,7 @@
 import {
   PitaState,
+  Gora,
+  GoraID,
 } from "@/types";
 
 export default {
@@ -11,9 +13,12 @@ export default {
   },
 
   getters: {
-    //agentSubscriptions(state): Array<AgentSubscription> | [] {
-      //return state.subscriptions
-    //},
+    goraByID: (state) => (goraID: GoraID): Gora => {
+      return state.pita.find((g: Gora) => g.id === goraID)
+    },
+    pitaIDs(state) {
+      return state.pita.map(g => g.id);
+    },
   },
 
   mutations: {

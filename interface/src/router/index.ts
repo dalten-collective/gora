@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Pita from "../views/Pita.vue";
-import Held from "../views/Held.vue";
+import Owned from "../views/Owned.vue";
 import Mine from "../views/Mine.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -10,9 +10,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Pita,
   },
   {
-    path: "/held",
-    name: "held",
-    component: Held,
+    path: "/owned",
+    name: "owned",
+    component: Owned,
   },
   {
     path: "/mine",

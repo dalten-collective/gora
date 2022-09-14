@@ -11,7 +11,7 @@
           <router-link :to="{ name: 'pita' }">Pita</router-link>
           </li>
           <li>
-          <router-link :to="{ name: 'held' }">Held</router-link>
+          <router-link :to="{ name: 'owned' }">Owned</router-link>
           </li>
           <li>
           <router-link :to="{ name: 'mine' }">Mine</router-link>

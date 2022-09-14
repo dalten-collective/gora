@@ -1,6 +1,8 @@
 import {
-  MadeState,
+  MadeState, PokeMkGoraPayload,
 } from "@/types";
+
+import madeAPI from "@/api"
 
 export default {
   namespaced: true,
@@ -36,5 +38,16 @@ export default {
 
       commit('setMade', payload)
     },
+
+    pokeMkGora({ commit, dispatch }, pokePayload: PokeMkGoraPayload) {
+      console.log(pokePayload)
+      return madeAPI.mkGora(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    }
   },
 };
