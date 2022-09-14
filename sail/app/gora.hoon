@@ -637,11 +637,9 @@
     ::     [((diff:j-web:hc state) state.+.neu) -.neu]     ::
     =/  id=@uv   (slav %uv i.t.wire)
     =/  hu=ship  (slav %p i.t.t.wire)
-    ~&  >>  %handling-poke-ack
-    ?.  ?=(%poke-ack -.sign)  ~&  >>>  %poke-ack-fail  (on-agent:def wire sign)
+    ?.  ?=(%poke-ack -.sign)  (on-agent:def wire sign)
     ?~  got=(~(get bi outgoing.logs) id [hu %give])
       ~_  leaf+"%gora -missing-offer-for-ack"  !!
-    ~&  >  %poke-ack-success
     :-  ~
     %=    this
         outgoing.logs
@@ -1282,15 +1280,12 @@
     ``+.state
   ::
       %mk-gora
+    =|  ole=_pita
     =^  cards  state
       (manage act)
     =-  [- cards +.state]
     %-  crip
-    """
-    私たちはそれを作りました
-    
-    ピタをチェックしてください
-    """
+    "{(scow %uv id:(head ~(val by (~(dif by pita) ole))))}"
   ::
       %stak-em
     ``+.state
@@ -1610,7 +1605,7 @@
             =-  [%give %fact ~[/gora/(scot %uv id.u.gor)] -]
             :-  %gora-transact-2
             !>  ^-  transact-2
-            [%diff [%give-staks (~(dif by stik) stak.u.gor)]]
+            [%diff [%give-staks stik]]
         %=  state
           outgoing.logs  legs
         ::
