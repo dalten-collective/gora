@@ -2,7 +2,13 @@ import {
   PitaState,
   Gora,
   GoraID,
+  PokeRmGora,
+  DiffResponse,
 } from "@/types";
+
+import _ from 'lodash'
+
+import manageAPI from '@/api'
 
 export default {
   namespaced: true,
@@ -33,6 +39,9 @@ export default {
       //const sub = state.subscriptions.find((s) => s === subscription);
       //state.subscriptions = state.subscriptions.filter((s) => s != sub);
     // },
+    applyDiff(state, payload: DiffResponse) {
+      state.pita = _.merge(payload.diff.set.pita, state.pita)
+    }
   },
 
   actions: {
@@ -40,6 +49,20 @@ export default {
       console.log('in pita ', payload)
 
       commit('setPita', payload)
+    },
+    handleDiff({ commit, dispatch }, payload: DiffResponse) {
+      commit('applyDiff', payload)
+    },
+
+    pokeRmGora({ commit, dispatch }, pokePayload: PokeRmGora) {
+      console.log(pokePayload)
+      return manageAPI.rmGora(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
     },
   },
 };

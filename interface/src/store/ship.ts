@@ -1,6 +1,6 @@
 import airlock from "../api";
 
-import { AgentSubscription, InitResponse } from "@/types";
+import { AgentSubscription, DiffResponse, InitResponse } from "@/types";
 
 export default {
   namespaced: true,
@@ -31,18 +31,29 @@ export default {
     openAirlockToAgent({ dispatch }, agentName: string) {
       airlock.openAirlockTo(
         agentName,
-        (data: InitResponse) => {
+        (data: InitResponse | DiffResponse) => {
           console.log("agentName ", agentName);
           console.log("response ", data);
 
-          dispatch("pita/handleSubscriptionData", data.pita, { root: true });
-          dispatch("owned/handleSubscriptionData", data.owned, { root: true });
-          dispatch("made/handleSubscriptionData", data.made, { root: true });
-          dispatch(
-            "meta/handleSubscriptionData",
-            { public: data.public, policy: data.policy, tags: data.tags },
-            { root: true }
-          );
+          if ('diff' in data) {
+            // TODO: handle diffs
+            console.log('got a diff')
+            console.log('diff: ', data.diff)
+            // add
+              dispatch("pita/handleDiff", data, { root: true })
+              dispatch("made/handleDiff", data, { root: true })
+          } else {
+            // initial response
+            console.log('got an init')
+            dispatch("pita/handleSubscriptionData", data.pita, { root: true });
+            dispatch("owned/handleSubscriptionData", data.owned, { root: true });
+            dispatch("made/handleSubscriptionData", data.made, { root: true });
+            dispatch(
+              "meta/handleSubscriptionData",
+              { public: data.public, policy: data.policy, tags: data.tags },
+              { root: true }
+            );
+          }
         },
         (subscriptionNumber: number) => {
           console.log("got subscription number ", subscriptionNumber);

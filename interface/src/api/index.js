@@ -1,9 +1,9 @@
 import urbitAPI from "./urbitAPI";
-import * as madeAPI from "./madeAPI";
+import * as manageAPI from "./manageAPI";
 import * as airlock from "./airlock";
 
 export default {
   ...urbitAPI,
   ...airlock,
-  ...madeAPI,
+  ...manageAPI,
 };

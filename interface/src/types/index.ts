@@ -109,7 +109,7 @@ export interface PartialGoraState {
 }
 
 export interface DiffObj {
-  add: PartialGoraState;
+  set: PartialGoraState;
   rem: PartialGoraState;
 }
 
@@ -173,8 +173,11 @@ export interface PokeSendPlea {
 // making and changing gorae
 
 // [%rm-gora @uv]                               deletes a gora, local or remote
+export interface PokeRmGoraPayload {
+  id: GoraID;
+}
 export interface PokeRmGora {
-  'rm-gora': { id: GoraID; };
+  'rm-gora': PokeRmGoraPayload;
 }
 
 // [%set-max @uv (unit @ud)]                    sets max hodlers, gora-standard
