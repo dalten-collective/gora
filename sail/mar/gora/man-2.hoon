@@ -42,6 +42,10 @@
             pic+so
         ::
           :-  %type
+          %+  cu
+            |=  gut=?([%g *] [%s *])
+            ?:  ?=(%g -.gut)
+            [%.y +.gut]  [%.n +.gut]
           %-  of
           :~
             [%g (ot ~[hodl+(as (se %p)) max+(mu ni)])]

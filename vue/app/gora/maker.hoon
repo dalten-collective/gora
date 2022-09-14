@@ -6,11 +6,7 @@
 ::
 ^-  (page:rudder tack manage-gora-2)
 |_  [bol=bowl:gall odo=order:rudder sat=tack]
-++  final
-  |=  [suc=? msg=brief:rudder]
-  ?.  suc
-    (build ~ `[| msg])
-  [%next (crip "voyer?gora={(trip msg)}") ~]
+++  final  (alert:rudder 'maker' build)
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

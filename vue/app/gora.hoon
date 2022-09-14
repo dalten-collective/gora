@@ -125,7 +125,7 @@
   %-  (slog leaf+"%gora -vue-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
-      [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
+      [%connect [[~ [%apps %gora ~]] dap.bowl]]
   ::
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]
       :+  %arvo  %b
@@ -142,10 +142,10 @@
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
       :~  =-  [%pass /eyre/connect %arvo %e -]
-          [%disconnect [~ [%apps %gora ~]]]
+          [%disconnect [~ [%apps %gora %public ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
@@ -787,7 +787,7 @@
       [%x %tags ~]
     ?>  (team:title our.bowl src.bowl)
     =-  ``json+!>(`json`a+-)
-    (turn ~(tap in ~(key by tags)) |=(t=@tas s+t))
+    (turn ~(tap in ~(key by tags)) (lead %s))
   ::
       [%x %tags @ ~]
     =-  ``noun+!>(`(list @tas)`-)
@@ -1746,8 +1746,9 @@
           tags
         ?.  (~(has by tags) tag.gal)
           tags
-        %+  ~(put by tags)  tag.gal
-        (~(dif in (~(got by tags) tag.gal)) gorae.gal)
+        ?~  lef=(~(dif in (~(got by tags) tag.gal)) gorae.gal)
+          (~(del by tags) tag.gal)
+        (~(put by tags) tag.gal lef)
       ==
     ::
         %stak-em
