@@ -363,7 +363,7 @@
                 ;div(class "button-layout")
                   ;div(class "button-wrapper")
                     ;a(id "give", class "button", href "./gora?host={(scow %p our.bol)}")
-                      ;span(class "tooltip-text"):"give gorae you own"
+                      ;span(class "tooltip-text"):"give gorae you host"
                     ::
                       ;svg(xmlns "http://www.w3.org/2000/svg", height "40", width "40")
                         ;path(d "M20 33.333q-3.417 0-5.875-2.458T11.667 25q0-3.292 2.041-5.479 2.042-2.188 4.917-2.771V8.625l-3.375 3.333-1.958-1.916L20 3.333l6.708 6.709L24.75 12l-3.375-3.375v8.125q2.875.583 4.917 2.771 2.041 2.187 2.041 5.479 0 3.417-2.416 5.875Q23.5 33.333 20 33.333Z");
@@ -1611,7 +1611,6 @@
       /*   badge - a badge inset in the box */
       .badge {
         width: 14vw;
-        margin-inline: 2%;
         border-radius: 50%;
 
         display: -webkit-box;
