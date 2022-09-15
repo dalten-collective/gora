@@ -6,6 +6,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      haveSubscription: false,
       subscriptions: [] as Array<AgentSubscription>,
     };
   },
@@ -25,13 +26,18 @@ export default {
       const sub = state.subscriptions.find((s) => s === subscription);
       state.subscriptions = state.subscriptions.filter((s) => s != sub);
     },
+
+    haveSubscription(state) {
+      state.haveSubscription = true;
+    },
   },
 
   actions: {
-    openAirlockToAgent({ dispatch }, agentName: string) {
+    openAirlockToAgent({ commit, dispatch }, agentName: string) {
       airlock.openAirlockTo(
         agentName,
         (data) => {
+          commit("haveSubscription")
           console.log("agentName ", agentName);
           console.log("response ", data);
 
@@ -43,7 +49,8 @@ export default {
           } else {
             // initial response
             console.log('got an init')
-            dispatch("pita/handleSubscriptionData", data.pita, { root: true });
+            dispatch("pita/handleSubscriptionData", data.pita, { root: true })
+              .then(() => commit('pita/havePita', {}, { root: true }));
             dispatch("owned/handleSubscriptionData", data.owned, { root: true });
             dispatch("made/handleSubscriptionData", data.made, { root: true });
             dispatch(

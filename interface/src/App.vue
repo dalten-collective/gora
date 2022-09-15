@@ -5,22 +5,38 @@
         gora
       </header>
 
-      <div class="tw-mb-4">
-        <ul class="tw-flex tw-justify-between">
-          <li>
-          <router-link :to="{ name: 'pita' }">Pita</router-link>
-          </li>
-          <li>
-          <router-link :to="{ name: 'owned' }">Owned</router-link>
-          </li>
-          <li>
-          <router-link :to="{ name: 'mine' }">Mine</router-link>
-          </li>
-        </ul>
+      <div v-if="!haveSubscription || !havePita" class="tw-w-full tw-h-full tw-flex tw-flex-col">
+        
+        <div class="tw-my-4">
+          <v-progress-linear height="25" color="info" rounded v-if="!haveSubscription" indeterminate>
+            Connecting to Urbit...
+          </v-progress-linear>
+        </div>
+        <div class="tw-my-4">
+          <v-progress-linear height="25" color="info" rounded v-if="!havePita" indeterminate>
+            Loading gorae...
+          </v-progress-linear>
+        </div>
       </div>
+      <div v-else>
 
-      <div>
-        <router-view />
+        <div class="tw-mb-4">
+          <ul class="tw-flex tw-justify-between">
+            <li>
+            <router-link :to="{ name: 'pita' }">Pita</router-link>
+            </li>
+            <li>
+            <router-link :to="{ name: 'owned' }">Owned</router-link>
+            </li>
+            <li>
+            <router-link :to="{ name: 'mine' }">Mine</router-link>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <router-view />
+        </div>
       </div>
 
     </div>
@@ -29,6 +45,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { mapState } from 'vuex';
 
 export default defineComponent({
   mounted() {
@@ -37,6 +54,11 @@ export default defineComponent({
   },
   unmounted() {
     this.closeAirlocks();
+  },
+
+  computed: {
+    ...mapState("ship", ["haveSubscription"]),
+    ...mapState("pita", ["havePita"]),
   },
 
   methods: {

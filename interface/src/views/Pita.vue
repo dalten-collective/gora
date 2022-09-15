@@ -45,15 +45,18 @@ export default defineComponent({
   data() {
     return {
       detailOpen: false,
-      detailedID: '',
+      notFoundOpen: false,
+      detailedID: null as string | null,
     }
   },
 
   mounted() {
-    const goraID = this.$route.params.goraID
-    if (goraID) {
+    const goraID = this.$route.params.goraID?.toString()
+    if (goraID && this.idDetailable(goraID)) {
       this.detailOpen = true;
       this.detailedID = goraID;
+    } else if (goraID && !this.idDetailable(goraID)) {
+      this.notFoundOpen = true;
     }
   },
 
@@ -75,6 +78,12 @@ export default defineComponent({
         this.detailOpen = false;
         this.$router.push({ name: 'pita' })
         this.detailedID = null;
+      }
+    },
+    notFoundOpen (val, oldVal) {
+      if (!val) {
+        this.notFoundOpen = false;
+        this.$router.push({ name: 'pita' })
       }
     },
   },

@@ -14,6 +14,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      havePita: false,
       pita: [] as PitaState,
     };
   },
@@ -28,6 +29,9 @@ export default {
   },
 
   mutations: {
+    havePita(state) {
+      state.havePita = true;
+    },
     setPita(state, payload: PitaState) {
       state.pita = payload;
     },
@@ -40,6 +44,10 @@ export default {
   },
 
   actions: {
+    havePita({ commit }) {
+      commit("havePita")
+    },
+
     handleSubscriptionData({ commit, dispatch }, payload: PitaState) {
       console.log('in pita ', payload)
 
