@@ -78,6 +78,12 @@ export default defineComponent({
         .then(() => {})
         .finally(() => { this.transactPending = false; })
     },
+    doIgnoreOffer(): void {
+      this.transactPending = true;
+      this.$store.dispatch("logs/pokeIgnoreGive", { id: this.goid })
+        .then(() => {})
+        .finally(() => { this.transactPending = false; })
+    },
   },
 });
 </script>

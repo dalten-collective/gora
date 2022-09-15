@@ -29,9 +29,9 @@ export function acceptGive(payload: { id: GoraID }): Promise<any> {
     });
 }
 
-export function rmGora(payload: PokeRmGoraPayload): Promise<any> {
-  const json: PokeRmGora = {
-    "rm-gora": payload,
+export function ignoreGive(payload: { id: GoraID }): Promise<any> {
+  const json: PokeIgnoreGive = {
+    "ignore-give": payload,
   };
   return urbitAPI
     .poke({

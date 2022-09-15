@@ -82,6 +82,16 @@ export default {
         .catch((e) => {
           throw e
         })
-    }
+    },
+
+    pokeIgnoreGive({ commit, dispatch }, pokePayload: { id: GoraID }) {
+      return transactAPI.ignoreGive(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
   },
 };
