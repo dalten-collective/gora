@@ -142,10 +142,10 @@
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
       :~  =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [~ [%apps %gora %public ~]]]
+          [%disconnect [~ [%apps %gora ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%disconnect [[~ [%apps %gora ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
@@ -274,7 +274,8 @@
           [%maker ~]  `[%page & %maker]                 ::  make gora
           [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
           [%tiket ~]  `[%page & %tiket]                 ::  your logs
-          [%stakd ~]  `[%page & %stakd]                 ::  burn pile
+          [%stakm ~]  `[%page & %stakm]                 ::  burn pile
+          [%stakd ~]  `[%page & %stakd]                 ::  the ashes
           [%poser ~]  `[%page | %poser]                 ::  my public
         ==
       ::
