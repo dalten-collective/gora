@@ -31,20 +31,11 @@ export default {
     setPita(state, payload: PitaState) {
       state.pita = payload;
     },
-    //addSubscription(state, payload: AgentSubscription) {
-      //state.subscriptions.push(payload);
-    //},
-
-    //unsetSubscription(state, subscription: AgentSubscription) {
-      //const sub = state.subscriptions.find((s) => s === subscription);
-      //state.subscriptions = state.subscriptions.filter((s) => s != sub);
-    // },
     applyDiff(state, payload: DiffResponse) {
       // remove
       state.pita = state.pita.filter(a => !payload.diff.rem.pita.map(r => r.id).includes(a.id))
       // add
       state.pita = state.pita.concat(payload.diff.set.pita)
-      // _.merge(state.pita, payload.diff.set.pita) // dun't work
     }
   },
 

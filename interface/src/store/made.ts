@@ -15,9 +15,6 @@ export default {
   },
 
   getters: {
-    //agentSubscriptions(state): Array<AgentSubscription> | [] {
-      //return state.subscriptions
-    //},
   },
 
   mutations: {
@@ -30,14 +27,6 @@ export default {
       // add
       state.made = state.made.concat(payload.diff.set.made)
     }
-    //addSubscription(state, payload: AgentSubscription) {
-      //state.subscriptions.push(payload);
-    //},
-
-    //unsetSubscription(state, subscription: AgentSubscription) {
-      //const sub = state.subscriptions.find((s) => s === subscription);
-      //state.subscriptions = state.subscriptions.filter((s) => s != sub);
-    // },
   },
 
   actions: {
