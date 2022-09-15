@@ -40,7 +40,11 @@ export default {
       //state.subscriptions = state.subscriptions.filter((s) => s != sub);
     // },
     applyDiff(state, payload: DiffResponse) {
-      state.pita = _.merge(payload.diff.set.pita, state.pita)
+      // remove
+      state.pita = state.pita.filter(a => !payload.diff.rem.pita.map(r => r.id).includes(a.id))
+      // add
+      state.pita = state.pita.concat(payload.diff.set.pita)
+      // _.merge(state.pita, payload.diff.set.pita) // dun't work
     }
   },
 

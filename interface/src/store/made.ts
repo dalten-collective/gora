@@ -25,10 +25,10 @@ export default {
       state.made = payload;
     },
     applyDiff(state, payload: DiffResponse) {
-      console.log('made diff ', payload.diff)
-      console.log('merge ',_.merge(payload.diff.set.made, state.made))
-      state.made = _.merge(payload.diff.set.made, state.made)
-      console.log('made state ', state.made)
+      // remove
+      state.made = state.made.filter(id => !payload.diff.rem.made.includes(id))
+      // add
+      state.made = state.made.concat(payload.diff.set.made)
     }
     //addSubscription(state, payload: AgentSubscription) {
       //state.subscriptions.push(payload);

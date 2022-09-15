@@ -31,17 +31,15 @@ export default {
     openAirlockToAgent({ dispatch }, agentName: string) {
       airlock.openAirlockTo(
         agentName,
-        (data: InitResponse | DiffResponse) => {
+        (data) => {
           console.log("agentName ", agentName);
           console.log("response ", data);
 
-          if ('diff' in data) {
-            // TODO: handle diffs
-            console.log('got a diff')
-            console.log('diff: ', data.diff)
-            // add
-              dispatch("pita/handleDiff", data, { root: true })
-              dispatch("made/handleDiff", data, { root: true })
+          if (data.hasOwnProperty('diff')) {
+             dispatch("made/handleDiff", data, { root: true })
+             dispatch("pita/handleDiff", data, { root: true })
+             dispatch("owned/handleDiff", data, { root: true })
+            // TODO: handle meta diffs
           } else {
             // initial response
             console.log('got an init')

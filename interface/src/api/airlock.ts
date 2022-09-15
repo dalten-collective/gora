@@ -15,7 +15,7 @@ export function openAirlockTo(
       app: agent,
       path: "/website",
       event: (data) => {
-        onEvent(data);
+        onEvent(data)
       },
     })
     .then((sub: number) => {

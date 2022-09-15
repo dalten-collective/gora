@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="haveTheGora">
     <ul>
       <li v-for="k in Object.keys(theGora)" :key="k" class="tw-grid tw-grid-cols-12">
         <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
@@ -24,6 +24,12 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters("pita", ["goraByID"]),
+    haveTheGora(): boolean {
+      if (this.theGora) {
+        return true
+      }
+      return false
+    },
     theGora(): Gora {
       return this.goraByID(this.goid);
     },
