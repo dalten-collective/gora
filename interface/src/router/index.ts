@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Pita from "../views/Pita.vue";
+// import PitaDetail from "../views/PitaDetail.vue";
 import Owned from "../views/Owned.vue";
 import Mine from "../views/Mine.vue";
 
@@ -7,6 +8,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "pita",
+    component: Pita,
+  },
+  {
+    path: "/:goraID",
+    name: "pita-gora-detail",
     component: Pita,
   },
   {
