@@ -274,7 +274,8 @@
           [%maker ~]  `[%page & %maker]                 ::  make gora
           [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
           [%tiket ~]  `[%page & %tiket]                 ::  your logs
-          [%stakd ~]  `[%page & %stakd]                 ::  burn pile
+          [%stakm ~]  `[%page & %stakm]                 ::  burn pile
+          [%stakd ~]  `[%page & %stakd]                 ::  the ashes
           [%poser ~]  `[%page | %poser]                 ::  my public
         ==
       ::

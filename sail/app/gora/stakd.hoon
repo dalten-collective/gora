@@ -134,12 +134,14 @@
               ;div(class "title-glass");
             ==
           ==
+        ::
           ;div(class "main")
             ;div(class "stak");
             ;div(class "nulTab")
               ;+  nul:make
             ==
           ==
+        ::
           ;div(class "menu");
         ==
       ==
