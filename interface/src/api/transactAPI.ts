@@ -4,6 +4,8 @@ import {
   PokeAcceptGive,
   PokeIgnoreGive,
   GoraID,
+  PokeSendPlea,
+  Ship,
 } from "@/types";
 
 const manMark = "gora-man-2";
@@ -32,6 +34,26 @@ export function acceptGive(payload: { id: GoraID }): Promise<any> {
 export function ignoreGive(payload: { id: GoraID }): Promise<any> {
   const json: PokeIgnoreGive = {
     "ignore-give": payload,
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
+      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
+
+export function sendPlea(payload: { id: GoraID, host: Ship }): Promise<any> {
+  const json: PokeSendPlea = {
+    "send-plea": payload,
   };
   return urbitAPI
     .poke({

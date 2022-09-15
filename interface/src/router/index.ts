@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Owned,
   },
   {
+    path: "/owned/:goraID",
+    name: "owned-gora-detail",
+    component: Owned,
+  },
+  {
     path: "/mine",
     name: "mine",
     component: Mine,

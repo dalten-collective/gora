@@ -5,6 +5,8 @@
         <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
         <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
       </li>
+      <pre>requests: {{ requests }}</pre>
+      <pre>for this: {{ requestsByID }}</pre>
       <v-btn @click="showConfirmDelete = true;">Delete</v-btn>
     </ul>
   <v-dialog v-model="showConfirmDelete">
@@ -45,6 +47,13 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
+    ...mapState("logs", ["requests"]),
+    ...mapGetters("logs", ["requestsForID"]),
+
+    requestsByID() {
+      return this.requestsForID(this.goid)
+    },
+
     haveTheGora(): boolean {
       if (this.theGora) {
         return true

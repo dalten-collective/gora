@@ -2,6 +2,8 @@ import {
   OwnedState,
 } from "@/types";
 
+import transactAPI from "@/api"
+
 export default {
   namespaced: true,
   state() {
@@ -11,6 +13,10 @@ export default {
   },
 
   getters: {
+    goraNotOwned: (state) => (goraID: GoraID): Gora => {
+      const owned = state.owned.includes(goraID)
+      return !owned
+    },
   },
 
   mutations: {
@@ -33,6 +39,16 @@ export default {
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {
       commit('applyDiff', payload)
+    },
+
+    pokeSendPlea({}, pokePayload: { id: GoraID, host: Ship }) {
+      return transactAPI.sendPlea(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
     },
   },
 };

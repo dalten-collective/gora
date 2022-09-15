@@ -2,14 +2,14 @@
   <div>
     <header class="tw-mb-4 tw-text-xl">Pita</header>
     <div v-for="goid in pitaIDs" :key="goid" >
-      <PitaOneGora :goid="goid" class="tw-mb-4"/>
+      <GoraDetail :goid="goid" class="tw-mb-4"/>
     </div>
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
         <v-card-text>
           <div v-if="idDetailable(detailedID)">
-            <PitaOneGora :goid="detailedID" />
+            <GoraDetail :goid="detailedID" from-page="pita" />
           </div>
         </v-card-text>
       </v-card>
@@ -29,7 +29,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapGetters } from "vuex";
-import PitaOneGora from "@/components/pita/pita-one-gora.vue"
+import GoraDetail from "@/components/gora-detail.vue"
 
 import {
   Gora
@@ -106,7 +106,7 @@ export default defineComponent({
   },
 
   components: {
-    PitaOneGora,
+    GoraDetail,
   }
 })
 </script>

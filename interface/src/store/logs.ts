@@ -1,4 +1,4 @@
-import { GoraID, Outgoing, PokeAcceptGive, Request } from "@/types";
+import { GoraID, Outgoing, PokeAcceptGive, Request, Ship } from "@/types";
 
 import transactAPI from "@/api"
 
@@ -16,6 +16,15 @@ export default {
   getters: {
     goraInOffers: (state) => (goraID: GoraID): boolean => {
       return state.offers.includes(goraID)
+    },
+
+    requestsForID: (state) => (goraID: GoraID): boolean => {
+      return state.requests.map((r) => {
+        if (r['id-list'].includes(goraID)) {
+          console.log('found ', r)
+          return r.requester
+        }
+      })
     },
     // TODO: not an array of IDs. fix includes
     //goraInRequests: (state) => (goraID: GoraID): boolean => {
@@ -44,10 +53,13 @@ export default {
     applyDiff(state, payload: DiffResponse) {
       // remove
       state.offers = state.offers.filter(id => !payload.diff.rem.logs.offers.includes(id))
+      console.log('req diff ', payload)
+      // state.requests = state.requests.filter(id => !payload.diff.rem.logs.offers.includes(id))
 
 
       // add
       state.offers = state.offers.concat(payload.diff.set.logs.offers)
+      // state.requests = state.requests.concat(payload.diff.set.logs.offers)
     }
   },
 

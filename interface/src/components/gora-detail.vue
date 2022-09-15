@@ -1,6 +1,6 @@
 <template>
   <div v-if="haveTheGora">
-    <router-link :to="{ name: 'pita-gora-detail', params: { goraID: goid }}">
+    <router-link :to="linkTo">
       View
     </router-link>
 
@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import type { PropType } from "vue";
-import { GoraID, Gora } from "../../../types";
+import { GoraID, Gora } from "../types";
 import { mapState, mapGetters } from "vuex";
 
 export default defineComponent({
@@ -57,6 +57,10 @@ export default defineComponent({
     goid: {
       type: String as PropType<GoraID>,
       default: "0v0",
+    },
+    fromPage: {
+      type: String,
+      default: "pita"
     },
   },
 
@@ -86,6 +90,19 @@ export default defineComponent({
 
     requestable(): boolean {
       return this.goraNotOwned(this.goid);
+    },
+
+    detailPage(): string {
+      return `${ this.fromPage }-gora-detail`
+    },
+
+    linkTo(): Object {
+      return {
+        name: this.detailPage,
+        params: {
+          goraID: this.goid
+        }
+      }
     },
   },
 
