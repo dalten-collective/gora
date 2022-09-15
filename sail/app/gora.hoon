@@ -422,7 +422,7 @@
         ?>  =(host.gora.tan src.bowl)
         ?-   -.gora.tan
             %g
-          :-  (gora:subs:hc pita)
+          =-  [(gora:subs:hc pita.-) -]
           %=    state
               offers.logs
             ?:  (~(has in hodl.gora.tan) our.bowl)
@@ -1600,8 +1600,6 @@
       !>(`transact-2`[%offered u.gor])
     ::
         %s
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       =;  [offers=(list card) stik=stak legs=_outgoing.logs]
         :-  :_  offers
             =-  [%give %fact ~[/gora/(scot %uv id.u.gor)] -]
@@ -1632,8 +1630,6 @@
     ==
   ::
       %send-plea
-    :: =;  neu=(quip card _state)                          ::  json -sail-removes
-    ::   [[((diff:j-web state) +.neu) -.neu] +.neu]        ::
     =/  wir=path
       /plead/(scot %uv id.man)/(scot %p host.man)
     :_  %=    state
@@ -1659,8 +1655,6 @@
     ^-  (quip card _state)
     ?-    -.gal
         %pub-gor
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       :-  ~
       %=    state
           public
@@ -1670,8 +1664,6 @@
       ==
     ::
         %rm-gora
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ~_  "%gora -rm-{<id.gal>}-gora-not-found"
       =/  gor=gora
         (~(got by pita) id.gal)
@@ -1697,8 +1689,6 @@
 
     ::
         %set-max
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ~_  "%gora -set-max-{<id.gal>}-failed"
       =/  gor=gora
         (~(got by pita) id.gal)
@@ -1724,8 +1714,6 @@
       !>(`transact-2`[%diff [%change-max max.gal]])
     ::
         %add-tag
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ?>  (~(all in gorae.gal) |=(i=id (~(has by pita) i)))
       :-  ~
       %=    state
@@ -1735,8 +1723,6 @@
       ==
     ::
         %rem-tag
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ?>  (~(all in gorae.gal) |=(i=id (~(has by pita) i)))
       :-  ~
       %=    state
@@ -1749,8 +1735,6 @@
       ==
     ::
         %stak-em
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ~_  '%gora -stak-em-failed'
       |^
       ?.  ?=(%.y -.which.gal)
@@ -1879,8 +1863,6 @@
       --
     ::
         %set-pol
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       ~_  leaf+"%gora -set-pol-failed -maybe-bad-id {<id.gal>}"
       ?~  gor=(~(get by pita) id.gal)  !!
       ?>  =(our.bol host.u.gor)
@@ -1906,8 +1888,6 @@
       ==
     ::
         %mk-gora
-      :: =;  neu=(quip card _state)                        ::  json -sail-removes
-      ::   [[((diff:j-web state) +.neu) -.neu] +.neu]      ::
       |^  ^-  (quip card _state)
       ?:  ?=(%.n -.type.gal)
         =;  new=gora-stakable
