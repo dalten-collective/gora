@@ -5,7 +5,7 @@
         gora
       </header>
 
-      <div v-if="!haveSubscription || !havePita" class="tw-w-full tw-h-full tw-flex tw-flex-col">
+      <div v-if="!haveSubscription || !havePita || !haveMeta" class="tw-w-full tw-h-full tw-flex tw-flex-col">
         
         <div class="tw-my-4">
           <v-progress-linear height="25" color="info" rounded v-if="!haveSubscription" indeterminate>
@@ -15,6 +15,11 @@
         <div class="tw-my-4">
           <v-progress-linear height="25" color="info" rounded v-if="!havePita" indeterminate>
             Loading gorae...
+          </v-progress-linear>
+        </div>
+        <div class="tw-my-4">
+          <v-progress-linear height="25" color="info" rounded v-if="!haveMeta" indeterminate>
+            Fetching logs...
           </v-progress-linear>
         </div>
       </div>
@@ -59,6 +64,7 @@ export default defineComponent({
   computed: {
     ...mapState("ship", ["haveSubscription"]),
     ...mapState("pita", ["havePita"]),
+    ...mapState("meta", ["haveMeta"]),
   },
 
   methods: {

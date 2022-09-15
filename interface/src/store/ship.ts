@@ -57,7 +57,8 @@ export default {
               "meta/handleSubscriptionData",
               { public: data.public, policy: data.policy, tags: data.tags },
               { root: true }
-            );
+            )
+              .then(() => commit('meta/haveMeta', {}, { root: true }));
           }
         },
         (subscriptionNumber: number) => {
