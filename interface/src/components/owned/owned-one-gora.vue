@@ -15,6 +15,7 @@ import type { PropType } from "vue";
 import { GoraID, Gora } from '../../../types';
 import { mapState, mapGetters } from 'vuex'
 
+
 export default defineComponent({
   props: {
     goid: {
