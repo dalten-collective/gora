@@ -45,6 +45,7 @@ export default {
              dispatch("made/handleDiff", data, { root: true })
              dispatch("pita/handleDiff", data, { root: true })
              dispatch("owned/handleDiff", data, { root: true })
+             dispatch("logs/handleDiff", data, { root: true })
             // TODO: handle meta diffs
           } else {
             // initial response
@@ -59,6 +60,8 @@ export default {
               { root: true }
             )
               .then(() => commit('meta/haveMeta', {}, { root: true }));
+            dispatch("logs/handleSubscriptionData", data.logs, { root: true })
+              .then(() => commit('logs/haveLogs', {}, { root: true }));
           }
         },
         (subscriptionNumber: number) => {

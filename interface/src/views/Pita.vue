@@ -2,9 +2,7 @@
   <div>
     <header class="tw-mb-4 tw-text-xl">Pita</header>
     <div v-for="goid in pitaIDs" :key="goid" >
-      <router-link :to="{ name: 'pita-gora-detail', params: { goraID: goid }}">
-        <PitaOneGora :goid="goid" class="tw-mb-4"/>
-      </router-link>
+      <PitaOneGora :goid="goid" class="tw-mb-4"/>
     </div>
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
       <v-card class="tw-bg-white">

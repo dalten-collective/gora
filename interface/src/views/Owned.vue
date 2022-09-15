@@ -1,6 +1,14 @@
 <template>
   <div>
-    <header class="tw-mb-4 tw-text-xl">Owned</header>
+    <header class="tw-my-4 tw-text-xl">Offered</header>
+
+    <div v-if="offers.length > 0">
+      <div v-for="goid in offers">
+        offered gora: {{ goid }}
+      </div>
+    </div>
+
+    <header class="tw-my-4 tw-text-xl">Owned</header>
 
     <div>
       <OwnedOneGora v-for="goid in owned" :key="goid" :goid="goid" class="tw-mb-4"/>
@@ -23,6 +31,7 @@ export default defineComponent({
 
   computed: {
     ...mapState("owned", ["owned"]),
+    ...mapState("logs", ["offers"]),
   },
   components: { OwnedOneGora },
 });

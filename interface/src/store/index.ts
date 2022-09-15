@@ -5,6 +5,7 @@ import pita from "./pita";
 import owned from "./owned";
 import made from "./made";
 import meta from "./meta";
+import logs from "./logs";
 
 const store = createStore({
   modules: {
@@ -13,6 +14,7 @@ const store = createStore({
     owned,
     made,
     meta,
+    logs,
   },
 });
 
