@@ -1,9 +1,27 @@
 <template>
   <div>
-    <header class="tw-my-4 tw-text-xl">Offered</header>
+    <v-dialog v-model="requesting" scrim scrollable>
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" color="info" @click="requesting = true;">Request</v-btn>
+      </template>
+      <v-card class="tw-bg-white tw-p-4">
+        <v-card-title class="tw-flex tw-justify-between">
+          <div>
+            Request Gora
+          </div>
+          <div>
+            <span @click="requesting = false;" class="tw-underline tw-cursor-pointer">Close</span>
+          </div>
+        </v-card-title>
+        <v-card-text>
+          <RequestForm />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <div v-if="offers.length > 0">
-      <div v-for="goid in offers">
+      <header class="tw-my-4 tw-text-xl">Offered </header>
+      <div v-for="goid in offers" :key="goid">
         offered gora: {{ goid }}
       </div>
     </div>
@@ -41,11 +59,12 @@
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 import GoraDetail from "@/components/gora-detail.vue"
+import RequestForm from "@/components/owned/request-form.vue"
 
 export default defineComponent({
   data() {
     return {
-      making: false,
+      requesting: false,
       detailOpen: false,
       notFoundOpen: false,
       detailedID: null as string | null,
@@ -113,6 +132,6 @@ export default defineComponent({
       return this.goraByID(goraID);
     },
   },
-  components: { GoraDetail },
+  components: { GoraDetail, RequestForm },
 });
 </script>

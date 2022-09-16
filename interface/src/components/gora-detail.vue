@@ -89,7 +89,11 @@ export default defineComponent({
     },
 
     requestable(): boolean {
-      return this.goraNotOwned(this.goid);
+      return this.goraNotOwned(this.goid) && !this.iHostGora;
+    },
+
+    iHostGora(): boolean {
+      return this.theGora.host === this.$filters.sigShip(this.ourShip);
     },
 
     detailPage(): string {

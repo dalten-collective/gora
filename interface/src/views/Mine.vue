@@ -1,10 +1,8 @@
 <template>
   <div>
-    <header class="tw-mb-4 tw-text-xl">Mine</header>
-
     <v-dialog v-model="making" fullscreen scrim scrollable>
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" color="info" @click="making = true;">open</v-btn>
+        <v-btn v-bind="props" color="info" @click="making = true;">Create</v-btn>
       </template>
       <v-card class="tw-bg-white tw-p-4">
         <v-card-title class="tw-flex tw-justify-between">
@@ -20,6 +18,8 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <header class="tw-mb-4 tw-text-xl">Mine</header>
 
     <div>
       <MyOneGora v-for="goid in made" :key="goid" :goid="goid" class="tw-mb-4"/>
@@ -37,7 +37,7 @@ import MyOneGora from "@/components/mine/my-one-gora.vue"
 export default defineComponent({
   data() {
     return {
-      making: true, // TODO: remove
+      making: false,
     }
   },
 
