@@ -37,7 +37,7 @@ import MyOneGora from "@/components/mine/my-one-gora.vue"
 export default defineComponent({
   data() {
     return {
-      making: false,
+      making: true, // TODO: remove
     }
   },
 

@@ -1,6 +1,6 @@
 import { GoraID, Outgoing, PokeAcceptGive, Request, Ship } from "@/types";
 
-import transactAPI from "@/api"
+import transactAPI from "@/api";
 
 export default {
   namespaced: true,
@@ -15,25 +15,31 @@ export default {
 
   getters: {
     goraInOffers: (state) => (goraID: GoraID): boolean => {
-      return state.offers.includes(goraID)
+      return state.offers.includes(goraID);
     },
 
-    requestsForID: (state) => (goraID: GoraID): boolean => {
-      return state.requests.map((r) => {
-        if (r['id-list'].includes(goraID)) {
-          console.log('found ', r)
-          return r.requester
-        }
-      })
+    requestsForID: (state) => (goraID: GoraID): Array<Ship> => {
+      const setShips: Set<Ship> = new Set(
+        state.requests
+          .map((r: Request) => {
+            if (r["id-list"].includes(goraID)) {
+              return r.requester;
+            } else {
+              return null;
+            }
+          })
+        .filter((s: Ship | null) => s != null)
+      );
+      return Array.from(setShips);
     },
     // TODO: not an array of IDs. fix includes
     //goraInRequests: (state) => (goraID: GoraID): boolean => {
-      //return state.requests.includes(goraID)
+    //return state.requests.includes(goraID)
     //},
     //
     // TODO: not an array of IDs. fix includes
     //goraInOutgoing: (state) => (goraID: GoraID): boolean => {
-      //return state.outgoing.includes(goraID)
+    //return state.outgoing.includes(goraID)
     //},
   },
 
@@ -52,23 +58,24 @@ export default {
     },
     applyDiff(state, payload: DiffResponse) {
       // remove
-      state.offers = state.offers.filter(id => !payload.diff.rem.logs.offers.includes(id))
-      console.log('req diff ', payload)
+      state.offers = state.offers.filter(
+        (id) => !payload.diff.rem.logs.offers.includes(id)
+      );
+      console.log("req diff ", payload);
       // state.requests = state.requests.filter(id => !payload.diff.rem.logs.offers.includes(id))
 
-
       // add
-      state.offers = state.offers.concat(payload.diff.set.logs.offers)
+      state.offers = state.offers.concat(payload.diff.set.logs.offers);
       // state.requests = state.requests.concat(payload.diff.set.logs.offers)
-    }
+    },
   },
 
   actions: {
     haveLogs({ commit }) {
-      commit('haveLogs')
+      commit("haveLogs");
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {
-      commit('applyDiff', payload)
+      commit("applyDiff", payload);
     },
 
     handleSubscriptionData(
@@ -87,23 +94,25 @@ export default {
     },
 
     pokeAcceptGive({ commit, dispatch }, pokePayload: { id: GoraID }) {
-      return transactAPI.acceptGive(pokePayload)
+      return transactAPI
+        .acceptGive(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
     pokeIgnoreGive({ commit, dispatch }, pokePayload: { id: GoraID }) {
-      return transactAPI.ignoreGive(pokePayload)
+      return transactAPI
+        .ignoreGive(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
   },
 };

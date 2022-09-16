@@ -52,6 +52,11 @@ export interface Policied {
   policy: Policy;
 }
 
+export interface GoraIDShip {
+  id: GoraID;
+  ship: Ship;
+}
+
 export interface Request {
   requester: Ship;
   'id-list': Array<GoraID>;

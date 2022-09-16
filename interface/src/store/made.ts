@@ -1,10 +1,11 @@
 import {
-  MadeState, PokeMkGoraPayload,
+  GoraIDShip,
+  MadeState, PokeAcceptRequest, PokeMkGoraPayload,
 } from "@/types";
 
 import _ from 'lodash'
 
-import manageAPI from "@/api"
+import api from "@/api"
 
 export default {
   namespaced: true,
@@ -40,13 +41,34 @@ export default {
     },
 
     pokeMkGora({ commit, dispatch }, pokePayload: PokeMkGoraPayload) {
-      return manageAPI.mkGora(pokePayload)
+      return api.mkGora(pokePayload)
         .then((r) => {
           return r
         })
         .catch((e) => {
           throw e
         })
-    }
+    },
+
+    pokeAcceptRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
+      return api.acceptRequest(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeIgnoreRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
+      return api.ignoreRequest(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
   },
 };

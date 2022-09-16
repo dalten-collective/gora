@@ -41,6 +41,32 @@
 
       <div v-else>
         todo: stackers
+        <pre>
+        sh: {{ stackHodlers}}
+        convert: {{ stackHodlersTosHodl }}
+        </pre>
+        <div>
+          <ul>
+            <li v-for="ship in gHodl" :key="ship">
+              {{ ship }}
+              <v-text-field v-model="stackHodlers[ship]" label="many"/>
+              <span @click="removeFromGHodl(ship)">Remove</span>
+            </li>
+          </ul>
+        </div>
+        <v-text-field
+          v-model="gHodlAdd"
+          placeholder="~sampel-palnet, "
+          label="Hodlers"
+          @keyup.enter="addToGHodl"
+        />
+        <v-btn @click="addToGHodl">Add</v-btn>
+
+        <v-text-field
+          v-model="gMax"
+          placeholder=""
+          label="Max Hodlers"
+        />
       </div>
 
       <v-btn color="success" @click="doMkPoke">Create</v-btn>
@@ -53,7 +79,7 @@
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 
-import { PokeMkGoraPayload, NewGType, NewSType, Stackers, UrbNull } from "../../types";
+import { PokeMkGoraPayload, NewGType, NewSType, Stackers, UrbNull, Ship } from "../../types";
 
 export default defineComponent({
   data() {
@@ -68,11 +94,24 @@ export default defineComponent({
       gHodl: [] as Array<string>,
       gMax: null,
       sHodl: [] as Array<Stackers>,
+      stackHodlers: {},
       //
     };
   },
   computed: {
     ...mapState("made", ["made"]),
+    stackHodlersTosHodl(): Array<Stackers> {
+      // as just (set ship):
+      // return this.gHodl
+
+      // as <Stackers>
+      return Object.keys(this.stackHodlers).map((ship: Ship) => {
+        return {
+          who: ship,
+          has: this.stackHodlers[ship]
+        }
+      })
+    },
   },
   components: {},
 
@@ -84,6 +123,7 @@ export default defineComponent({
 
       if (!this.gHodl.includes(this.gHodlAdd)) {
         this.gHodl.push(this.gHodlAdd)
+        this.stackHodlers[this.gHodlAdd] = 1;
       }
       this.gHodlAdd = "";
     },
@@ -102,7 +142,7 @@ export default defineComponent({
       if (this.isStak) {
         return {
           s: {
-            stak: this.sHodl,
+            stak: this.stackHodlersTosHodl,
           }
         }
       } else {
