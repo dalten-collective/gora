@@ -12,17 +12,18 @@
             Connecting to Urbit...
           </v-progress-linear>
         </div>
-        <div class="tw-my-4">
+
+        <div class="tw-my-4" v-if="haveSubscription">
           <v-progress-linear height="25" color="info" rounded v-if="!havePita" indeterminate>
             Loading gorae...
           </v-progress-linear>
         </div>
-        <div class="tw-my-4">
+        <div class="tw-my-4" v-if="haveSubscription">
           <v-progress-linear height="25" color="info" rounded v-if="!haveMeta" indeterminate>
             Fetching metadata...
           </v-progress-linear>
         </div>
-        <div class="tw-my-4">
+        <div class="tw-my-4" v-if="haveSubscription">
           <v-progress-linear height="25" color="info" rounded v-if="!haveLogs" indeterminate>
             Fetching interstellar activity...
           </v-progress-linear>
