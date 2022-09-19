@@ -50,6 +50,16 @@ export default {
         })
     },
 
+    pokeGiveGora({ commit, dispatch }, pokePayload: { id: GoraID, who: Array<Ship> }) {
+      return api.sendGive(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
     pokeAcceptRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
       return api.acceptRequest(pokePayload)
         .then((r) => {

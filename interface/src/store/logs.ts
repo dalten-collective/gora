@@ -17,6 +17,24 @@ export default {
     goraInOffers: (state) => (goraID: GoraID): boolean => {
       return state.offers.includes(goraID);
     },
+    goraInRequests: (state) => (goraID: GoraID): boolean => {
+      // TODO: this wrong
+      return false
+      //return state.offers.includes(goraID);
+    },
+    goraInShipsRequests: (state, getters) => (args: { goraID: GoraID, ship: Ship}): boolean => {
+      console.log('ship', args.ship)
+      console.log('id', args.goraID)
+      console.log('req by ship', getters.requestsByShip(args.ship))
+      console.log('req by ship', getters.requestsByShip(args.ship).flat().includes(args.goraID))
+      return getters.requestsByShip(args.ship).includes(args.goraID);
+    },
+
+    outgoingFor: (state) => (goraID: GoraID): Array<Outgoing> => {
+      return state.outgoing.filter((o: Outgoing) => {
+        return o.id === goraID
+      })
+    },
 
     requestsForID: (state) => (goraID: GoraID): Array<Ship> => {
       const setShips: Set<Ship> = new Set(
@@ -32,6 +50,22 @@ export default {
       );
       return Array.from(setShips);
     },
+
+    requestsByShip: (state) => (ship: Ship): Array<GoraID> => {
+      const setIDs: Set<GoraID> = new Set(
+        state.requests
+          .map((r: Request) => {
+            if (r['requester'] === ship) {
+              return r['id-list'];
+            } else {
+              return null;
+            }
+          })
+        .filter((idList: Array<GoraID> | null) => idList != null)
+      );
+      return Array.from(setIDs).flat()
+    },
+
     // TODO: not an array of IDs. fix includes
     //goraInRequests: (state) => (goraID: GoraID): boolean => {
     //return state.requests.includes(goraID)

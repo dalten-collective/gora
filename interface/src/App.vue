@@ -4,6 +4,9 @@
       <header class="tw-flex tw-justify-around tw-mb-4">
         gora
       </header>
+      <pre>our requests: {{ requestsByShip(`~${ ourShip}`) }}</pre>
+      <pre>our offers: {{ offers }}</pre>
+      <!-- <pre>outgoing: {{ outgoing }}</pre> -->
 
       <div v-if="!haveSubscription || !havePita || !haveMeta || !haveLogs" class="tw-w-full tw-h-full tw-flex tw-flex-col">
         
@@ -56,7 +59,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default defineComponent({
   mounted() {
@@ -68,10 +71,11 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapGetters("logs", ["goraInOffers", "requestsByShip", "goraInShipsRequests"]),
     ...mapState("ship", ["haveSubscription"]),
     ...mapState("pita", ["havePita"]),
     ...mapState("meta", ["haveMeta"]),
-    ...mapState("logs", ["haveLogs"]),
+    ...mapState("logs", ["haveLogs", "offers", "outgoing"]),
   },
 
   methods: {

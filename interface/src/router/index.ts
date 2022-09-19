@@ -30,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "mine",
     component: Mine,
   },
+  {
+    path: "/mine/:goraID",
+    name: "mine-gora-detail",
+    component: Mine,
+  },
   //{
   //path: "/about",
   //name: "about",

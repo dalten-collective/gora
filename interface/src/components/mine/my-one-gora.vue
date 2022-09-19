@@ -10,6 +10,34 @@
         <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
       </li>
     </ul>
+
+    <div>
+      Outgoing
+      <ul>
+        <li><Outgoing v-for="o in outgoingByID" :log="o" :hodl="theGora.hodl" /></li>
+      </ul>
+    </div>
+
+    <div>
+      Offer:
+      <div>
+        <ul>
+          <li v-for="ship in recipients" :key="ship">
+            {{ ship }}
+            <span @click="removeFromRecipients(ship)">Remove</span>
+          </li>
+        </ul>
+      </div>
+      <v-text-field
+        v-model="recipientAdd"
+        placeholder="~sampel-palnet, "
+        label="Offer to..."
+        @keyup.enter="addToRecipients"
+      />
+      <v-btn @click="addToRecipients">Add</v-btn>
+      <br />
+      <v-btn @click="doOffer">Offer</v-btn>
+    </div>
     Requests:
     <ul>
       <li v-for="ship in requestsByID" :key="ship">
@@ -53,7 +81,10 @@ import {
   PokeRmGoraPayload,
   GoraIDShip,
 } from "../../types";
+
 import { mapState, mapGetters } from "vuex";
+
+import Outgoing from "@/components/mine/outgoing.vue"
 
 export default defineComponent({
   props: {
@@ -68,16 +99,22 @@ export default defineComponent({
       rmPending: false,
       showConfirmDelete: false,
       transactPending: false,
+      recipients: [] as Array<Ship>,
+      recipientAdd: '',
+      offerPending: false,
     };
   },
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
-    ...mapState("logs", ["requests"]),
-    ...mapGetters("logs", ["requestsForID"]),
+    ...mapState("logs", ["requests", "outgoing"]),
+    ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
 
     requestsByID() {
       return this.requestsForID(this.goid);
+    },
+    outgoingByID() {
+      return this.outgoingFor(this.goid);
     },
 
     haveTheGora(): boolean {
@@ -92,6 +129,39 @@ export default defineComponent({
   },
 
   methods: {
+    addToRecipients() {
+      if (!this.recipientAdd) {
+        return;
+      }
+
+      if (!this.recipients.includes(this.recipientAdd)) {
+        this.recipients.push(this.recipientAdd)
+      }
+      this.recipientAdd = "";
+    },
+
+    removeFromRecipients(ship: string) {
+      this.recipients = this.recipients.filter((s: string) => s !== ship)
+    },
+
+
+    doOffer() {
+      this.offerPending = true;
+      this.$store.dispatch("made/pokeGiveGora", { id: this.goid, who: this.recipients })
+        .then((r) => {
+        })
+        .catch((e) => {
+        })
+        .finally(() => {
+          this.offerPending = false;
+          this.resetOffer()
+        })
+    },
+
+    resetOffer() {
+      this.recipients = [];
+    },
+
     doDelete() {
       this.rmPending = true;
       const payload: PokeRmGoraPayload = {
@@ -135,6 +205,10 @@ export default defineComponent({
           this.transactPending = false;
         });
     },
+  },
+
+  components: {
+    Outgoing
   },
 });
 </script>

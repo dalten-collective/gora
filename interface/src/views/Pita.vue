@@ -1,9 +1,11 @@
 <template>
   <div>
     <header class="tw-mb-4 tw-text-xl">Pita</header>
+
     <div v-for="goid in pitaIDs" :key="goid" >
-      <GoraDetail :goid="goid" class="tw-mb-4"/>
+      <GoraList :goid="goid" class="tw-mb-4"/>
     </div>
+
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
@@ -30,6 +32,7 @@
 import { defineComponent } from 'vue'
 import { mapGetters } from "vuex";
 import GoraDetail from "@/components/gora-detail.vue"
+import GoraList from "@/components/gora-list.vue"
 
 import {
   Gora
@@ -107,6 +110,7 @@ export default defineComponent({
 
   components: {
     GoraDetail,
+    GoraList,
   }
 })
 </script>
