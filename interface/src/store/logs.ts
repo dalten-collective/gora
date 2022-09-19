@@ -92,16 +92,75 @@ export default {
     },
     applyDiff(state, payload: DiffResponse) {
       // remove
+      // offers
       state.offers = state.offers.filter(
         (id) => !payload.diff.rem.logs.offers.includes(id)
       );
-      console.log("req diff ", payload);
-      // state.requests = state.requests.filter(id => !payload.diff.rem.logs.offers.includes(id))
-
       // add
+      // offers
       state.offers = state.offers.concat(payload.diff.set.logs.offers);
-      // state.requests = state.requests.concat(payload.diff.set.logs.offers)
-    },
+
+      //// 
+
+      // remove requests
+      const remReq: Array<Request> = payload.diff.rem.logs.requests
+      remReq.forEach((rdiff: Request) => {
+        const req = state.requests.find((r: Request) => {
+          return r.requester === rdiff.requester
+        })
+        if (req) { // have this in state
+          // remove old requester from state
+          state.requests = state.requests.filter((r: Request) => {
+            return r.requester !== rdiff.requester
+          })
+
+          // set up new id-list
+          let newIDList = req['id-list']
+          newIDList = req['id-list'].filter((id: GoraID) => !rdiff['id-list'].includes(id))
+
+          // add new requester (and id-list)
+          state.requests.push(
+            {
+              requester: rdiff.requester,
+              'id-list': newIDList
+            }
+          )
+        }
+      })
+
+      // add requests
+      const setReq: Array<Request> = payload.diff.set.logs.requests
+      setReq.forEach((sdiff: Request) => {
+        const req = state.requests.find((r: Request) => {
+          return r.requester === sdiff.requester
+        })
+        let newIDList;
+        if (req) { // already have in state, get its id-list
+          // remove old
+          state.requests = state.requests.filter((r: Request) => {
+            return r.requester !== sdiff.requester
+          })
+
+          // set up new id-list
+          newIDList = req['id-list']
+          sdiff['id-list'].forEach(id => {
+            newIDList.push(id)
+          })
+        } else { // don't have it in state. use this id-list as the whole list
+          newIDList = sdiff['id-list']
+        }
+
+        // add new requester (and id-list either fresh or edited)
+        state.requests.push(
+          {
+            requester: sdiff.requester,
+            'id-list': newIDList,
+          }
+        )
+      });
+    }
+
+
   },
 
   actions: {

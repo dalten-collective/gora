@@ -5,6 +5,7 @@
         gora
       </header>
       <pre>our requests: {{ requestsByShip(`~${ ourShip}`) }}</pre>
+      <pre>our requests: {{ requestsByShip("~sum") }}</pre>
       <pre>our offers: {{ offers }}</pre>
       <!-- <pre>outgoing: {{ outgoing }}</pre> -->
 
