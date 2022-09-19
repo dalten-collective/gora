@@ -100,7 +100,7 @@ export default {
       // offers
       state.offers = state.offers.concat(payload.diff.set.logs.offers);
 
-      //// 
+      //////
 
       // remove requests
       const remReq: Array<Request> = payload.diff.rem.logs.requests
@@ -158,6 +158,21 @@ export default {
           }
         )
       });
+
+      //////
+
+      // remove outgoing
+      const remOutgoing: Array<Outgoing> = payload.diff.rem.logs.ougoing
+      // TODO: 
+      // match on act+who+id
+
+      const setOutgoing: Array<Outgoing> = payload.diff.set.logs.outgoing
+      state.outgoing = setOutgoing;
+      // Diff isn't working / giving back entire state. so not adding individually.
+      // setOutgoing.forEach((o: Outgoing) => {
+      //   // TODO: okay to just shove all in, right?
+      //   state.outgoing.push(o)
+      // })
     }
 
 
