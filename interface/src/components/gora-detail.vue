@@ -6,6 +6,13 @@
 
     <GoraImg :gora="theGora" :detailing="detailing" />
 
+    <!--
+    TODO:
+
+    - need to get gacks, takes in here. consider using props.
+
+    -->
+
     <div v-if="goraOffered">
     {{ transactPending }}
       <v-btn

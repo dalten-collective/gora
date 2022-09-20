@@ -13,6 +13,11 @@
       <GoraImg :gora="theGora" />
     </router-link>
 
+      <li><pre>Offered: {{ goraOffered }}</pre></li>
+      <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
+      <li><pre>Made: {{ iHostGora }}</pre></li>
+      <li><pre>Requested: {{ requestedThisGora }}</pre></li>
+
     <!-- DEBUG
     <ul>
       <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
@@ -150,6 +155,7 @@ export default defineComponent({
         }
       }
     },
+
     linkToMine(): Object {
       return {
         name: 'mine-gora-detail',

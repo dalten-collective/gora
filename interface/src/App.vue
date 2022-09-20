@@ -34,10 +34,10 @@
         <div class="tw-mb-4">
           <ul class="tw-flex tw-justify-between">
             <li>
-            <router-link :to="{ name: 'pita' }">Pita</router-link>
+            <router-link :to="{ name: 'pita' }">Goraverse</router-link>
             </li>
             <li>
-            <router-link :to="{ name: 'owned' }">Owned</router-link>
+            <router-link :to="{ name: 'hedl' }">Hedl</router-link>
             </li>
             <li>
             <router-link :to="{ name: 'mine' }">Mine</router-link>

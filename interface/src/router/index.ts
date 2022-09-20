@@ -16,13 +16,13 @@ const routes: Array<RouteRecordRaw> = [
     component: Pita,
   },
   {
-    path: "/owned",
-    name: "owned",
+    path: "/hedl",
+    name: "hedl",
     component: Owned,
   },
   {
-    path: "/owned/:goraID",
-    name: "owned-gora-detail",
+    path: "/hedl/:goraID",
+    name: "hedl-gora-detail",
     component: Owned,
   },
   {

@@ -19,10 +19,10 @@
       </v-card>
     </v-dialog>
 
-    <header class="tw-my-4 tw-text-xl">Owned</header>
+    <header class="tw-my-4 tw-text-xl">Hedl</header>
 
     <div v-for="goid in owned" :key="goid">
-      <GoraList :goid="goid" class="tw-mb-4"/>
+      <GoraList :goid="goid" class="tw-mb-4" from-page="hedl" />
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
@@ -30,7 +30,7 @@
         <v-card-title></v-card-title>
         <v-card-text>
           <div v-if="idDetailable(detailedID)">
-            <GoraDetail :goid="detailedID" from-page="pita" @close="detailOpen = false"/>
+            <GoraDetail :goid="detailedID" from-page="hedl" :detailing="detailOpen" @close="detailOpen = false"/>
           </div>
         </v-card-text>
       </v-card>
@@ -96,14 +96,14 @@ export default defineComponent({
     detailOpen (val, oldVal) {
       if (!val) {
         this.detailOpen = false;
-        this.$router.push({ name: 'owned' })
+        this.$router.push({ name: 'hedl' })
         this.detailedID = null;
       }
     },
     notFoundOpen (val, oldVal) {
       if (!val) {
         this.notFoundOpen = false;
-        this.$router.push({ name: 'owned' })
+        this.$router.push({ name: 'hedl' })
       }
     },
   },
