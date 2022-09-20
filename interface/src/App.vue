@@ -3,6 +3,7 @@
     <div class="tw-container tw-mx-auto">
       <header class="tw-flex tw-justify-around tw-mb-4">
         gora
+        <ImageButton img="https://picsum.photos/30/30" color="success" />
       </header>
 
       <div v-if="!haveSubscription || !havePita || !haveMeta || !haveLogs" class="tw-w-full tw-h-full tw-flex tw-flex-col">

@@ -6,9 +6,13 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 
+import ImageButton from "./components/image-button.vue";
+
 loadFonts();
 
 const app = createApp(App);
+
+app.component("ImageButton", ImageButton);
 
 app.config.globalProperties.ourShip = window.ship;
 app.config.globalProperties.$filters = {
