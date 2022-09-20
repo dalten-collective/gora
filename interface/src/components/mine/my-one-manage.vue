@@ -1,9 +1,5 @@
 <template>
   <div v-if="haveTheGora">
-    <router-link :to="{ name: 'mine-gora-detail', params: { goraID: goid }}">
-      View
-    </router-link>
-
     <ul>
       <li
         v-for="k in Object.keys(theGora)"
@@ -14,6 +10,65 @@
         <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
       </li>
     </ul>
+
+    <div>
+      Outgoing
+      <ul>
+        <li><Outgoing v-for="o in outgoingByID" :log="o" :hodl="theGora.hodl" /></li>
+      </ul>
+    </div>
+
+    <div>
+      Offer:
+      <div>
+        <ul>
+          <li v-for="ship in recipients" :key="ship">
+            {{ ship }}
+            <span @click="removeFromRecipients(ship)">Remove</span>
+          </li>
+        </ul>
+      </div>
+      <v-text-field
+        v-model="recipientAdd"
+        placeholder="~sampel-palnet, "
+        label="Offer to..."
+        @keyup.enter="addToRecipients"
+      />
+      <v-btn @click="addToRecipients">Add</v-btn>
+      <br />
+      <v-btn @click="doOffer">Offer</v-btn>
+    </div>
+    Requests:
+    <ul>
+      <li v-for="ship in requestsByID" :key="ship">
+        {{ ship }}
+        <v-btn
+          @click="acceptRequest(ship)"
+          :loading="transactPending"
+          :disabled="transactPending"
+          >Give</v-btn
+        >
+        <v-btn
+          @click="ignoreRequest(ship)"
+          :loading="transactPending"
+          :disabled="transactPending"
+          >Ignore</v-btn
+        >
+      </li>
+    </ul>
+    <v-btn @click="showConfirmDelete = true">Delete</v-btn>
+    <v-dialog v-model="showConfirmDelete">
+      <v-card class="tw-bg-white tw-p-4">
+        <v-card-title>Delete Gora?</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete this gora? TODO: explanation
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="showConfirmDelete = false">No</v-btn>
+          <v-btn @click="doDelete">Yes</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -36,6 +91,10 @@ export default defineComponent({
     goid: {
       type: String as PropType<GoraID>,
       default: "0v0",
+    },
+    fromPage: {
+      type: String,
+      default: "mine"
     },
   },
 
