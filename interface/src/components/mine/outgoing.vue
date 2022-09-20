@@ -3,7 +3,9 @@
     <!-- log.status === 'pending' YELLOW -->
     <!-- log.status === true GREEN -->
     <div v-if="log.act === 'give'" class="tw-text-white" :class="statusColor">
-      Offered to {{ log.who }} at {{ log.when }} <span v-if="whoHodls">(Now hodls)</span>
+      Offered to {{ log.who }} at {{ log.when }}
+      <span v-if="log.status === 'pending'">(Hasn't seen offer yet)</span>
+      <span v-if="whoHodls">(Now hodls)</span>
     </div>
     <!--
     <ul>

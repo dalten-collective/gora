@@ -12,6 +12,18 @@
       <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
       <li><pre>Made: {{ iHostGora }}</pre></li>
       <li><pre>Requested: {{ requestedThisGora }}</pre></li>
+
+      <ul>
+        <li v-for="gack in outgoingGacksByID" :key="[gack.id, gack.act, gack.status]">
+          <Gack :gack="gack" />
+        </li>
+      </ul>
+
+      <ul>
+        <li v-for="take in outgoingTakesByID" :key="[take.id, take.act, take.status]">
+          <Take :take="take" />
+        </li>
+      </ul>
     </ul>
 
     <div v-if="goraOffered">
@@ -31,6 +43,7 @@
       >
     </div>
 
+    <!--
     <div v-if="requestable">
       TODO: don't show if already requested
       <v-btn
@@ -41,6 +54,7 @@
         >Request Gora</v-btn
       >
     </div>
+    -->
 
     <ul>
       <li
@@ -58,8 +72,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import type { PropType } from "vue";
-import { GoraID, Gora } from "../types";
+import { GoraID, Gora, Outgoing } from "../types";
 import { mapState, mapGetters } from "vuex";
+import Gack from "@/components/pita/gack.vue";
+import Take from "@/components/pita/take.vue";
 
 export default defineComponent({
   props: {
@@ -73,6 +89,10 @@ export default defineComponent({
     },
   },
 
+  components: {
+    Gack, Take
+  },
+
   data() {
     return {
       transactPending: false,
@@ -82,7 +102,7 @@ export default defineComponent({
   computed: {
     ...mapGetters("pita", ["goraByID"]),
     ...mapGetters("owned", ["goraNotOwned"]),
-    ...mapGetters("logs", ["goraInOffers", "requestsByShip", "goraInShipsRequests"]),
+    ...mapGetters("logs", ["goraInOffers", "requestsByShip", "goraInShipsRequests", "outgoingFor", "outgoingTakesFor", "outgoingGacksFor"]),
     haveTheGora(): boolean {
       if (this.theGora) {
         return true;
@@ -93,16 +113,25 @@ export default defineComponent({
       return this.goraByID(this.goid);
     },
 
+    outgoingByID(): Array<Outgoing> {
+      return this.outgoingFor(this.goid)
+    },
+    outgoingTakesByID(): Array<Outgoing> {
+      return this.outgoingTakesFor(this.goid)
+    },
+    outgoingGacksByID(): Array<Outgoing> {
+      return this.outgoingGacksFor(this.goid)
+    },
+
     goraOffered(): boolean {
       return this.goraInOffers(this.goid);
     },
-    // ourRequests(): Array<GoraID> {
-    //   return this.requestsByShip(this.$filters.sigShip(this.ourShip));
-    // },
+
     requestedThisGora(): boolean {
-      return this.goraInShipsRequests(
-        { ship: this.$filters.sigShip(this.ourShip), goraID: this.goid }
-      )
+      return this.outgoingTakesByID.map((o: Outgoing) => o.id).includes(this.goid)
+    },
+    gackedThisGora(): boolean {
+      return this.outgoingGacksByID.map((o: Outgoing) => o.id).includes(this.goid)
     },
 
     requestable(): boolean {
@@ -158,5 +187,6 @@ export default defineComponent({
         .finally(() => { this.transactPending = false; })
     },
   },
+
 });
 </script>

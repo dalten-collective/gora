@@ -22,11 +22,8 @@ export default {
       return false
       //return state.offers.includes(goraID);
     },
+
     goraInShipsRequests: (state, getters) => (args: { goraID: GoraID, ship: Ship}): boolean => {
-      console.log('ship', args.ship)
-      console.log('id', args.goraID)
-      console.log('req by ship', getters.requestsByShip(args.ship))
-      console.log('req by ship', getters.requestsByShip(args.ship).flat().includes(args.goraID))
       return getters.requestsByShip(args.ship).includes(args.goraID);
     },
 
@@ -34,6 +31,17 @@ export default {
       return state.outgoing.filter((o: Outgoing) => {
         return o.id === goraID
       })
+    },
+
+    outgoingTakesFor: (state) => (goraID: GoraID): Array<Outgoing> => {
+      return state.outgoing.filter((o: Outgoing) => {
+        return o.id === goraID
+      }).filter((o: Outgoing) => o.act === "take")
+    },
+    outgoingGacksFor: (state) => (goraID: GoraID): Array<Outgoing> => {
+      return state.outgoing.filter((o: Outgoing) => {
+        return o.id === goraID
+      }).filter((o: Outgoing) => o.act === "gack")
     },
 
     requestsForID: (state) => (goraID: GoraID): Array<Ship> => {
