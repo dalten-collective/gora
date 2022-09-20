@@ -33,6 +33,11 @@ export default {
       })
     },
 
+    outgoingGivesFor: (state) => (goraID: GoraID): Array<Outgoing> => {
+      return state.outgoing.filter((o: Outgoing) => {
+        return o.id === goraID
+      }).filter((o: Outgoing) => o.act === "give")
+    },
     outgoingTakesFor: (state) => (goraID: GoraID): Array<Outgoing> => {
       return state.outgoing.filter((o: Outgoing) => {
         return o.id === goraID

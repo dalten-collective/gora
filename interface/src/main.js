@@ -26,6 +26,14 @@ app.config.globalProperties.$filters = {
     // for taking Urbit's sect:enjs:format and converting to js-friendly
     return new Date(sects * 1000);
   },
+  goraMadeDate(gora) {
+    if (!gora) {
+      return "Unknown"
+    }
+    const time = gora.made + 1
+    const toMS = new Date(time * 1000)
+    return toMS.toLocaleDateString()
+  },
 };
 
 app.use(router).use(store).use(vuetify).mount("#app");

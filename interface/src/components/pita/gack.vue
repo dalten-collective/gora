@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="tw-text-white" :class="statusColor">
-      Given on {{ gack.when }}
+      Give accepted on {{ $filters.sectToDate(gack.when).toLocaleString() }}
       <span v-if="!gack.status">(Gora not available!)</span>
     </div>
   </div>

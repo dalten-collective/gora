@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="log.act === 'give'" class="tw-text-white" :class="statusColor">
-      Offered to {{ log.who }} at {{ log.when }}
+      Offered to {{ log.who }} at {{ $filters.sectToDate(log.when).toLocaleString() }}
       <span v-if="log.status === 'pending'">(Hasn't seen offer yet)</span>
       <span v-if="whoHodls">(Now hodls)</span>
     </div>

@@ -58,22 +58,6 @@
             </v-tooltip>
           </div>
 
-          <!--
-          <ul>
-            <ul>
-              <li v-for="gack in outgoingGacksByID" :key="[gack.id, gack.act, gack.status]">
-                <Gack :gack="gack" />
-              </li>
-            </ul>
-
-            <ul>
-              <li v-for="take in outgoingTakesByID" :key="[take.id, take.act, take.status]">
-                <Take :take="take" />
-              </li>
-            </ul>
-          </ul>
-          -->
-
           <router-link v-if="iHostGora" :to="linkToMine">
             <v-btn icon="mdi-pencil" variant="outline" color="info" size="x-small"/>
           </router-link>
@@ -90,9 +74,10 @@ import { defineComponent } from "vue";
 import type { PropType } from "vue";
 import { GoraID, Gora, Outgoing } from "../types";
 import { mapState, mapGetters } from "vuex";
+
+import GoraImg from "@/components/gora-img.vue";
 import Gack from "@/components/pita/gack.vue";
 import Take from "@/components/pita/take.vue";
-import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
   props: {
@@ -131,7 +116,7 @@ export default defineComponent({
     ]),
 
     unique(): boolean {
-      return this.theGora.max === 1
+      return this.theGora.max === 1 && this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))
     },
 
     haveTheGora(): boolean {
@@ -162,20 +147,6 @@ export default defineComponent({
       return this.outgoingTakesByID
         .map((o: Outgoing) => o.id)
         .includes(this.goid);
-    },
-    gackedThisGora(): boolean {
-      return this.outgoingGacksByID
-        .map((o: Outgoing) => o.id)
-        .includes(this.goid);
-    },
-
-    requestable(): boolean {
-      // TODO: not already requested
-      return (
-        this.goraNotOwned(this.goid) &&
-        !this.iHostGora &&
-        !this.requestedThisGora
-      );
     },
 
     iHostGora(): boolean {

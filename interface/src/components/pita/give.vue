@@ -1,8 +1,9 @@
 <template>
   <div>
+    <!-- Unclear how this works -->
     <div class="tw-text-white" :class="statusColor">
-      Requested on {{ $filters.sectToDate(take.when).toLocaleString() }}
-      <span v-if="!take.status">(Gora not available!)</span>
+      Give accepted on {{ $filters.sectToDate(give.when).toLocaleString() }}
+      <span v-if="!give.status">(Gora not available!)</span>
     </div>
   </div>
 </template>
@@ -15,17 +16,17 @@ import { Outgoing } from "@/types";
 
 export default defineComponent({
   props: {
-    take: {
+    give: {
       type: Object as PropType<Outgoing>
     },
   },
 
   computed: {
     statusColor() {
-      if (this.take.status === '~') {
+      if (this.give.status === '~') {
         return ['tw-bg-warning']
       }
-      if (this.take.status) {
+      if (this.give.status) {
         return ['tw-bg-success']
       } else {
         return ['tw-bg-error']

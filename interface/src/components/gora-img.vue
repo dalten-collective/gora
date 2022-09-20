@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div >
-      <img :src="gora.pic" style="object-fit: contain; width: 250px; height: 250px;" @click="openBigImage" :class="detailClass" />
+    <div>
+      <img class="tw-m-auto" :src="gora.pic" style="object-fit: contain; width: 250px; height: 250px;" @click="openBigImage" :class="detailClass" />
     </div>
 
     <v-dialog v-model="bigImageOpen">
