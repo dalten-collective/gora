@@ -103,14 +103,15 @@ export interface GoraState {
   logs: LogsState;
 }
 
+// TODO: remove
 export interface PartialGoraState {
-  pita?: PitaState;
-  owned?: OwnedState;
-  made?: MadeState;
-  public?: PublicState;
-  policy?: PolicyState;
-  tags?: TagsState;
-  logs?: LogsState;
+  pita: PitaState;
+  owned: OwnedState;
+  made: MadeState;
+  public: PublicState;
+  policy: PolicyState;
+  tags: TagsState;
+  logs: LogsState;
 }
 
 export interface DiffObj {

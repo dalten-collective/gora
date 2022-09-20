@@ -38,8 +38,15 @@ export default {
     applyDiff(state, payload: DiffResponse) {
       // remove
       state.pita = state.pita.filter(a => !payload.diff.rem.pita.map(r => r.id).includes(a.id))
+
       // add
-      state.pita = state.pita.concat(payload.diff.set.pita)
+      const pitaDiff: Array<Gora> = payload.diff.set.pita
+      // Remove all that we got updates for in the diff...
+      state.pita = state.pita.filter((g: Gora) => !pitaDiff.map(gdiff => gdiff.id).includes(g.id))
+      // Then add their diff versions back in:
+      pitaDiff.forEach((diffGora: Gora) => {
+        state.pita.push(diffGora)
+      })
     }
   },
 
