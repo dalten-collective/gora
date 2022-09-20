@@ -17,6 +17,7 @@ export default defineComponent({
   props: {
     whichIcon: {
       type: String,
+      default: 'acceptOffer'
     },
     color: {
       type: String,
@@ -48,10 +49,7 @@ export default defineComponent({
 
   computed: {
     iconToComponent() {
-      if (this.whichIcon === 'acceptOffer') {
-        return this.acceptOffer
-      }
-      return this.rejectOffer
+      return this[this.whichIcon]
     }
   },
 })

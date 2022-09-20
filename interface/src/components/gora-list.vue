@@ -56,23 +56,6 @@
       </ul>
     </ul>
 
-    <div v-if="goraOffered">
-      <v-btn
-        color="success"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doAcceptOffer"
-        >Accept Offer</v-btn
-      >
-      <v-btn
-        color="warning"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doIgnoreOffer"
-        >Ignore Offer</v-btn
-      >
-    </div>
-
     <ul>
       <li
         v-for="k in Object.keys(theGora)"
