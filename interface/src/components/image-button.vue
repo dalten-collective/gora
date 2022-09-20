@@ -1,7 +1,10 @@
 <template>
-  <v-btn :color="color" icon variant="outlined" >
-    <img :src="img" height="30" width="30" />
-  </v-btn>
+    <v-btn :color="color" icon variant="outlined" >
+      <img :src="img" height="30" width="30" />
+      <v-tooltip v-if="hint" activator="parent" location="bottom">
+        {{ hint }}
+      </v-tooltip>
+    </v-btn>
 </template>
 
 <script lang="ts">
@@ -14,6 +17,10 @@ export default defineComponent({
       default: ''
     },
     img: {
+      type: String,
+      default: ''
+    },
+    hint: {
       type: String,
       default: ''
     }
