@@ -1,22 +1,41 @@
 <template>
   <div v-if="haveTheGora">
-    <router-link :to="linkTo">
-      View
-    </router-link>
+    <router-link :to="linkTo"> View </router-link>
 
-    <router-link v-if="iHostGora" :to="linkToMine">
-      Manage
-    </router-link>
-
+    <router-link v-if="iHostGora" :to="linkToMine"> Manage </router-link>
 
     <router-link :to="linkTo">
       <GoraImg :gora="theGora" />
     </router-link>
 
-      <li><pre>Offered: {{ goraOffered }}</pre></li>
-      <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
-      <li><pre>Made: {{ iHostGora }}</pre></li>
-      <li><pre>Requested: {{ requestedThisGora }}</pre></li>
+    <!-- v-if="goraOffered" -->
+    <ImageButton
+      img="https://picsum.photos/30/30"
+      color="success"
+      hint="Accept this offer"
+      :loading="transactPending"
+      :disabled="transactPending"
+      @click="doAcceptOffer"
+      which-icon="acceptOffer"
+    />
+    <ImageButton
+      img="https://picsum.photos/30/30"
+      color="error"
+      hint="Ignore this offer"
+      :loading="transactPending"
+      :disabled="transactPending"
+      @click="doIgnoreOffer"
+      which-icon="rejectOffer"
+    />
+    <li>
+      <pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre>
+    </li>
+    <li>
+      <pre>Made: {{ iHostGora }}</pre>
+    </li>
+    <li>
+      <pre>Requested: {{ requestedThisGora }}</pre>
+    </li>
 
     <!-- DEBUG
     <ul>
@@ -85,12 +104,14 @@ export default defineComponent({
     },
     fromPage: {
       type: String,
-      default: "pita"
+      default: "pita",
     },
   },
 
   components: {
-    Gack, Take, GoraImg,
+    Gack,
+    Take,
+    GoraImg,
   },
 
   data() {
@@ -102,7 +123,14 @@ export default defineComponent({
   computed: {
     ...mapGetters("pita", ["goraByID"]),
     ...mapGetters("owned", ["goraNotOwned"]),
-    ...mapGetters("logs", ["goraInOffers", "requestsByShip", "goraInShipsRequests", "outgoingFor", "outgoingTakesFor", "outgoingGacksFor"]),
+    ...mapGetters("logs", [
+      "goraInOffers",
+      "requestsByShip",
+      "goraInShipsRequests",
+      "outgoingFor",
+      "outgoingTakesFor",
+      "outgoingGacksFor",
+    ]),
     haveTheGora(): boolean {
       if (this.theGora) {
         return true;
@@ -114,13 +142,13 @@ export default defineComponent({
     },
 
     outgoingByID(): Array<Outgoing> {
-      return this.outgoingFor(this.goid)
+      return this.outgoingFor(this.goid);
     },
     outgoingTakesByID(): Array<Outgoing> {
-      return this.outgoingTakesFor(this.goid)
+      return this.outgoingTakesFor(this.goid);
     },
     outgoingGacksByID(): Array<Outgoing> {
-      return this.outgoingGacksFor(this.goid)
+      return this.outgoingGacksFor(this.goid);
     },
 
     goraOffered(): boolean {
@@ -128,15 +156,23 @@ export default defineComponent({
     },
 
     requestedThisGora(): boolean {
-      return this.outgoingTakesByID.map((o: Outgoing) => o.id).includes(this.goid)
+      return this.outgoingTakesByID
+        .map((o: Outgoing) => o.id)
+        .includes(this.goid);
     },
     gackedThisGora(): boolean {
-      return this.outgoingGacksByID.map((o: Outgoing) => o.id).includes(this.goid)
+      return this.outgoingGacksByID
+        .map((o: Outgoing) => o.id)
+        .includes(this.goid);
     },
 
     requestable(): boolean {
       // TODO: not already requested
-      return this.goraNotOwned(this.goid) && !this.iHostGora && !this.requestedThisGora;
+      return (
+        this.goraNotOwned(this.goid) &&
+        !this.iHostGora &&
+        !this.requestedThisGora
+      );
     },
 
     iHostGora(): boolean {
@@ -144,50 +180,61 @@ export default defineComponent({
     },
 
     detailPage(): string {
-      return `${ this.fromPage }-gora-detail`
+      return `${this.fromPage}-gora-detail`;
     },
 
     linkTo(): Object {
       return {
         name: this.detailPage,
         params: {
-          goraID: this.goid
-        }
-      }
+          goraID: this.goid,
+        },
+      };
     },
 
     linkToMine(): Object {
       return {
-        name: 'mine-gora-detail',
+        name: "mine-gora-detail",
         params: {
-          goraID: this.goid
-        }
-      }
+          goraID: this.goid,
+        },
+      };
     },
   },
 
   methods: {
     doAcceptOffer(): void {
       this.transactPending = true;
-      this.$store.dispatch("logs/pokeAcceptGive", { id: this.goid })
+      this.$store
+        .dispatch("logs/pokeAcceptGive", { id: this.goid })
         .then(() => {})
-        .finally(() => { this.transactPending = false; })
+        .finally(() => {
+          this.transactPending = false;
+        });
     },
 
     doIgnoreOffer(): void {
       this.transactPending = true;
-      this.$store.dispatch("logs/pokeIgnoreGive", { id: this.goid })
+      this.$store
+        .dispatch("logs/pokeIgnoreGive", { id: this.goid })
         .then(() => {})
-        .finally(() => { this.transactPending = false; })
+        .finally(() => {
+          this.transactPending = false;
+        });
     },
 
     doPlea(): void {
       this.transactPending = true;
-      this.$store.dispatch("owned/pokeSendPlea", { id: this.goid, host: this.theGora.host })
+      this.$store
+        .dispatch("owned/pokeSendPlea", {
+          id: this.goid,
+          host: this.theGora.host,
+        })
         .then(() => {})
-        .finally(() => { this.transactPending = false; })
+        .finally(() => {
+          this.transactPending = false;
+        });
     },
   },
-
 });
 </script>
