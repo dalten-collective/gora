@@ -1,8 +1,10 @@
 <template>
   <div v-if="haveTheGora">
     <router-link :to="{ name: 'mine-gora-detail', params: { goraID: goid }}">
-      View
+      Manage
     </router-link>
+
+    <GoraImg :gora="theGora" />
 
     <ul>
       <li
@@ -30,6 +32,7 @@ import {
 import { mapState, mapGetters } from "vuex";
 
 import Outgoing from "@/components/mine/outgoing.vue"
+import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
   props: {
@@ -153,7 +156,7 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing
+    Outgoing, GoraImg
   },
 });
 </script>

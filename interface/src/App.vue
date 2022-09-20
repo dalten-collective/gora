@@ -4,10 +4,6 @@
       <header class="tw-flex tw-justify-around tw-mb-4">
         gora
       </header>
-      <pre>our requests: {{ requestsByShip(`~${ ourShip}`) }}</pre>
-      <pre>our requests: {{ requestsByShip("~sum") }}</pre>
-      <pre>our offers: {{ offers }}</pre>
-      <!-- <pre>outgoing: {{ outgoing }}</pre> -->
 
       <div v-if="!haveSubscription || !havePita || !haveMeta || !haveLogs" class="tw-w-full tw-h-full tw-flex tw-flex-col">
         

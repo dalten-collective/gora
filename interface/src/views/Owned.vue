@@ -19,17 +19,10 @@
       </v-card>
     </v-dialog>
 
-    <div v-if="offers.length > 0">
-      <header class="tw-my-4 tw-text-xl">Offered </header>
-      <div v-for="goid in offers" :key="goid">
-        offered gora: {{ goid }}
-      </div>
-    </div>
-
     <header class="tw-my-4 tw-text-xl">Owned</header>
 
-    <div>
-      <GoraDetail v-for="goid in owned" :key="goid" :goid="goid" class="tw-mb-4" from-page="owned" />
+    <div v-for="goid in owned" :key="goid">
+      <GoraList :goid="goid" class="tw-mb-4"/>
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
@@ -37,7 +30,7 @@
         <v-card-title></v-card-title>
         <v-card-text>
           <div v-if="idDetailable(detailedID)">
-            <GoraDetail :goid="detailedID" from-page="pita" />
+            <GoraDetail :goid="detailedID" from-page="pita" @close="detailOpen = false"/>
           </div>
         </v-card-text>
       </v-card>
@@ -60,6 +53,7 @@ import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 import GoraDetail from "@/components/gora-detail.vue"
 import RequestForm from "@/components/owned/request-form.vue"
+import GoraList from "@/components/gora-list.vue"
 
 export default defineComponent({
   data() {
@@ -132,6 +126,6 @@ export default defineComponent({
       return this.goraByID(goraID);
     },
   },
-  components: { GoraDetail, RequestForm },
+  components: { GoraDetail, RequestForm, GoraList },
 });
 </script>

@@ -11,7 +11,7 @@
         <v-card-title></v-card-title>
         <v-card-text>
           <div v-if="idDetailable(detailedID)">
-            <GoraDetail :goid="detailedID" from-page="pita" />
+            <GoraDetail :goid="detailedID" from-page="pita" @close="detailOpen = false" :detailing="detailOpen"/>
           </div>
         </v-card-text>
       </v-card>

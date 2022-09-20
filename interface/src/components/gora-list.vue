@@ -8,6 +8,12 @@
       Manage
     </router-link>
 
+
+    <router-link :to="linkTo">
+      <GoraImg :gora="theGora" />
+    </router-link>
+
+    <!-- DEBUG
     <ul>
       <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
       <li><pre>Made: {{ iHostGora }}</pre></li>
@@ -43,19 +49,6 @@
       >
     </div>
 
-    <!--
-    <div v-if="requestable">
-      TODO: don't show if already requested
-      <v-btn
-        color="success"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doPlea"
-        >Request Gora</v-btn
-      >
-    </div>
-    -->
-
     <ul>
       <li
         v-for="k in Object.keys(theGora)"
@@ -66,6 +59,7 @@
         <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
       </li>
     </ul>
+    -->
   </div>
 </template>
 
@@ -76,6 +70,7 @@ import { GoraID, Gora, Outgoing } from "../types";
 import { mapState, mapGetters } from "vuex";
 import Gack from "@/components/pita/gack.vue";
 import Take from "@/components/pita/take.vue";
+import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
   props: {
@@ -90,7 +85,7 @@ export default defineComponent({
   },
 
   components: {
-    Gack, Take
+    Gack, Take, GoraImg,
   },
 
   data() {

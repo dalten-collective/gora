@@ -1,8 +1,10 @@
 <template>
   <div v-if="haveTheGora">
-    <router-link :to="linkTo">
-      View
-    </router-link>
+    <header class="tw-flex tw-justify-between">
+      <span class="tw-underline" @click="this.$emit('close')">Close</span>
+    </header>
+
+    <GoraImg :gora="theGora" :detailing="detailing" />
 
     <div v-if="goraOffered">
     {{ transactPending }}
@@ -51,6 +53,7 @@ import { defineComponent } from "vue";
 import type { PropType } from "vue";
 import { GoraID, Gora } from "../types";
 import { mapState, mapGetters } from "vuex";
+import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
   props: {
@@ -61,6 +64,9 @@ export default defineComponent({
     fromPage: {
       type: String,
       default: "pita"
+    },
+    detailing: {
+      type: Boolean
     },
   },
 
@@ -131,6 +137,11 @@ export default defineComponent({
         .then(() => {})
         .finally(() => { this.transactPending = false; })
     },
+
   },
+
+  components: {
+    GoraImg
+  }
 });
 </script>

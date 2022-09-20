@@ -1,5 +1,8 @@
 <template>
   <div v-if="haveTheGora">
+    <span @click="$emit('close')">Close</span>
+    <GoraImg :gora="theGora" :detailing="detailing" />
+
     <ul>
       <li
         v-for="k in Object.keys(theGora)"
@@ -85,6 +88,7 @@ import {
 import { mapState, mapGetters } from "vuex";
 
 import Outgoing from "@/components/mine/outgoing.vue"
+import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
   props: {
@@ -95,6 +99,9 @@ export default defineComponent({
     fromPage: {
       type: String,
       default: "mine"
+    },
+    detailing: {
+      type: Boolean,
     },
   },
 
@@ -212,7 +219,7 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing
+    Outgoing, GoraImg
   },
 });
 </script>

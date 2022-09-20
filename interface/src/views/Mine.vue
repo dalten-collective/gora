@@ -30,7 +30,7 @@
         <v-card-title></v-card-title>
         <v-card-text>
           <div v-if="idDetailable(detailedID)">
-            <MyOneManage :goid="detailedID" from-page="mine" />
+            <MyOneManage :goid="detailedID" from-page="mine" @close="detailOpen = false" :detailing="detailOpen" />
           </div>
         </v-card-text>
       </v-card>
