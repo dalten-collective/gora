@@ -1,10 +1,10 @@
 <template>
-    <v-btn :color="color" icon :loading="loading" :disabled="disabled" >
-      <img :src="iconToComponent" height="40" width="40" />
-      <v-tooltip v-if="hint" activator="parent" location="bottom">
-        {{ hint }}
-      </v-tooltip>
-    </v-btn>
+  <v-btn elevation="20" :color="color" icon :loading="loading" :disabled="disabled">
+    <img :src="iconToComponent" height="35" width="35" />
+    <v-tooltip v-if="hint" activator="parent" location="bottom">
+      {{ hint }}
+    </v-tooltip>
+  </v-btn>
 </template>
 
 <script lang="ts">

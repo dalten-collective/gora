@@ -2,8 +2,10 @@
   <div>
     <header class="tw-mb-4 tw-text-xl">Pita</header>
 
-    <div v-for="goid in pitaIDs" :key="goid" >
-      <GoraList :goid="goid" class="tw-mb-4"/>
+    <div class="tw-flex tw-justify-around tw-flex-wrap">
+      <div v-for="goid in pitaIDs" :key="goid" >
+        <GoraList :goid="goid" class="tw-mb-4"/>
+      </div>
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>

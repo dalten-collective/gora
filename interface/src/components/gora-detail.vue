@@ -1,57 +1,73 @@
 <template>
   <div v-if="haveTheGora">
     <header class="tw-flex tw-justify-between">
-      <span class="tw-underline" @click="this.$emit('close')">Close</span>
+      <div></div>
+      <div>
+        <span class="tw-underline tw-cursor-pointer" @click="this.$emit('close')">Close</span>
+      </div>
     </header>
 
-    <GoraImg :gora="theGora" :detailing="detailing" />
+    <article>
 
-    <!--
-    TODO:
+      <div class="tw-flex">
+        <div>
+          <GoraImg :gora="theGora" :detailing="detailing" />
+          <div style="height: 0; position: relative; bottom: 65px;" class='tw-flex tw-flex-row tw-justify-between tw-m-2'>
+            <ImageButton
+              img="https://picsum.photos/30/30"
+              v-if="goraOffered"
+              color="success"
+              hint="Accept this offer"
+              :loading="transactPending"
+              :disabled="transactPending"
+              @click="doAcceptOffer"
+              which-icon="acceptOffer"
+            />
+            <ImageButton
+              img="https://picsum.photos/30/30"
+              v-if="goraOffered"
+              color="error"
+              hint="Ignore this offer"
+              :loading="transactPending"
+              :disabled="transactPending"
+              @click="doIgnoreOffer"
+              which-icon="rejectOffer"
+            />
+          </div>
+        </div>
+      </div>
 
-    - need to get gacks, takes in here. consider using props.
+      <!--
+      TODO:
 
-    -->
+      - need to get gacks, takes in here. consider using props.
 
-    <div v-if="goraOffered">
-    {{ transactPending }}
-      <v-btn
-        color="success"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doAcceptOffer"
-        >Accept Offer</v-btn
-      >
-      <v-btn
-        color="warning"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doIgnoreOffer"
-        >Ignore Offer</v-btn
-      >
-    </div>
+      -->
 
-    <div v-if="requestable">
-    {{ transactPending }}
-      <v-btn
-        color="success"
-        :loading="transactPending"
-        :disabled="transactPending"
-        @click="doPlea"
-        >Request Gora</v-btn
-      >
-    </div>
+      <div v-if="requestable">
+      {{ transactPending }}
+        <v-btn
+          color="success"
+          :loading="transactPending"
+          :disabled="transactPending"
+          @click="doPlea"
+          >Request Gora</v-btn
+        >
+      </div>
 
-    <ul>
-      <li
-        v-for="k in Object.keys(theGora)"
-        :key="k"
-        class="tw-grid tw-grid-cols-12"
-      >
-        <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
-        <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
-      </li>
-    </ul>
+      <ul>
+        <li
+          v-for="k in Object.keys(theGora)"
+          :key="k"
+          class="tw-grid tw-grid-cols-12"
+        >
+          <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
+          <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
+        </li>
+      </ul>
+
+    </article>
+
   </div>
 </template>
 
@@ -102,7 +118,7 @@ export default defineComponent({
     },
 
     requestable(): boolean {
-      return this.goraNotOwned(this.goid) && !this.iHostGora;
+      return this.goraNotOwned(this.goid) && !this.iHostGora && !this.goraOffered;
     },
 
     iHostGora(): boolean {

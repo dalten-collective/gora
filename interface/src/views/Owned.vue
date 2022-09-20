@@ -21,8 +21,10 @@
 
     <header class="tw-my-4 tw-text-xl">Hedl</header>
 
-    <div v-for="goid in owned" :key="goid">
-      <GoraList :goid="goid" class="tw-mb-4" from-page="hedl" />
+    <div class="tw-flex tw-justify-around tw-flex-wrap">
+      <div v-for="goid in owned" :key="goid">
+        <GoraList :goid="goid" class="tw-mb-4" from-page="hedl" />
+      </div>
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>

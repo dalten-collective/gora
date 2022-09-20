@@ -1,72 +1,87 @@
 <template>
-  <div v-if="haveTheGora">
-    <router-link :to="linkTo"> View </router-link>
+  <div>
+    <!-- we don't want the buttons to animate -->
+    <div style="height: 0; position: relative; top: 220px; z-index: 100;" class='tw-flex tw-flex-row tw-justify-between tw-m-2'>
+        <ImageButton
+          img="https://picsum.photos/30/30"
+          v-if="goraOffered"
+          color="success"
+          hint="Accept this offer"
+          :loading="transactPending"
+          :disabled="transactPending"
+          @click.stop="doAcceptOffer"
+          which-icon="acceptOffer"
+        />
+        <ImageButton
+          img="https://picsum.photos/30/30"
+          v-if="goraOffered"
+          color="error"
+          hint="Ignore this offer"
+          :loading="transactPending"
+          :disabled="transactPending"
+          @click.stop="doIgnoreOffer"
+          which-icon="rejectOffer"
+        />
+      </div>
+    <div v-if="haveTheGora" class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses">
 
-    <router-link v-if="iHostGora" :to="linkToMine"> Manage </router-link>
+      <article>
+        <div class="tw-flex tw-flex-col">
+          <div>
+            <router-link :to="linkTo">
+              <GoraImg :gora="theGora" />
+            </router-link>
+          </div>
 
-    <router-link :to="linkTo">
-      <GoraImg :gora="theGora" />
-    </router-link>
+          <div class="tw-class-flex tw-justify-space-around">
+            <div class="tw-text-center tw-max-w-[250px]">
+              <h1 class="" style="white-space: nowrap; width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                {{ theGora.name }}
+                <v-tooltip activator="parent" location="bottom">
+                  {{ theGora.name }}
+                </v-tooltip>
+              </h1>
+            </div>
+          </div>
 
-    <!-- v-if="goraOffered" -->
-    <ImageButton
-      img="https://picsum.photos/30/30"
-      color="success"
-      hint="Accept this offer"
-      :loading="transactPending"
-      :disabled="transactPending"
-      @click="doAcceptOffer"
-      which-icon="acceptOffer"
-    />
-    <ImageButton
-      img="https://picsum.photos/30/30"
-      color="error"
-      hint="Ignore this offer"
-      :loading="transactPending"
-      :disabled="transactPending"
-      @click="doIgnoreOffer"
-      which-icon="rejectOffer"
-    />
-    <li>
-      <pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre>
-    </li>
-    <li>
-      <pre>Made: {{ iHostGora }}</pre>
-    </li>
-    <li>
-      <pre>Requested: {{ requestedThisGora }}</pre>
-    </li>
+        </div>
 
-    <!-- DEBUG
-    <ul>
-      <li><pre>Owned: {{ !goraNotOwned(theGora.id) }}</pre></li>
-      <li><pre>Made: {{ iHostGora }}</pre></li>
-      <li><pre>Requested: {{ requestedThisGora }}</pre></li>
+        <footer class="tw-flex tw-justify-between">
+          <div class="tw-min-h-[32px]">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ props }">
+                <v-icon v-bind="props" color="warning" v-if="unique">
+                  mdi-flare
+                </v-icon>
+              </template>
+              <span>Unique gora! You are the only hodler.</span>
+            </v-tooltip>
+          </div>
 
-      <ul>
-        <li v-for="gack in outgoingGacksByID" :key="[gack.id, gack.act, gack.status]">
-          <Gack :gack="gack" />
-        </li>
-      </ul>
+          <!--
+          <ul>
+            <ul>
+              <li v-for="gack in outgoingGacksByID" :key="[gack.id, gack.act, gack.status]">
+                <Gack :gack="gack" />
+              </li>
+            </ul>
 
-      <ul>
-        <li v-for="take in outgoingTakesByID" :key="[take.id, take.act, take.status]">
-          <Take :take="take" />
-        </li>
-      </ul>
-    </ul>
+            <ul>
+              <li v-for="take in outgoingTakesByID" :key="[take.id, take.act, take.status]">
+                <Take :take="take" />
+              </li>
+            </ul>
+          </ul>
+          -->
 
-    <ul>
-      <li
-        v-for="k in Object.keys(theGora)"
-        :key="k"
-        class="tw-grid tw-grid-cols-12"
-      >
-        <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
-        <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
-      </li>
-    </ul>
-    -->
+          <router-link v-if="iHostGora" :to="linkToMine">
+            <v-btn icon="mdi-pencil" variant="outline" color="info" size="x-small"/>
+          </router-link>
+        </footer>
+
+      </article>
+    </div>
+
   </div>
 </template>
 
@@ -114,6 +129,11 @@ export default defineComponent({
       "outgoingTakesFor",
       "outgoingGacksFor",
     ]),
+
+    unique(): boolean {
+      return this.theGora.max === 1
+    },
+
     haveTheGora(): boolean {
       if (this.theGora) {
         return true;
@@ -182,6 +202,22 @@ export default defineComponent({
           goraID: this.goid,
         },
       };
+    },
+
+    goraBorderClasses(): Array<string> {
+      var classes = ['tw-border', 'tw-border-2', 'tw-rounded-md']
+      if (this.goraOffered || this.requestedThisGora) {
+        classes.push('tw-border-dashed')
+      }
+      if (this.iHostGora) {
+        classes.push('tw-border-info', 'tw-border-opacity-25')
+      }
+
+      if (this.goraOffered) {
+        classes.push('tw-animate-pulse')
+      }
+
+      return classes
     },
   },
 

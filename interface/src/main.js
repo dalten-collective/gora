@@ -26,7 +26,6 @@ app.config.globalProperties.$filters = {
     // for taking Urbit's sect:enjs:format and converting to js-friendly
     return new Date(sects * 1000);
   },
-
 };
 
 app.use(router).use(store).use(vuetify).mount("#app");
