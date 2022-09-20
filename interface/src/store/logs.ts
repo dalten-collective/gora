@@ -1,4 +1,4 @@
-import { GoraID, Outgoing, PokeAcceptGive, Request, Ship } from "@/types";
+import { GoraID, Outgoing, PokeAcceptGive, Request, Ship, DiffResponse } from "@/types";
 
 import transactAPI from "@/api";
 
@@ -94,7 +94,7 @@ export default {
       // remove
       // offers
       state.offers = state.offers.filter(
-        (id) => !payload.diff.rem.logs.offers.includes(id)
+        (id: GoraID) => !payload.diff.rem.logs.offers.includes(id)
       );
       // add
       // offers
@@ -162,9 +162,20 @@ export default {
       //////
 
       // remove outgoing
-      const remOutgoing: Array<Outgoing> = payload.diff.rem.logs.ougoing
-      // TODO: 
+      const remOutgoing: Array<Outgoing> = payload.diff.rem.logs.outgoing
       // match on act+who+id
+      remOutgoing.forEach((rout: Outgoing) => {
+        const req = state.requests.find((o: Outgoing) => {
+          return (
+            (o.act === rout.act) &&
+            (o.id  === rout.id)  &&
+            (o.who === rout.who)
+          )
+        })
+        if (req) {
+          state.outgoing = state.filter((r: Outgoing) => r !== req)
+        }
+      })
 
       const setOutgoing: Array<Outgoing> = payload.diff.set.logs.outgoing
       state.outgoing = setOutgoing;
@@ -174,8 +185,6 @@ export default {
       //   state.outgoing.push(o)
       // })
     }
-
-
   },
 
   actions: {
