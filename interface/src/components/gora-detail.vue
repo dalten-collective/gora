@@ -18,7 +18,7 @@
             </div>
             <div
               style="height: 0; position: relative; bottom: 65px"
-              class="tw-flex tw-flex-row tw-justify-between tw-m-2 tw-m-auto tw-w-[250px]"
+              class="tw-flex tw-flex-row tw-justify-between tw-m-2 tw-m-auto tw-w-[270px]"
             >
               <ImageButton
                 img="https://picsum.photos/30/30"
