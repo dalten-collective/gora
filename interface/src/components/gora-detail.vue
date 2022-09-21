@@ -13,7 +13,7 @@
         <header class="tw-flex tw-justify-around tw-mb-8">
           <v-spacer />
           <div class="tw-flex tw-flex-col tw-flex-grow">
-            <div>
+            <div class="inner-shadow-gora tw-bg-surface tw-mx-auto tw-p-8 tw-rounded-lg">
               <GoraImg :gora="theGora" :detailing="detailing" />
             </div>
             <div
@@ -372,3 +372,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+  .inner-shadow-gora {
+    --tw-shadow: inset 1px 6px 4px 5px rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+</style>
