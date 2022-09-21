@@ -71,7 +71,7 @@
               :hint="
                 holdersOverMax
                   ? 'Some of these ships won\'t be able to claim, due to Max'
-                  : 'Optionally start this gora with outgoing offers. Add ships and click the \'+\' or press enter'
+                  : 'Optionally start this gora with outgoing offers.'
               "
               @keyup.enter="addToGHodl"
             />
@@ -81,13 +81,15 @@
           </div>
         </div>
 
-        <v-text-field
-          v-if="!isStak"
-          v-model="gMax"
-          placeholder=""
-          label="Max Hodlers"
-          hint="Limit how many ships can hold. Leave blank for unlimited. Set as 1 to create a unique gora"
-        />
+        <div class="tw-mb-4">
+          <v-text-field
+            v-if="!isStak"
+            v-model="gMax"
+            placeholder=""
+            label="Max Hodlers"
+            hint="Limit how many ships can hold. Leave blank for unlimited. Set as 1 to create a unique gora"
+          />
+        </div>
       </div>
 
       <!--
@@ -118,13 +120,15 @@
       </div>
       -->
 
-      <v-btn
-        color="success"
-        :disabled="!mkGoraFormValid || makePending"
-        :loading="makePending"
-        @click="doMkPoke"
-        >Mint</v-btn
-      >
+      <div class="tw-flex tw-justify-end">
+        <v-btn
+          color="success"
+          :disabled="!mkGoraFormValid || makePending"
+          :loading="makePending"
+          @click="doMkPoke"
+          >Mint</v-btn
+        >
+      </div>
     </v-form>
   </div>
 </template>
