@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <img class="tw-m-auto" :src="imageSource" style="object-fit: contain; width: 250px; height: 250px;" @click="openBigImage" :class="detailClass" />
+      <img class="tw-m-auto" :src="imageSource" :style="styleObject" @click="openBigImage" :class="detailClass" />
     </div>
 
     <v-dialog v-model="bigImageOpen">
@@ -29,6 +29,10 @@ export default defineComponent({
     detailing: {
       type: Boolean,
     },
+    thumbnail: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -43,6 +47,14 @@ export default defineComponent({
         return ['tw-cursor-pointer'];
       }
       return ['']
+    },
+
+    styleObject() {
+      return {
+        objectFit: 'contain',
+        width: this.thumbnail ? '50px' : '250px',
+        height: this.thumbnail ? '50px' : '250px',
+      }
     },
 
     imageSource() {
