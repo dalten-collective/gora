@@ -1,6 +1,68 @@
 <template>
   <div>
-    <header class="tw-mb-4 tw-text-xl">Pita</header>
+    <header class="tw-mb-6 tw-mt-10 tw-text-xl tw-flex-col tw-flex md:tw-flex-row tw-px-2 md:tw-px-0">
+      <div class="tw-flex-1 tw-text-left">
+      </div>
+      <div class="tw-flex-1 tw-text-center">
+        Gorae I Know About
+      </div>
+      <div class="tw-flex-1 tw-text-right">
+        <v-dialog v-model="requesting" scrim scrollable>
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" class="tw-hidden md:tw-block" color="success" variant="outlined" @click="requesting = true;">
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              <v-tooltip activator="parent" location="left">
+                Request a gora
+              </v-tooltip>
+            </v-btn>
+
+            <v-btn block v-bind="props" class="tw-mt-2 tw-block md:tw-hidden" color="success" variant="outlined" @click="requesting = true;">
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              <v-tooltip activator="parent" location="bottom">
+                Request a gora
+              </v-tooltip>
+            </v-btn>
+
+          </template>
+          <v-card class="tw-bg-white tw-p-4">
+            <v-card-title class="tw-flex tw-justify-between">
+              <div>
+                Request Gora
+              </div>
+              <div>
+                <span @click="requesting = false;" class="tw-underline tw-cursor-pointer">Close</span>
+              </div>
+            </v-card-title>
+            <v-card-text>
+              <RequestForm />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="making" fullscreen scrim scrollable>
+          <template v-slot:activator="{ props }">
+
+          </template>
+          <v-card class="tw-bg-white tw-p-4">
+            <v-card-title class="tw-flex tw-justify-between">
+              <div>
+                Create Gora
+              </div>
+              <div>
+                <span @click="making = false;" class="tw-underline tw-cursor-pointer">Close</span>
+              </div>
+            </v-card-title>
+            <v-card-text>
+              <MkForm @closeMk="making = false" />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
+    </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
       <div v-for="goid in pitaIDs" :key="goid" >
@@ -33,8 +95,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapGetters } from "vuex";
+
 import GoraDetail from "@/components/gora-detail.vue"
 import GoraList from "@/components/gora-list.vue"
+import RequestForm from "@/components/owned/request-form.vue"
 
 import {
   Gora
@@ -47,6 +111,7 @@ export default defineComponent({
 
   data() {
     return {
+      requesting: false,
       detailOpen: false,
       notFoundOpen: false,
       detailedID: null as string | null,
@@ -113,6 +178,7 @@ export default defineComponent({
   components: {
     GoraDetail,
     GoraList,
+    RequestForm,
   }
 })
 </script>

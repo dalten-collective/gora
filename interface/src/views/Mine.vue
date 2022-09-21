@@ -1,25 +1,50 @@
 <template>
   <div>
-    <v-dialog v-model="making" fullscreen scrim scrollable>
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" color="info" @click="making = true;">Create</v-btn>
-      </template>
-      <v-card class="tw-bg-white tw-p-4">
-        <v-card-title class="tw-flex tw-justify-between">
-          <div>
-            Create Gora
-          </div>
-          <div>
-            <span @click="making = false;" class="tw-underline tw-cursor-pointer">Close</span>
-          </div>
-        </v-card-title>
-        <v-card-text>
-          <MkForm @closeMk="making = false" />
-        </v-card-text>
-      </v-card>
-    </v-dialog>
 
-    <header class="tw-mb-4 tw-text-xl">Mine</header>
+    <header class="tw-mb-6 tw-mt-10 tw-text-xl tw-flex-col tw-flex md:tw-flex-row tw-px-2 md:tw-px-0">
+      <div class="tw-flex-1 tw-text-left">
+      </div>
+      <div class="tw-flex-1 tw-text-center">
+        Gorae I've Made
+      </div>
+
+      <div class="tw-flex-1 tw-text-right">
+        <v-dialog v-model="making" fullscreen scrim scrollable>
+          <template v-slot:activator="{ props }">
+            <v-btn class="tw-hidden md:tw-block" v-bind="props" color="success" variant="outlined" @click="making = true;">
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              <v-tooltip activator="parent" location="left">
+                Mint a new gora
+              </v-tooltip>
+            </v-btn>
+
+            <v-btn block class="tw-mt-2 tw-block md:tw-hidden" v-bind="props" color="success" variant="outlined" @click="making = true;">
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              <v-tooltip activator="parent" location="bottom">
+                Mint a new gora
+              </v-tooltip>
+            </v-btn>
+          </template>
+          <v-card class="tw-bg-white tw-p-4">
+            <v-card-title class="tw-flex tw-justify-between">
+              <div>
+                Create Gora
+              </div>
+              <div>
+                <span @click="making = false;" class="tw-underline tw-cursor-pointer">Close</span>
+              </div>
+            </v-card-title>
+            <v-card-text>
+              <MkForm @closeMk="making = false" />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
+    </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
       <div v-for="goid in made" :key="goid">
