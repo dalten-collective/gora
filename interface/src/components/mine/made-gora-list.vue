@@ -94,6 +94,14 @@ export default defineComponent({
         this.$store.dispatch("made/deselectGora", this.goid)
       }
     },
+
+    isSelected(val) {
+      if (val) {
+        this.innerSelected = true;
+      } else {
+        this.innerSelected = false;
+      }
+    },
   },
 
   computed: {
@@ -101,6 +109,10 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapGetters("made", ["goraIsSelected"]),
+
+    isSelected() {
+      return this.goraIsSelected(this.goid)
+    },
 
     requestsByID() {
       return this.requestsForID(this.goid);

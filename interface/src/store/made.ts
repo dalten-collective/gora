@@ -42,6 +42,13 @@ export default {
     removeGoraFromSelected(state, goraID: GoraID) {
       state.goraeSelected = state.goraeSelected.filter((gid) => gid !== goraID)
     },
+
+    clearSelected(state) {
+      state.goraeSelected = []
+    },
+    selectAll(state) {
+      state.goraeSelected = state.made
+    },
   },
 
   actions: {
@@ -111,5 +118,12 @@ export default {
       commit('removeGoraFromSelected', goraID)
     },
 
+    deselectAll({ commit }) {
+      commit('clearSelected')
+    },
+
+    selectAll({ commit }) {
+      commit('selectAll')
+    },
   },
 };

@@ -1,12 +1,59 @@
 <template>
-  <div>
-    <div>
+  <div class="tw-w-screen md:tw-w-[500px] tw-px-2">
+    <div class="tw-flex tw-justify-between">
       <!-- <v-btn @click="sendOpen = true">send</v-btn> -->
-      <v-btn>add tags</v-btn>
-      <v-btn>remove tags</v-btn>
-      <v-btn @click="burnOpen = true">burn/stack</v-btn>
-      <v-btn>Deselect all</v-btn>
-      <v-btn>Select all</v-btn>
+
+      <v-btn icon color="success">
+        <v-icon>
+          mdi-tag-plus
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Not yet implemented
+          <!--
+          Tag selected
+          -->
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon color="error">
+        <v-icon>
+          mdi-tag-minus
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Not yet implemented
+          <!--
+          Remove tag from selected
+          -->
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon color="warning" @click="burnOpen = true" >
+        <v-icon>
+          mdi-circle-multiple-outline
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Stack selected
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon color="info" @click="deselectAll">
+        <v-icon>
+          mdi-close
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Deselect all
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon color="info" @click="selectAll">
+        <v-icon>
+          mdi-check-all
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Select all
+        </v-tooltip>
+      </v-btn>
+
     </div>
 
     <!-- <MassSend v-model="sendOpen" @closeDialog="sendOpen = false;" /> -->
@@ -40,6 +87,14 @@ export default defineComponent({
   },
 
   methods: {
+    deselectAll() {
+      // TODO: when filters are here, will need to NOT do it like this
+      this.$store.dispatch("made/deselectAll")
+    },
+    selectAll() {
+      // TODO: when filters are here, will need to NOT do it like this
+      this.$store.dispatch("made/selectAll")
+    },
   },
 });
 </script>
