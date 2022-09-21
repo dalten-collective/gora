@@ -1,37 +1,65 @@
 <template>
   <div v-if="haveTheGora">
-    <router-link :to="{ name: 'mine-gora-detail', params: { goraID: goid }}">
-      Manage
-    </router-link>
+    <div class="tw-p-3 tw-rounded-md tw-shadow-md">
+    <article>
+      <div class="tw-flex tw-flex-col">
+        <div>
+          <router-link 
+          :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
+          >
+            <GoraImg :gora="theGora" />
+          </router-link>
+        </div>
 
-    <GoraImg :gora="theGora" />
+        <div class="tw-class-flex tw-justify-space-around">
+          <div class="tw-text-center tw-max-w-[250px]">
+            <h1
+              class=""
+              style="
+                white-space: nowrap;
+                width: 250px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ theGora.name }}
+              <v-tooltip activator="parent" location="bottom">
+                {{ theGora.name }}
+              </v-tooltip>
+            </h1>
+          </div>
+        </div>
+      </div>
 
-    <ul>
-      <li
-        v-for="k in Object.keys(theGora)"
-        :key="k"
-        class="tw-grid tw-grid-cols-12"
-      >
-        <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
-        <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
-      </li>
-    </ul>
+      <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
+          <div>
+            box
+          </div>
+          <router-link
+            :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
+          >
+            <v-btn
+              icon="mdi-pencil"
+              variant="outline"
+              color="info"
+              size="x-small"
+            />
+          </router-link>
+
+      </footer>
+    </article>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import type { PropType } from "vue";
-import {
-  GoraID,
-  Gora,
-  PokeRmGoraPayload,
-  GoraIDShip,
-} from "../../types";
+import { GoraID, Gora, PokeRmGoraPayload, GoraIDShip } from "../../types";
 
 import { mapState, mapGetters } from "vuex";
 
-import Outgoing from "@/components/mine/outgoing.vue"
+import Outgoing from "@/components/mine/outgoing.vue";
 import GoraImg from "@/components/gora-img.vue";
 
 export default defineComponent({
@@ -48,7 +76,7 @@ export default defineComponent({
       showConfirmDelete: false,
       transactPending: false,
       recipients: [] as Array<Ship>,
-      recipientAdd: '',
+      recipientAdd: "",
       offerPending: false,
     };
   },
@@ -83,27 +111,25 @@ export default defineComponent({
       }
 
       if (!this.recipients.includes(this.recipientAdd)) {
-        this.recipients.push(this.recipientAdd)
+        this.recipients.push(this.recipientAdd);
       }
       this.recipientAdd = "";
     },
 
     removeFromRecipients(ship: string) {
-      this.recipients = this.recipients.filter((s: string) => s !== ship)
+      this.recipients = this.recipients.filter((s: string) => s !== ship);
     },
-
 
     doOffer() {
       this.offerPending = true;
-      this.$store.dispatch("made/pokeGiveGora", { id: this.goid, who: this.recipients })
-        .then((r) => {
-        })
-        .catch((e) => {
-        })
+      this.$store
+        .dispatch("made/pokeGiveGora", { id: this.goid, who: this.recipients })
+        .then((r) => {})
+        .catch((e) => {})
         .finally(() => {
           this.offerPending = false;
-          this.resetOffer()
-        })
+          this.resetOffer();
+        });
     },
 
     resetOffer() {
@@ -156,7 +182,8 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing, GoraImg
+    Outgoing,
+    GoraImg,
   },
 });
 </script>

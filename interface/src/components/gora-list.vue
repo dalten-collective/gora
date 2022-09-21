@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="haveTheGora">
     <!-- we don't want the buttons to animate -->
     <div style="height: 0; position: relative; top: 220px; z-index: 100;" class='tw-flex tw-flex-row tw-justify-between tw-m-2'>
         <ImageButton
@@ -23,8 +23,8 @@
           which-icon="rejectOffer"
         />
       </div>
-    <div v-if="haveTheGora" class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses">
 
+    <div class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses">
       <article>
         <div class="tw-flex tw-flex-col">
           <div>
@@ -46,7 +46,7 @@
 
         </div>
 
-        <footer class="tw-flex tw-justify-between">
+        <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
           <div class="tw-min-h-[32px]">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">

@@ -14,15 +14,17 @@
           </div>
         </v-card-title>
         <v-card-text>
-          <MkForm />
+          <MkForm @closeMk="making = false" />
         </v-card-text>
       </v-card>
     </v-dialog>
 
     <header class="tw-mb-4 tw-text-xl">Mine</header>
 
-    <div>
-      <MyOneGora v-for="goid in made" :key="goid" :goid="goid" class="tw-mb-4"/>
+    <div class="tw-flex tw-justify-around tw-flex-wrap">
+      <div v-for="goid in made" :key="goid">
+        <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
+      </div>
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
@@ -52,7 +54,7 @@
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 import MkForm from "@/components/mine/mk-form.vue"
-import MyOneGora from "@/components/mine/my-one-gora.vue"
+import MadeGoraList from "@/components/mine/made-gora-list.vue"
 import MyOneManage from "@/components/mine/my-one-manage.vue"
 
 export default defineComponent({
@@ -125,6 +127,6 @@ export default defineComponent({
     },
   },
 
-  components: { MkForm, MyOneGora, MyOneManage },
+  components: { MkForm, MadeGoraList, MyOneManage },
 });
 </script>

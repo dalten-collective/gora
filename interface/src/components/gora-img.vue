@@ -1,13 +1,13 @@
 <template>
   <div>
     <div>
-      <img class="tw-m-auto" :src="gora.pic" style="object-fit: contain; width: 250px; height: 250px;" @click="openBigImage" :class="detailClass" />
+      <img class="tw-m-auto" :src="imageSource" style="object-fit: contain; width: 250px; height: 250px;" @click="openBigImage" :class="detailClass" />
     </div>
 
     <v-dialog v-model="bigImageOpen">
       <v-card class="tw-bg-white" >
         <v-btn icon="mdi-close" color="error" style="position: absolute; margin-top: 10px; margin-left: 10px;" @click="bigImageOpen = false" />
-        <img :src="gora.pic" />
+        <img :src="imageSource" />
       </v-card>
     </v-dialog>
   </div>
@@ -22,6 +22,9 @@ export default defineComponent({
   props: {
     gora: {
       type: Object as PropType<Gora>
+    },
+    urlDirect: {
+      type: String
     },
     detailing: {
       type: Boolean,
@@ -40,6 +43,15 @@ export default defineComponent({
         return ['tw-cursor-pointer'];
       }
       return ['']
+    },
+
+    imageSource() {
+      if (this.gora) {
+        return this.gora.pic
+      } else if (this.urlDirect) {
+        return this.urlDirect
+      }
+      return ""
     },
   },
 
