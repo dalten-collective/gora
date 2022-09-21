@@ -50,6 +50,11 @@
       <div v-for="goid in made" :key="goid">
         <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
       </div>
+      <div v-if="made.length === 0">
+        <div class="tw-border tw-rounded-sm tw-p-8 tw-mt-8 tw-shadow">
+          Nothing to see here. <span class="tw-cursor-pointer tw-text-success tw-underline" @click="making = true;">Make</span> some gorae!
+        </div>
+      </div>
     </div>
 
     <div v-if="goraeSelected.length > 0" style="position: fixed; bottom: 0;" class="md:px-2 tw-bg-surface tw-py-4 tw-rounded-md tw-shadow-lg tw-border md:tw-right-0" >

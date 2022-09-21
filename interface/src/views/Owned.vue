@@ -15,6 +15,11 @@
       <div v-for="goid in owned" :key="goid">
         <GoraList :goid="goid" class="tw-mb-4" from-page="hedl" />
       </div>
+      <div v-if="owned.length === 0">
+        <div class="tw-border tw-rounded-sm tw-p-8 tw-mt-8 tw-shadow">
+          You don't own any gorae. <router-link class="tw-cursor-pointer tw-text-success tw-underline" :to="{ name: 'pita' }" >Request</router-link> or <router-link class="tw-cursor-pointer tw-text-success tw-underline" :to="{ name: 'mine' }" >make</router-link> some!
+        </div>
+      </div>
     </div>
 
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>

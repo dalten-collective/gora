@@ -13,7 +13,7 @@
       </nav>
     </header>
 
-    <div class="tw-container tw-mx-auto" style="position: relative; top: 100px;">
+    <div class="tw-container tw-mx-auto tw-px-1 md:tw-px-0" style="position: relative; top: 100px;">
       <div v-if="!haveSubscription || !havePita || !haveMeta || !haveLogs" class="tw-w-full tw-h-full tw-flex tw-flex-col">
         <div class="tw-my-4">
           <v-progress-linear height="25" color="info" rounded v-if="!haveSubscription" indeterminate>

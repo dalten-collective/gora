@@ -42,31 +42,17 @@
             </v-card-text>
           </v-card>
         </v-dialog>
-
-        <v-dialog v-model="making" fullscreen scrim scrollable>
-          <template v-slot:activator="{ props }">
-
-          </template>
-          <v-card class="tw-bg-white tw-p-4">
-            <v-card-title class="tw-flex tw-justify-between">
-              <div>
-                Create Gora
-              </div>
-              <div>
-                <span @click="making = false;" class="tw-underline tw-cursor-pointer">Close</span>
-              </div>
-            </v-card-title>
-            <v-card-text>
-              <MkForm @closeMk="making = false" />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
       </div>
     </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
       <div v-for="goid in pitaIDs" :key="goid" >
         <GoraList :goid="goid" class="tw-mb-4"/>
+      </div>
+      <div v-if="pitaIDs.length === 0">
+        <div class="tw-border tw-rounded-sm tw-p-8 tw-mt-8 tw-shadow">
+          You've never seen any gorae. <span class="tw-cursor-pointer tw-text-success tw-underline" @click="requesting = true;">Request</span> or <router-link class="tw-cursor-pointer tw-text-success tw-underline" :to="{ name: 'mine' }" >make</router-link> some!
+        </div>
       </div>
     </div>
 
