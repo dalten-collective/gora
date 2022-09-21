@@ -27,6 +27,10 @@
       </div>
     </div>
 
+    <div v-if="goraeSelected.length > 0" style="position: fixed; bottom: 0; right: 0;" class="px-2 tw-bg-surface tw-py-4 tw-rounded-md tw-shadow-lg tw-border" >
+      <MassManage />
+    </div>
+
     <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
@@ -53,9 +57,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
+
 import MkForm from "@/components/mine/mk-form.vue"
 import MadeGoraList from "@/components/mine/made-gora-list.vue"
 import MyOneManage from "@/components/mine/my-one-manage.vue"
+import MassManage from "@/components/mine/mass-manage.vue"
 
 export default defineComponent({
   data() {
@@ -68,7 +74,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState("made", ["made"]),
+    ...mapState("made", ["made", "goraeSelected"]),
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
   },
 
@@ -127,6 +133,6 @@ export default defineComponent({
     },
   },
 
-  components: { MkForm, MadeGoraList, MyOneManage },
+  components: { MkForm, MadeGoraList, MyOneManage, MassManage },
 });
 </script>

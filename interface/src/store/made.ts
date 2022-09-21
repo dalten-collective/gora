@@ -1,6 +1,7 @@
 import {
   GoraIDShip,
   MadeState, PokeAcceptRequest, PokeMkGoraPayload,
+  NewBareGora, GoraID
 } from "@/types";
 
 import _ from 'lodash'
@@ -12,10 +13,14 @@ export default {
   state() {
     return {
       made: [] as MadeState,
+      goraeSelected: [] as Array<GoraID>,
     };
   },
 
   getters: {
+    goraIsSelected: (state) => (goraID: GoraID): boolean => {
+      return state.goraeSelected.includes(goraID)
+    }
   },
 
   mutations: {
@@ -27,7 +32,16 @@ export default {
       state.made = state.made.filter(id => !payload.diff.rem.made.includes(id))
       // add
       state.made = state.made.concat(payload.diff.set.made)
-    }
+    },
+
+    addGoraToSelected(state, goraID: GoraID) {
+      const ids = new Set(state.goraeSelected)
+      ids.add(goraID)
+      state.goraeSelected = Array.from(ids)
+    },
+    removeGoraFromSelected(state, goraID: GoraID) {
+      state.goraeSelected = state.goraeSelected.filter((gid) => gid !== goraID)
+    },
   },
 
   actions: {
@@ -42,6 +56,16 @@ export default {
 
     pokeMkGora({ commit, dispatch }, pokePayload: PokeMkGoraPayload) {
       return api.mkGora(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeStakGora({ commit, dispatch }, pokePayload: { dez: Array<GoraID>, which: GoraID | NewBareGora } ) {
+      return api.stakEm(pokePayload)
         .then((r) => {
           return r
         })
@@ -78,6 +102,13 @@ export default {
         .catch((e) => {
           throw e
         })
+    },
+
+    selectGora({ commit }, goraID: GoraID) {
+      commit('addGoraToSelected', goraID)
+    },
+    deselectGora({ commit }, goraID: GoraID) {
+      commit('removeGoraFromSelected', goraID)
     },
 
   },

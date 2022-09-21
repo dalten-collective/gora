@@ -33,7 +33,7 @@
 
       <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
           <div>
-            box
+            <v-checkbox v-model="innerSelected" />
           </div>
           <router-link
             :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
@@ -78,13 +78,29 @@ export default defineComponent({
       recipients: [] as Array<Ship>,
       recipientAdd: "",
       offerPending: false,
+      innerSelected: false,
     };
+  },
+
+  mounted() {
+    this.innerSelected = this.goraIsSelected(this.goid)
+  },
+
+  watch: {
+    innerSelected(val) {
+      if (val) {
+        this.$store.dispatch("made/selectGora", this.goid)
+      } else {
+        this.$store.dispatch("made/deselectGora", this.goid)
+      }
+    },
   },
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
+    ...mapGetters("made", ["goraIsSelected"]),
 
     requestsByID() {
       return this.requestsForID(this.goid);
@@ -105,6 +121,10 @@ export default defineComponent({
   },
 
   methods: {
+    boxChecked() {
+      this.$emit('boxChecked', { goraID: this.goid })
+    },
+
     addToRecipients() {
       if (!this.recipientAdd) {
         return;
