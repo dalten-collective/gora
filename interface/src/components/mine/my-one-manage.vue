@@ -118,17 +118,18 @@
 
               <v-expansion-panel class="tw-bg-surface">
                 <v-expansion-panel-title>
-                  <h3>Hodlers</h3>
+                  <h3>Hodlers ({{ theGora.hodl.length === 0 ? 'None' : theGora.hodl.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <ul>
-                    <li
-                      v-for="ship in theGora.hodl"
-                      :key="ship"
-                    >
-                      {{ $filters.sigShip(ship) }}
-                    </li>
-                  </ul>
+                  <v-chip
+                    class="tw-mr-2 tw-my-2"
+                    v-for="ship in theGora.hodl"
+                    :key="ship"
+                    variant="flat"
+                    color="info"
+                  >
+                    <span class="tw-font-mono">{{ $filters.sigShip(ship) }}</span>
+                  </v-chip>
                 </v-expansion-panel-text>
               </v-expansion-panel>
 
