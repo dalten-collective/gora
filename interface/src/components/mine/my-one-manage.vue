@@ -24,7 +24,8 @@
                   </h1>
                 </div>
               </div>
-              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-2">
+
+              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-8">
                 <div class="tw-text-center tw-max-w-[250px]">
                   <v-chip variant="outlined" size="small" color="info">
                     you host
@@ -59,10 +60,7 @@
                         Max hodlers
                       </div>
                       <div class="tw-text-center tw-bg-surface tw-p-2">
-                        <span v-if="unique">
-                          Only 1: Just you!
-                        </span>
-                        <span v-else-if="!theGora.max">
+                        <span v-if="!theGora.max">
                           Unlimited
                         </span>
                         <span v-else>
@@ -93,15 +91,7 @@
                       Max hodlers
                     </div>
                     <div class="tw-col-span-10 tw-text-left tw-bg-surface tw-p-2">
-                      <span v-if="unique">
-                        Only 1: Just you!
-                      </span>
-                      <span v-else-if="!theGora.max">
-                        Unlimited
-                      </span>
-                      <span v-else>
-                        {{ theGora.max }}
-                      </span>
+                      <MaxDisplayEdit :goid="goid" />
                     </div>
                   </div>
 
@@ -303,6 +293,7 @@ import GoraImg from "@/components/gora-img.vue";
 import Give from "@/components/pita/give.vue";
 import Take from "@/components/pita/take.vue";
 import ShipList from "@/components/ship-list.vue";
+import MaxDisplayEdit from "@/components/mine/max-display-edit.vue";
 
 export default defineComponent({
   props: {
@@ -447,7 +438,7 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing, GoraImg, Give, Take, ShipList
+    Outgoing, GoraImg, Give, Take, ShipList, MaxDisplayEdit
   },
 });
 </script>

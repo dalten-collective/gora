@@ -9,6 +9,7 @@ import {
   PokeRmGoraPayload,
   PokeSendGora,
   PokeStakEm,
+  PokeSetMax,
 } from "@/types";
 
 const manMark = "gora-man-2";
@@ -33,6 +34,27 @@ export function mkGora(payload: PokeMkGoraPayload): Promise<any> {
       throw e;
     });
 }
+
+export function setMax(payload: { id: GoraID, max: UrbNull | number }): Promise<any> {
+  const json: PokeSetMax = {
+    "set-max": payload,
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
+      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
+
 
 export function stakEm(payload: { dez: Array<GoraID>, which: GoraID | NewBareGora }): Promise<any> {
   const json: PokeStakEm = {

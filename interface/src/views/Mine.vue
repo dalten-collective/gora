@@ -47,8 +47,8 @@
     </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in made" :key="goid">
-          <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: relative; left: 99%; top: 5px;">
+      <div v-for="goid in made" :key="goid" style="position: relative;">
+          <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: absolute; left: 99%; top: 5px;">
           </v-badge>
           <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
       </div>

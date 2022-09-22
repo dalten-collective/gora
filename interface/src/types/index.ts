@@ -11,7 +11,7 @@ export type GoraID = string;
 export type GType = 'g';
 export type SType = 's';
 export type GoraType = GType | SType;
-export type UrbNull = '~';
+export type UrbNull = '~' | null;
 export type Ship = string;
 export type Gora = GoraStak | GoraG;
 export interface Stackers {

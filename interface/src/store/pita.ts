@@ -36,17 +36,33 @@ export default {
       state.pita = payload;
     },
     applyDiff(state, payload: DiffResponse) {
-      // remove
-      state.pita = state.pita.filter(a => !payload.diff.rem.pita.map(r => r.id).includes(a.id))
+      // remove all the ones we'll be adding
+      state.pita = state.pita.filter((gora: Gora) => {
+        return !payload.diff.rem.pita.map(r => r.id).includes(gora.id)
+      })
 
       // add
       const pitaDiff: Array<Gora> = payload.diff.set.pita
       // Remove all that we got updates for in the diff...
-      state.pita = state.pita.filter((g: Gora) => !pitaDiff.map(gdiff => gdiff.id).includes(g.id))
+      console.log('running remove...')
+      console.log('dif ', payload.diff.set.pita)
+      console.log('ids ', payload.diff.set.pita.map(r => r.id))
+
+      console.log('len before remove ', state.pita.length)
+
+      state.pita = state.pita.filter((gora: Gora) => {
+        console.log('comparing id ', gora.id)
+        console.log('bool ', !payload.diff.set.pita.map(r => r.id).includes(gora.id))
+        return !payload.diff.set.pita.map(r => r.id).includes(gora.id)
+      })
+
+      console.log('len after remove ', state.pita.length)
+      // state.pita = state.pita.filter((g: Gora) => !pitaDiff.map(gdiff => gdiff.id).includes(g.id))
       // Then add their diff versions back in:
       pitaDiff.forEach((diffGora: Gora) => {
         state.pita.push(diffGora)
       })
+      console.log('len after push ', state.pita.length)
     }
   },
 

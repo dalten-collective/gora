@@ -1,7 +1,7 @@
 import {
   GoraIDShip,
   MadeState, PokeAcceptRequest, PokeMkGoraPayload,
-  NewBareGora, GoraID
+  NewBareGora, GoraID, UrbNull,
 } from "@/types";
 
 import _ from 'lodash'
@@ -103,6 +103,16 @@ export default {
 
     pokeIgnoreRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
       return api.ignoreRequest(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeSetMax({ commit, dispatch }, pokePayload: { id: GoraID, max: UrbNull | number } ) {
+      return api.setMax(pokePayload)
         .then((r) => {
           return r
         })
