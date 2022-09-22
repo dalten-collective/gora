@@ -48,7 +48,9 @@
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
       <div v-for="goid in made" :key="goid">
-        <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
+          <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: relative; left: 99%; top: 5px;">
+          </v-badge>
+          <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
       </div>
       <div v-if="made.length === 0">
         <div class="tw-border tw-rounded-sm tw-p-8 tw-mt-8 tw-shadow">
@@ -106,6 +108,7 @@ export default defineComponent({
   computed: {
     ...mapState("made", ["made", "goraeSelected"]),
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
+    ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
   },
 
   mounted() {
@@ -146,6 +149,10 @@ export default defineComponent({
   },
 
   methods: {
+    goraHasNotifs(goraID) {
+      return this.requestsForID(goraID).length > 0
+    },
+
     idDetailable(goraID) {
       if (goraID && this.haveTheGora(goraID)) {
         return true

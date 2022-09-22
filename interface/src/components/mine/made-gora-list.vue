@@ -1,6 +1,6 @@
 <template>
   <div v-if="haveTheGora">
-    <div class="tw-p-3 tw-rounded-md tw-shadow-md">
+    <div class="tw-p-3 tw-rounded-md tw-shadow-md tw-border-2 tw-border-info tw-border-opacity-25">
     <article>
       <div class="tw-flex tw-flex-col">
         <div>
