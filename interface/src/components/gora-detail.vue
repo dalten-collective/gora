@@ -174,7 +174,6 @@
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <ul class="tw-mb-4">
-                  {{ outgoingGivesFor(theGora.id) }}
                     <li
                       class="tw-mb-2"
                       v-for="give in outgoingGivesFor(theGora.id)"
@@ -372,11 +371,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-  .inner-shadow-gora {
-    --tw-shadow: inset 1px 6px 4px 5px rgb(0 0 0 / 0.05);
-    --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  }
-</style>

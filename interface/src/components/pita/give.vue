@@ -1,8 +1,9 @@
 <template>
   <div>
-    <!-- Unclear how this works -->
-    <div class="tw-text-white" :class="statusColor">
-      Give accepted on {{ $filters.sectToDate(give.when).toLocaleString() }}
+    <!-- TODO: Unclear how this works -->
+    <div class="tw-text-white tw-p-2" :class="statusColor">
+      Offered to <span class="tw-font-mono">{{ give.who }}</span> on {{ $filters.sectToDate(give.when).toLocaleString() }}
+      <span v-if="give.status === 'pending'">(Hasn't seen offer yet)</span>
       <span v-if="!give.status">(Gora not available!)</span>
     </div>
   </div>
@@ -23,7 +24,7 @@ export default defineComponent({
 
   computed: {
     statusColor() {
-      if (this.give.status === '~') {
+      if (this.give.status === '~' || this.give.status === 'pending') {
         return ['tw-bg-warning']
       }
       if (this.give.status) {

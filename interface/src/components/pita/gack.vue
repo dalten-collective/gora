@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="tw-text-white" :class="statusColor">
+    <div class="tw-text-white tw-p-2" :class="statusColor">
       Give {{ !gack.status ? 'attempted' : 'accepted' }} on {{ $filters.sectToDate(gack.when).toLocaleString() }}
       <span v-if="!gack.status">(Gora not available!)</span>
     </div>

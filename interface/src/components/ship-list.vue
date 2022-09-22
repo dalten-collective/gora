@@ -58,6 +58,10 @@ export default defineComponent({
     shipValidate(string) {
       return !string || /^[\w~-\s,]+$/.test(string) || "invalid ships";
     },
+    resetList() {
+      this.offerList = [];
+    },
+
     removeFromOfferList(ship) {
       this.offerList = this.offerList.filter((s: string) => s !== ship);
       this.$emit('updateList', this.offerList)

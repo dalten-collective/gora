@@ -168,11 +168,63 @@
 
               <v-expansion-panel class="tw-bg-surface">
                 <v-expansion-panel-title>
+                  <h3>Offers</h3>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <div class="tw-my-4">
+                    <v-form @submit.prevent="">
+                      <div class="tw-flex tw-flex-col">
+                        <div>
+                          <h3 class="tw-text-lg">Offer to...</h3>
+                        </div>
+                        <ShipList @updateList="updateRecipients" ref="offerList" />
+                      </div>
+                    </v-form>
+                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">Send Offers</v-btn>
+                  </div>
+
+                  <v-divider class="tw-my-4" />
+
+                  <div class="tw-rounded-sm tw-shadow-inner tw-p-4 tw-bg-white">
+                    <ul class="tw-mb-4">
+                      <li
+                        class="tw-mb-2"
+                        v-for="give in outgoingGivesFor(theGora.id)"
+                        :key="[give.id, give.act, give.status]"
+                      >
+                        <Give :give="give" />
+                      </li>
+                    </ul>
+
+                    <ul class="tw-mb-4">
+                      <li
+                        class="tw-mb-2"
+                        v-for="gack in outgoingGacksByID"
+                        :key="[gack.id, gack.act, gack.status]"
+                      >
+                        <Gack :gack="gack" />
+                      </li>
+                    </ul>
+                    <ul>
+                      <li
+                        class="tw-mb-2"
+                        v-for="take in outgoingTakesByID"
+                        :key="[take.id, take.act, take.status]"
+                      >
+                        <Take :take="take" />
+                      </li>
+                    </ul>
+                  </div>
+                </v-expansion-panel-text>
+
+              </v-expansion-panel>
+
+              <v-expansion-panel class="tw-bg-surface">
+                <v-expansion-panel-title>
                   <h3>History</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <ul class="tw-mb-4">
-                  {{ outgoingGivesFor(theGora.id) }}
                     <li
                       class="tw-mb-2"
                       v-for="give in outgoingGivesFor(theGora.id)"
@@ -230,26 +282,6 @@
       </ul>
     </div>
 
-    <div>
-      Offer:
-      <div>
-        <ul>
-          <li v-for="ship in recipients" :key="ship">
-            {{ ship }}
-            <span @click="removeFromRecipients(ship)">Remove</span>
-          </li>
-        </ul>
-      </div>
-      <v-text-field
-        v-model="recipientAdd"
-        placeholder="~sampel-palnet, "
-        label="Offer to..."
-        @keyup.enter="addToRecipients"
-      />
-      <v-btn @click="addToRecipients">Add</v-btn>
-      <br />
-      <v-btn @click="doOffer">Offer</v-btn>
-    </div>
     <v-btn @click="showConfirmDelete = true">Delete</v-btn>
     <v-dialog v-model="showConfirmDelete">
       <v-card class="tw-bg-white tw-p-4">
@@ -280,6 +312,9 @@ import { mapState, mapGetters } from "vuex";
 
 import Outgoing from "@/components/mine/outgoing.vue"
 import GoraImg from "@/components/gora-img.vue";
+import Give from "@/components/pita/give.vue";
+import Take from "@/components/pita/take.vue";
+import ShipList from "@/components/ship-list.vue";
 
 export default defineComponent({
   props: {
@@ -311,7 +346,7 @@ export default defineComponent({
   computed: {
     ...mapGetters("pita", ["goraByID"]),
     ...mapState("logs", ["requests", "outgoing"]),
-    ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
+    ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
 
     requestsByID() {
       return this.requestsForID(this.goid);
@@ -332,6 +367,10 @@ export default defineComponent({
   },
 
   methods: {
+    updateRecipients(list) {
+      this.recipients = list;
+    },
+
     copyID(): void {
       navigator.clipboard.writeText(this.goid);
       this.copyDone = true;
@@ -371,6 +410,7 @@ export default defineComponent({
 
     resetOffer() {
       this.recipients = [];
+      this.$refs.offerList.resetList()
     },
 
     doDelete() {
@@ -419,7 +459,7 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing, GoraImg
+    Outgoing, GoraImg, Give, Take, ShipList
   },
 });
 </script>
