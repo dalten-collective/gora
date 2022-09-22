@@ -4,10 +4,12 @@
       <img class="tw-m-auto" :src="imageSource" :style="styleObject" @click="openBigImage" :class="detailClass" />
     </div>
 
-    <v-dialog v-model="bigImageOpen">
+    <v-dialog v-model="bigImageOpen" fullscreen>
       <v-card class="tw-bg-white" >
         <v-btn icon="mdi-close" color="error" style="position: absolute; margin-top: 10px; margin-left: 10px;" @click="bigImageOpen = false" />
-        <img :src="imageSource" />
+        <div class="tw-m-auto">
+          <img :src="imageSource" />
+        </div>
       </v-card>
     </v-dialog>
   </div>
