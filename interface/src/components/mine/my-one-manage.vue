@@ -262,36 +262,23 @@
         </div>
 
       </div>
+
+      <footer class='tw-flex tw-justify-end tw-mt-10'>
+        <v-btn icon="mdi-delete" @click="showConfirmDelete = true" color="error"/>
+      </footer>
     </article>
 
-    <ul>
-      <li
-        v-for="k in Object.keys(theGora)"
-        :key="k"
-        class="tw-grid tw-grid-cols-12"
-      >
-        <span class="tw-font-mono tw-grid-col-span-4">{{ k }}:</span>
-        <span class="tw-grid-col-span-8">{{ theGora[k] }}</span>
-      </li>
-    </ul>
 
-    <div>
-      Outgoing
-      <ul>
-        <li><Outgoing v-for="o in outgoingByID" :log="o" :hodl="theGora.hodl" /></li>
-      </ul>
-    </div>
-
-    <v-btn @click="showConfirmDelete = true">Delete</v-btn>
     <v-dialog v-model="showConfirmDelete">
       <v-card class="tw-bg-white tw-p-4">
-        <v-card-title>Delete Gora?</v-card-title>
+        <v-card-title class="tw-text-error">Delete Gora?</v-card-title>
         <v-card-text>
-          Are you sure you want to delete this gora? TODO: explanation
+          Are you sure you want to delete this gora? Any outstanding offers will be abandoned.<br />
+          You cannot undo this!
         </v-card-text>
-        <v-card-actions>
-          <v-btn @click="showConfirmDelete = false">No</v-btn>
-          <v-btn @click="doDelete">Yes</v-btn>
+        <v-card-actions class="tw-flex tw-justify-between">
+          <v-btn @click="showConfirmDelete = false">No! Don't delete it.</v-btn>
+          <v-btn color="error" @click="doDelete">Yes, kill it.</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
