@@ -30,8 +30,12 @@ export default {
     applyDiff(state, payload: DiffResponse) {
       // remove
       state.made = state.made.filter(id => !payload.diff.rem.made.includes(id))
+
       // add
-      state.made = state.made.concat(payload.diff.set.made)
+      const madeSet = new Set(state.made)
+      payload.diff.set.made.forEach(m => madeSet.add(m))
+      state.made = Array.from(madeSet)
+
     },
 
     addGoraToSelected(state, goraID: GoraID) {
