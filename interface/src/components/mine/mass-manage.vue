@@ -21,11 +21,14 @@
         </v-tooltip>
       </v-btn>
 
-      <v-btn icon color="warning" @click="burnOpen = true" >
+      <v-btn icon color="warning" @click="openBurn" >
         <v-icon>
           mdi-circle-multiple-outline
         </v-icon>
-        <v-tooltip activator="parent" location="top">
+        <v-tooltip v-if="stackableSelected" activator="parent" location="top">
+          Cannot put stackable gorae into another stack
+        </v-tooltip>
+        <v-tooltip v-else activator="parent" location="top">
           Stack selected
         </v-tooltip>
       </v-btn>
@@ -60,7 +63,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 // import MassSend from "@/components/mine/mass-send.vue";
 import MassBurn from "@/components/mine/mass-burn.vue";
@@ -70,6 +73,7 @@ import MassUnTag from "@/components/mine/mass-un-tag.vue";
 export default defineComponent({
   computed: {
     ...mapState("made", ["goraeSelected"]),
+    ...mapGetters("pita", ["stackableSelected"]),
   },
 
   data() {
@@ -93,6 +97,13 @@ export default defineComponent({
     selectAll() {
       // TODO: when filters are here, will need to NOT do it like this
       this.$store.dispatch("made/selectAll")
+    },
+    openBurn() {
+      if (this.stackableSelected(this.goraeSelected)) {
+        return
+      } else {
+        this.burnOpen = true;
+      }
     },
   },
 });

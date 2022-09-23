@@ -26,6 +26,13 @@ export default {
     pitaIDs(state) {
       return state.pita.map(g => g.id);
     },
+
+    stackableSelected: (state) => (goraIDs: Array<GoraID>): boolean => {
+      const typesSelected = state.pita.filter((g: Gora) => {
+        return goraIDs.includes(g.id)
+      }).map(g => g.type)
+      return typesSelected.includes('s')
+    },
   },
 
   mutations: {
