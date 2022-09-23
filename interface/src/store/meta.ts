@@ -44,10 +44,11 @@ export default {
         if (thisTag) {
           console.log('removing for ', thisTag.tag)
           console.log('prev ids', thisTag['id-list'])
-          thisTag['id-list'] = thisTag['id-list'].filter((id: GoraID) => {
+          const newList = thisTag['id-list'].filter((id: GoraID) => {
             return !tagRem['id-list'].includes(id)
           })
-          console.log('after ids', thisTag['id-list'])
+          console.log('after ids', newList)
+          thisTag['id-list'] = newList
         }
       })
 
