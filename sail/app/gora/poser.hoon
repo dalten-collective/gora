@@ -123,7 +123,6 @@
         background-color: #333230;
       }
     }
-  
     '''
   ++  pita-to-image-public
     ^-  tape
