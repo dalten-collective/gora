@@ -25,7 +25,7 @@
                 </div>
               </div>
 
-              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-8">
+              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-4">
                 <div class="tw-text-center tw-max-w-[250px]">
                   <v-chip variant="outlined" size="small" color="info">
                     you host
@@ -33,8 +33,22 @@
                 </div>
               </div>
 
+              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-8">
+                <div class="tw-flex tw-flex-wrap tw-max-w-1/2 tw-my-2" v-if="tagsForGora.length > 0">
+                  <v-chip
+                    v-for="t in tagsForGora" :key="t"
+                    class="tw-mr-1 tw-mb-1"
+                    variant="outlined" color="info" size="small">
+                      <v-icon class="tw-mr-1">
+                        mdi-tag-outline
+                      </v-icon>
+                      {{ t }}
+                  </v-chip>
+                </div>
+              </div>
 
-              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-2">
+
+              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-my-4 tw-mb-2">
                 <div class="tw-text-center">
                   <div class="tw-grid md:tw-hidden tw-grid-rows-2 tw-gap-2 tw-w-full">
                     <div class="tw-row-span-2 tw-border tw-border-gora">
@@ -106,7 +120,7 @@
           <div class="tw-flex-grow">
             <v-expansion-panels variant="accordion">
 
-              <v-expansion-panel class="tw-bg-surface">
+              <v-expansion-panel class="tw-bg-surface" v-if="gType">
                 <v-expansion-panel-title>
                   <h3>Hodlers ({{ theGora.hodl.length === 0 ? 'None' : theGora.hodl.length }})</h3>
                 </v-expansion-panel-title>
@@ -119,6 +133,22 @@
                     color="info"
                   >
                     <span class="tw-font-mono">{{ $filters.sigShip(ship) }}</span>
+                  </v-chip>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+              <v-expansion-panel class="tw-bg-surface" v-if="sType">
+                <v-expansion-panel-title>
+                  <h3>Hodlers ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})</h3>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-chip
+                    class="tw-mr-2 tw-my-2"
+                    v-for="stak in theGora.stak"
+                    :key="stak"
+                    variant="flat"
+                    color="info"
+                  >
+                    <span class="tw-font-mono">{{ $filters.sigShip(stak.who) }} x{{ stak.has }}</span>
                   </v-chip>
                 </v-expansion-panel-text>
               </v-expansion-panel>
@@ -326,6 +356,18 @@ export default defineComponent({
     ...mapGetters("pita", ["goraByID"]),
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
+    ...mapGetters("meta", ["thisGoraTags"]),
+
+    gType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+    },
+    sType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+    },
+
+    tagsForGora() {
+      return this.thisGoraTags(this.goid).map(t => t.tag)
+    },
 
     requestsByID() {
       return this.requestsForID(this.goid);

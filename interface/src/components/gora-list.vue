@@ -24,7 +24,7 @@
         />
       </div>
 
-    <div class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses">
+    <div class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses, goraStackClass">
       <article>
         <div class="tw-flex tw-flex-col">
           <div>
@@ -190,6 +190,20 @@ export default defineComponent({
 
       return classes
     },
+
+    goraStackClass() {
+      if (this.sType) {
+        return 'stak'
+      }
+    },
+
+    gType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+    },
+    sType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+    },
+
   },
 
   methods: {
@@ -228,3 +242,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+  .stak {
+    /*
+    position: relative;
+    bottom: 20px;
+    right: 30px;
+    color: red;
+    */
+  }
+</style>

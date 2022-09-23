@@ -66,7 +66,25 @@
               </div>
             </div>
 
+<<<<<<< Updated upstream
             <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-2">
+=======
+              <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-4">
+                <div class="tw-flex tw-flex-wrap tw-max-w-1/2 tw-my-2" v-if="tagsForGora.length > 0">
+                  <v-chip
+                    v-for="t in tagsForGora" :key="t"
+                    class="tw-mr-1 tw-mb-1"
+                    variant="outlined" color="info" size="small">
+                      <v-icon class="tw-mr-1">
+                        mdi-tag-outline
+                      </v-icon>
+                      {{ t }}
+                  </v-chip>
+                </div>
+              </div>
+
+            <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mt-4 tw-mb-2">
+>>>>>>> Stashed changes
               <div class="tw-text-center">
                 <span class="tw-underline tw-cursor-pointer tw-text-sm tw-text-info" @click="showDetails = !showDetails">Details</span>
 
@@ -271,6 +289,15 @@ export default defineComponent({
       "outgoingGacksFor",
       "outgoingGivesFor",
     ]),
+<<<<<<< Updated upstream
+=======
+    ...mapGetters("meta", ["thisGoraTags"]),
+
+    tagsForGora() {
+      return this.thisGoraTags(this.goid).map(t => t.tag)
+    },
+
+>>>>>>> Stashed changes
     unique(): boolean {
       return this.theGora.max === 1 && this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))
     },
