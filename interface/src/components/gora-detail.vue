@@ -166,6 +166,17 @@
           <div class="tw-flex-grow">
             <v-expansion-panels variant="accordion">
 
+              <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
+                <v-expansion-panel-title>
+                  <h3>Gorae in Stack ({{ theGora.nul.length }})</h3>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <div v-for="g in theGora.nul">
+                    {{ g.name }}
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+
               <v-expansion-panel class="tw-bg-surface">
                 <v-expansion-panel-title>
                   <h3>Hodlers</h3>

@@ -38,6 +38,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    stack: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {

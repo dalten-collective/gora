@@ -120,6 +120,17 @@
           <div class="tw-flex-grow">
             <v-expansion-panels variant="accordion">
 
+              <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
+                <v-expansion-panel-title>
+                  <h3>Gorae in Stack ({{ theGora.nul.length }})</h3>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <div v-for="g in theGora.nul">
+                    {{ g.name }}
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+
               <v-expansion-panel class="tw-bg-surface" v-if="gType">
                 <v-expansion-panel-title>
                   <h3>Hodlers ({{ theGora.hodl.length === 0 ? 'None' : theGora.hodl.length }})</h3>
@@ -324,6 +335,7 @@ import Give from "@/components/pita/give.vue";
 import Take from "@/components/pita/take.vue";
 import ShipList from "@/components/ship-list.vue";
 import MaxDisplayEdit from "@/components/mine/max-display-edit.vue";
+import GoraSummary from "@/components/gora-summary.vue";
 
 export default defineComponent({
   props: {
@@ -480,7 +492,7 @@ export default defineComponent({
   },
 
   components: {
-    Outgoing, GoraImg, Give, Take, ShipList, MaxDisplayEdit
+    Outgoing, GoraImg, Give, Take, ShipList, MaxDisplayEdit, GoraSummary
   },
 });
 </script>
