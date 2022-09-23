@@ -856,8 +856,8 @@
         border: 5px outset #c3a882;
         border-radius: 10px;
 
-        -webkit-box-shadow: 2px 2px 3px 5px #796b56, inset 0px 8px 20px 5px #000000, 6px 6px 27px 9px rgb(0 0 0);
-        box-shadow: 2px 2px 3px 5px #796b56, inset 0px 8px 20px 5px #000000, 6px 6px 27px 9px rgb(0 0 0);
+        -webkit-box-shadow: 2px 2px 3px 1px #796b56, inset 0px 8px 20px 5px #000000, 6px 6px 27px 9px rgb(0 0 0);
+        box-shadow: 2px 2px 3px 1px #796b56, inset 0px 8px 20px 5px #000000, 6px 6px 27px 9px rgb(0 0 0);
 
         display: -webkit-box;
 

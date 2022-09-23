@@ -50,7 +50,7 @@
           :~
             [%g (ot ~[hodl+(as (se %p)) max+(mu ni)])]
           ::
-            =-  [%s (ot ~[stak+(as (se %p))])]
+            =-  [%s (ot ~[stak+-])]
             %+  cu
               |=  s-s=(set @p)
               ^-  (map @p @ud)
