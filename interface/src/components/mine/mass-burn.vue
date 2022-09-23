@@ -38,14 +38,25 @@
                     New Stacked Gora
                   </h2>
                 </div>
+                
+                <div>
+                {{ existingGoraID }}
+                  <v-select
+                    label="Select Existing Gora"
+                    :items="pita"
+                    item-title="name"
+                    item-value="id"
+                    v-model="existingGoraID"
+                  />
+                </div>
+
                 <div class="tw-flex tw-flex-col tw-flex-grow">
                   <v-form ref="mkGoraForm" v-model="mkGoraFormValid">
                     <v-text-field
                       v-model="goraName"
                       placeholder="This is My Gora. There Are Many Gorae Like It, But This One Is Mine"
                       label="Name"
-                      required
-                      :rules="[(v) => !!v || 'Required']"
+                      :rules="[(v) => !!v || existingGoraID !== '' || 'Required']"
                     />
 
                     <GoraImg :urlDirect="goraPic" v-if="goraPic" />
@@ -54,8 +65,7 @@
                       v-model="goraPic"
                       placeholder="https://place-i-uploaded-my-image/the-image.jpg"
                       label="Image URL"
-                      required
-                      :rules="[(v) => !!v || 'Required']"
+                      :rules="[(v) => !!v || existingGoraID !== '' || 'Required']"
                     />
                     </v-form>
                 </div>
@@ -98,11 +108,17 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapState("pita", ["pita"]),
     ...mapState("made", ["goraeSelected"]),
     burnReady(): boolean {
-      if (this.usingNew) {
-        return (this.goraName && this.goraPic)
+      if (this.existingGoraID) {
+        return true
+      } else {
+        if (this.goraName && this.goraPic) {
+          return true
+        }
       }
+      return false
     },
   },
 
@@ -113,7 +129,22 @@ export default defineComponent({
       goraPic: "",
       mkGoraFormValid: false,
       usingNew: true,
+      existingGoraID: '',
     }
+  },
+
+  watch: {
+    existingGoraID(val) {
+      if (val) {
+        this.goraName = '';
+        this.goraPic  = '';
+      }
+    },
+    goraName(val) {
+      if (val) {
+        this.existingGoraID = '';
+      }
+    },
   },
 
   components: {
@@ -143,12 +174,24 @@ export default defineComponent({
           }
         }
       }
-      // const burnToExisting: Existing = {
-      //   existing: this.existingGoraID
-      // }
+      const burnToExisting: Existing = {
+        dez: this.goraeSelected,
+        which: {
+          existing: {
+            id: this.existingGoraID
+          }
+        }
+      }
+
+      let payload
+      if (this.existingGoraID === '') {
+        payload = burnToNew
+      } else {
+        payload = burnToExisting
+      }
 
       this.$store
-        .dispatch("made/pokeStakGora", burnToNew)
+        .dispatch("made/pokeStakGora", payload)
         .then((r) => {})
         .catch((e) => {})
         .finally(() => {
