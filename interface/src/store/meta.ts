@@ -19,6 +19,9 @@ export default {
         return t['id-list'].includes(goraID)
       })
     },
+    thisGoraPub: (state) => (goraID: GoraID): boolean => {
+      return state.public.includes(goraID)
+    },
   },
 
   mutations: {
@@ -34,6 +37,7 @@ export default {
     haveMeta(state) {
       state.haveMeta = true;
     },
+
     applyDiff(state, payload: DiffResponse) {
       // remove ids from this tag's state
       const tagRems: Array<Tagged> = payload.diff.rem.tags
@@ -66,6 +70,16 @@ export default {
           state.tags.push(tagAdd)
         }
       })
+
+      // remove from public
+      state.public = state.public.filter((id) => {
+        return !payload.diff.rem.public.includes(id)
+      })
+
+      // add to public
+      const pubSet = new Set(state.public)
+      payload.diff.set.public.forEach(id => pubSet.add(id))
+      state.public = Array.from(pubSet)
     },
   },
 
@@ -96,6 +110,21 @@ export default {
           throw e
         })
     },
+
+    pokePubMod(
+      { commit, dispatch },
+      pokePayload: { id: GoraID; how: boolean }
+    ) {
+      return api
+        .pubMod(pokePayload)
+        .then((r) => {
+          return r;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+
 
     handleSubscriptionData(
       { commit, dispatch },

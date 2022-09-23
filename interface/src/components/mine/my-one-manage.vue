@@ -26,10 +26,31 @@
               </div>
 
               <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-4">
-                <div class="tw-text-center tw-max-w-[250px]">
+                <div class="tw-text-center tw-max-w-[250px] tw-flex tw-items-center">
                   <v-chip variant="outlined" size="small" color="info">
                     you host
                   </v-chip>
+
+                  <div class="tw-ml-2">
+                    <v-btn color="info" icon v-if="thisGoraPub(goid)" @click="makePriv" :loading="pubPending">
+                      <v-icon>
+                        mdi-eye
+                      </v-icon>
+                      <v-tooltip activator="parent">
+                        Currently public. Click to make private.
+                      </v-tooltip>
+                    </v-btn>
+
+                    <v-btn v-else icon color="grey" @click="makePub" :loading="pubPending">
+                      <v-icon>
+                        mdi-eye-off
+                      </v-icon>
+                      <v-tooltip activator="parent">
+                        Currently private. Click to make public.
+                      </v-tooltip>
+                    </v-btn>
+                  </div>
+
                 </div>
               </div>
 
@@ -354,6 +375,7 @@ export default defineComponent({
 
   data() {
     return {
+      pubPending: false,
       rmPending: false,
       showConfirmDelete: false,
       transactPending: false,
@@ -368,7 +390,7 @@ export default defineComponent({
     ...mapGetters("pita", ["goraByID"]),
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
-    ...mapGetters("meta", ["thisGoraTags"]),
+    ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
 
     gType(): boolean {
       return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
@@ -402,6 +424,21 @@ export default defineComponent({
   methods: {
     updateRecipients(list) {
       this.recipients = list;
+    },
+
+    makePub() {
+      this.pubPending = true;
+      this.$store.dispatch("meta/pokePubMod", { id: this.goid, how: true })
+        .finally(() => {
+          this.pubPending = false;
+        })
+    },
+    makePriv() {
+      this.pubPending = true;
+      this.$store.dispatch("meta/pokePubMod", { id: this.goid, how: false })
+        .finally(() => {
+          this.pubPending = false;
+        })
     },
 
     copyID(): void {

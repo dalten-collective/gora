@@ -226,6 +226,14 @@ export interface PokeStakEm {
     which: Existing | NewBareGora;
   };
 }
+//
+// [%pub-gor id how:bool]                    convert a set gorae into a stak
+export interface PokePubMod {
+  'pub-gor': {
+    id: GoraID;
+    how: boolean;
+  };
+}
 
 // [%set-pol @uv u?(%approve %decline)]         (un)set a gora's request policy
 export interface PokeSetPol {

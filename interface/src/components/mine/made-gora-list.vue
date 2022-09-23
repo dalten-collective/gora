@@ -3,6 +3,19 @@
     <div class="tw-p-3 tw-rounded-md tw-shadow-md tw-border-2 tw-border-info tw-border-opacity-25">
     <article>
       <div class="tw-flex tw-flex-col">
+        <div style="position: relative;" v-if="thisGoraPub(goid)">
+          <v-tooltip position="left">
+            <template v-slot:activator="{ props }">
+            <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
+              mdi-eye
+            </v-icon>
+            </template>
+                <span>
+                Public
+                </span>
+          </v-tooltip>
+        </div>
+
         <div>
           <router-link 
           :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
@@ -123,7 +136,7 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapGetters("made", ["goraIsSelected"]),
-    ...mapGetters("meta", ["thisGoraTags"]),
+    ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
 
     tagsForGora() {
       return this.thisGoraTags(this.goid).map(t => t.tag)

@@ -13,6 +13,7 @@ import {
   PokeAddTag,
   PokeRemTag,
   Existing,
+  PokePubMod,
 } from "@/types";
 import {useCssVars} from "vue";
 
@@ -126,6 +127,26 @@ export function addTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<
 export function remTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<any> {
   const json: PokeRemTag = {
     "rem-tag": payload,
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
+      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
+
+export function pubMod(payload: { id: GoraID, how: boolean }): Promise<any> {
+  const json: PokePubMod = {
+    "pub-gor": payload,
   };
   return urbitAPI
     .poke({

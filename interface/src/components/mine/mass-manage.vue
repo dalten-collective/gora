@@ -33,6 +33,24 @@
         </v-tooltip>
       </v-btn>
 
+      <v-btn icon color="success" @click="makePub" >
+        <v-icon>
+          mdi-home
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Make public
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon color="error" @click="makePriv" >
+        <v-icon>
+          mdi-home
+        </v-icon>
+        <v-tooltip activator="parent" location="top">
+          Make not public
+        </v-tooltip>
+      </v-btn>
+
       <v-btn icon color="info" @click="deselectAll">
         <v-icon>
           mdi-close
@@ -105,6 +123,7 @@ export default defineComponent({
         this.burnOpen = true;
       }
     },
+
   },
 });
 </script>
