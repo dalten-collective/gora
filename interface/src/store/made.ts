@@ -1,12 +1,17 @@
 import {
   GoraIDShip,
-  MadeState, PokeAcceptRequest, PokeMkGoraPayload,
-  NewBareGora, GoraID, UrbNull,
+  MadeState,
+  PokeAcceptRequest,
+  PokeMkGoraPayload,
+  NewBareGora,
+  GoraID,
+  UrbNull,
+  Existing
 } from "@/types";
 
-import _ from 'lodash'
+import _ from "lodash";
 
-import api from "@/api"
+import api from "@/api";
 
 export default {
   namespaced: true,
@@ -18,9 +23,11 @@ export default {
   },
 
   getters: {
-    goraIsSelected: (state) => (goraID: GoraID): boolean => {
-      return state.goraeSelected.includes(goraID)
-    },
+    goraIsSelected:
+      (state) =>
+      (goraID: GoraID): boolean => {
+        return state.goraeSelected.includes(goraID);
+      },
   },
 
   mutations: {
@@ -29,125 +36,148 @@ export default {
     },
     applyDiff(state, payload: DiffResponse) {
       // remove
-      state.made = state.made.filter(id => !payload.diff.rem.made.includes(id))
+      state.made = state.made.filter(
+        (id) => !payload.diff.rem.made.includes(id)
+      );
 
       // add
-      const madeSet = new Set(state.made)
-      payload.diff.set.made.forEach(m => madeSet.add(m))
-      state.made = Array.from(madeSet)
-
+      const madeSet = new Set(state.made);
+      payload.diff.set.made.forEach((m) => madeSet.add(m));
+      state.made = Array.from(madeSet);
     },
 
     addGoraToSelected(state, goraID: GoraID) {
-      const ids = new Set(state.goraeSelected)
-      ids.add(goraID)
-      state.goraeSelected = Array.from(ids)
+      const ids = new Set(state.goraeSelected);
+      ids.add(goraID);
+      state.goraeSelected = Array.from(ids);
     },
     removeGoraFromSelected(state, goraID: GoraID) {
-      state.goraeSelected = state.goraeSelected.filter((gid) => gid !== goraID)
+      state.goraeSelected = state.goraeSelected.filter((gid) => gid !== goraID);
     },
 
     clearSelected(state) {
-      state.goraeSelected = []
+      state.goraeSelected = [];
     },
     selectAll(state) {
-      state.goraeSelected = state.made
+      state.goraeSelected = state.made;
     },
   },
 
   actions: {
     handleSubscriptionData({ commit, dispatch }, payload: MadeState) {
-      console.log('in made ', payload)
+      console.log("in made ", payload);
 
-      commit('setMade', payload)
+      commit("setMade", payload);
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {
-      commit('applyDiff', payload)
+      commit("applyDiff", payload);
     },
 
     pokeMkGora({ commit, dispatch }, pokePayload: PokeMkGoraPayload) {
-      return api.mkGora(pokePayload)
+      return api
+        .mkGora(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
-    pokeStakGora({ commit, dispatch }, pokePayload: { dez: Array<GoraID>, which: GoraID | NewBareGora } ) {
-      return api.stakEm(pokePayload)
+    pokeStakGora(
+      { commit, dispatch },
+      pokePayload: {
+        dez: GoraID,
+        which: NewBareGora | Existing
+      }
+    ) {
+      return api
+        .stakEm(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
-    pokeGiveGora({ commit, dispatch }, pokePayload: { id: GoraID, who: Array<Ship> }) {
-      return api.sendGive(pokePayload)
+    pokeGiveGora(
+      { commit, dispatch },
+      pokePayload: { id: GoraID; who: Array<Ship> }
+    ) {
+      return api
+        .sendGive(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
     pokeAcceptRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
-      return api.acceptRequest(pokePayload)
+      return api
+        .acceptRequest(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
     pokeIgnoreRequest({ commit, dispatch }, pokePayload: GoraIDShip) {
-      return api.ignoreRequest(pokePayload)
+      return api
+        .ignoreRequest(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
-    pokeSetMax({ commit, dispatch }, pokePayload: { id: GoraID, max: UrbNull | number } ) {
-      return api.setMax(pokePayload)
+    pokeSetMax(
+      { commit, dispatch },
+      pokePayload: { id: GoraID; max: UrbNull | number }
+    ) {
+      return api
+        .setMax(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
-    pokeRemTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
-      return api.remTag(pokePayload)
+    pokeRemTag(
+      { commit, dispatch },
+      pokePayload: { tag: string; gorae: Array<GoraID> }
+    ) {
+      return api
+        .remTag(pokePayload)
         .then((r) => {
-          return r
+          return r;
         })
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     },
 
     selectGora({ commit }, goraID: GoraID) {
-      commit('addGoraToSelected', goraID)
+      commit("addGoraToSelected", goraID);
     },
     deselectGora({ commit }, goraID: GoraID) {
-      commit('removeGoraFromSelected', goraID)
+      commit("removeGoraFromSelected", goraID);
     },
 
     deselectAll({ commit }) {
-      commit('clearSelected')
+      commit("clearSelected");
     },
 
     selectAll({ commit }) {
-      commit('selectAll')
+      commit("selectAll");
     },
   },
 };

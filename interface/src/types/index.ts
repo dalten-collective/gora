@@ -210,11 +210,20 @@ export interface PokeRemTag {
   };
 }
 
+
+export interface Existing {
+  existing: GoraID
+}
+
+export interface NewStacked {
+  new: NewBareGora;
+}
+
 // [%stak-em (set id) @t @t]                    convert a set gorae into a stak
 export interface PokeStakEm {
   'stak-em': {
     dez: Array<GoraID>;
-    which: GoraID | NewBareGora;
+    which: Existing | NewBareGora;
   };
 }
 

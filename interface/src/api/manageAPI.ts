@@ -12,7 +12,9 @@ import {
   PokeSetMax,
   PokeAddTag,
   PokeRemTag,
+  Existing,
 } from "@/types";
+import {useCssVars} from "vue";
 
 const manMark = "gora-man-2";
 // const transMark = "gora-transact-2"
@@ -58,7 +60,10 @@ export function setMax(payload: { id: GoraID, max: UrbNull | number }): Promise<
 }
 
 
-export function stakEm(payload: { dez: Array<GoraID>, which: GoraID | NewBareGora }): Promise<any> {
+export function stakEm(payload: {
+  dez: GoraID,
+  which: NewBareGora | Existing
+}): Promise<any> {
   const json: PokeStakEm = {
     "stak-em": payload,
   };

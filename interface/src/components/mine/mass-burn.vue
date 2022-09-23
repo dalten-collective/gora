@@ -134,8 +134,21 @@ export default defineComponent({
     burnGorae() {
       this.burnPending = true;
 
+      const burnToNew: NewBareGora = {
+        dez: this.goraeSelected,
+        which: {
+          new: {
+            name: this.goraName,
+            pic: this.goraPic
+          }
+        }
+      }
+      // const burnToExisting: Existing = {
+      //   existing: this.existingGoraID
+      // }
+
       this.$store
-        .dispatch("made/pokeStakGora", { dez: this.goraeSelected, which: { name: this.goraName, pic: this.goraPic } })
+        .dispatch("made/pokeStakGora", burnToNew)
         .then((r) => {})
         .catch((e) => {})
         .finally(() => {
