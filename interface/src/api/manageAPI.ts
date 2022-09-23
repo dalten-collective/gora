@@ -10,6 +10,8 @@ import {
   PokeSendGora,
   PokeStakEm,
   PokeSetMax,
+  PokeAddTag,
+  PokeRemTag,
 } from "@/types";
 
 const manMark = "gora-man-2";
@@ -96,10 +98,29 @@ export function sendGive(payload: { id: GoraID, who: Array<Ship> }): Promise<any
     });
 }
 
+export function addTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<any> {
+  const json: PokeAddTag = {
+    "add-tag": payload,
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
+      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
 
-export function rmGora(payload: PokeRmGoraPayload): Promise<any> {
-  const json: PokeRmGora = {
-    "rm-gora": payload,
+export function remTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<any> {
+  const json: PokeRemTag = {
+    "rem-tag": payload,
   };
   return urbitAPI
     .poke({

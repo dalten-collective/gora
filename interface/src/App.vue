@@ -39,7 +39,7 @@
       </div>
       <div v-else>
 
-        <div>
+        <div style="margin-bottom: 85px;"> <!-- for mass-manage tray -->
           <router-view />
         </div>
       </div>

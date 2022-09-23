@@ -20,7 +20,7 @@ export default {
   getters: {
     goraIsSelected: (state) => (goraID: GoraID): boolean => {
       return state.goraeSelected.includes(goraID)
-    }
+    },
   },
 
   mutations: {
@@ -117,6 +117,26 @@ export default {
 
     pokeSetMax({ commit, dispatch }, pokePayload: { id: GoraID, max: UrbNull | number } ) {
       return api.setMax(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeAddTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
+      return api.addTag(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeRemTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
+      return api.remTag(pokePayload)
         .then((r) => {
           return r
         })

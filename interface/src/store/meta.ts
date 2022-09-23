@@ -1,4 +1,4 @@
-import { PublicState, PolicyState, TagsState } from "@/types";
+import { Tagged, PublicState, PolicyState, TagsState, DiffResponse, GoraID } from "@/types";
 
 export default {
   namespaced: true,
@@ -12,6 +12,11 @@ export default {
   },
 
   getters: {
+    thisGoraTags: (state) => (goraID: GoraID): Array<string> => {
+      return state.tags.filter((t: Tagged) => {
+        return t['id-list'].includes(goraID)
+      })
+    },
   },
 
   mutations: {
@@ -27,11 +32,47 @@ export default {
     haveMeta(state) {
       state.haveMeta = true;
     },
+    applyDiff(state, payload: DiffResponse) {
+      // remove ids from this tag's state
+      const tagRems: Array<Tagged> = payload.diff.rem.tags
+      tagRems.forEach((tagRem) => {
+        const thisTag = state.tags.find((existTag: Tagged) => {
+          existTag.tag === tagRem.tag
+        })
+        if (thisTag) {
+          thisTag['id-list'] = thisTag['id-list'].filter((t: Tagged) => {
+            thisTag.tag !== t.tag
+          })
+        }
+      })
+
+      // add this tag and/or its IDs
+      const tagAdds: Array<Tagged> = payload.diff.set.tags
+      tagAdds.forEach((tagAdd) => {
+        const thisTag = state.tags.find((existTag: Tagged) => {
+          return existTag.tag === tagAdd.tag
+        })
+        if (thisTag) { // add to existing
+          console.log('found ', thisTag)
+          const tagSet = new Set(thisTag['id-list'])
+          console.log('prev id list ', tagSet)
+          tagAdd['id-list'].forEach((id: GoraID) => tagSet.add(id))
+          thisTag['id-list'] = Array.from(tagSet)
+          console.log('new id list ', Array.from(tagSet))
+        } else {       // add new
+          console.log('new tag: ', tagAdd)
+          state.tags.push(tagAdd)
+        }
+      })
+    },
   },
 
   actions: {
     haveMeta({ commit }) {
       commit('haveMeta')
+    },
+    handleDiff({ commit, dispatch }, payload: DiffResponse) {
+      commit("applyDiff", payload);
     },
 
     handleSubscriptionData(

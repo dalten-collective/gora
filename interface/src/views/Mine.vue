@@ -50,7 +50,7 @@
       <div v-for="goid in made" :key="goid" style="position: relative;">
           <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: absolute; left: 99%; top: 5px;">
           </v-badge>
-          <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine"/>
+          <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine" />
       </div>
       <div v-if="made.length === 0">
         <div class="tw-border tw-rounded-sm tw-p-8 tw-mt-8 tw-shadow">
@@ -109,6 +109,7 @@ export default defineComponent({
     ...mapState("made", ["made", "goraeSelected"]),
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
+    ...mapState("meta", ["tags"]),
   },
 
   mounted() {

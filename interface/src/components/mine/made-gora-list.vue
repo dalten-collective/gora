@@ -47,6 +47,20 @@
           </router-link>
 
       </footer>
+
+      <footer v-if="innerSelected">
+        <div class="tw-flex tw-flex-wrap tw-max-w-[250px]">
+          <v-chip
+            v-for="t in tagsForGora" :key="t"
+            class="tw-mr-1 tw-mb-1"
+            variant="outlined" color="info" size="small">
+              <v-icon class="tw-mr-1">
+                mdi-tag-outline
+              </v-icon>
+              {{ t }}
+          </v-chip>
+        </div>
+      </footer>
     </article>
     </div>
   </div>
@@ -109,6 +123,11 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapGetters("made", ["goraIsSelected"]),
+    ...mapGetters("meta", ["thisGoraTags"]),
+
+    tagsForGora() {
+      return this.thisGoraTags(this.goid).map(t => t.tag)
+    },
 
     isSelected() {
       return this.goraIsSelected(this.goid)

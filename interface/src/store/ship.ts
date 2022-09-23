@@ -46,7 +46,7 @@ export default {
              dispatch("pita/handleDiff", data, { root: true })
              dispatch("owned/handleDiff", data, { root: true })
              dispatch("logs/handleDiff", data, { root: true })
-            // TODO: handle meta diffs
+             dispatch("meta/handleDiff", data, { root: true })
           } else {
             // initial response
             console.log('got an init')

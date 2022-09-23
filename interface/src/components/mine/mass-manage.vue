@@ -3,15 +3,12 @@
     <div class="tw-flex tw-justify-between">
       <!-- <v-btn @click="sendOpen = true">send</v-btn> -->
 
-      <v-btn icon color="success">
+      <v-btn icon color="success" @click="addTagOpen = true;">
         <v-icon>
           mdi-tag-plus
         </v-icon>
         <v-tooltip activator="parent" location="top">
-          Not yet implemented
-          <!--
           Tag selected
-          -->
         </v-tooltip>
       </v-btn>
 
@@ -59,6 +56,7 @@
     <!-- <MassSend v-model="sendOpen" @closeDialog="sendOpen = false;" /> -->
 
     <MassBurn v-model="burnOpen" @closeDialog="burnOpen = false;" />
+    <MassTag v-model="addTagOpen" @closeDialog="addTagOpen = false;" />
   </div>
 </template>
 
@@ -68,6 +66,7 @@ import { mapState } from "vuex";
 
 // import MassSend from "@/components/mine/mass-send.vue";
 import MassBurn from "@/components/mine/mass-burn.vue";
+import MassTag from "@/components/mine/mass-tag.vue";
 
 export default defineComponent({
   computed: {
@@ -78,12 +77,13 @@ export default defineComponent({
     return {
       // sendOpen: false,
       burnOpen: false,
+      addTagOpen: false,
     };
   },
 
   components: {
     // MassSend,
-    MassBurn
+    MassBurn, MassTag
   },
 
   methods: {
