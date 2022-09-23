@@ -125,16 +125,6 @@ export default {
         })
     },
 
-    pokeAddTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
-      return api.addTag(pokePayload)
-        .then((r) => {
-          return r
-        })
-        .catch((e) => {
-          throw e
-        })
-    },
-
     pokeRemTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
       return api.remTag(pokePayload)
         .then((r) => {

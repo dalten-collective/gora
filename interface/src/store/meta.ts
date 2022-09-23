@@ -1,5 +1,7 @@
 import { Tagged, PublicState, PolicyState, TagsState, DiffResponse, GoraID } from "@/types";
 
+import api from "@/api"
+
 export default {
   namespaced: true,
   state() {
@@ -35,14 +37,17 @@ export default {
     applyDiff(state, payload: DiffResponse) {
       // remove ids from this tag's state
       const tagRems: Array<Tagged> = payload.diff.rem.tags
-      tagRems.forEach((tagRem) => {
+      tagRems.forEach((tagRem: Tagged) => {
         const thisTag = state.tags.find((existTag: Tagged) => {
-          existTag.tag === tagRem.tag
+          return existTag.tag === tagRem.tag
         })
         if (thisTag) {
-          thisTag['id-list'] = thisTag['id-list'].filter((t: Tagged) => {
-            thisTag.tag !== t.tag
+          console.log('removing for ', thisTag.tag)
+          console.log('prev ids', thisTag['id-list'])
+          thisTag['id-list'] = thisTag['id-list'].filter((id: GoraID) => {
+            return !tagRem['id-list'].includes(id)
           })
+          console.log('after ids', thisTag['id-list'])
         }
       })
 
@@ -53,14 +58,10 @@ export default {
           return existTag.tag === tagAdd.tag
         })
         if (thisTag) { // add to existing
-          console.log('found ', thisTag)
           const tagSet = new Set(thisTag['id-list'])
-          console.log('prev id list ', tagSet)
           tagAdd['id-list'].forEach((id: GoraID) => tagSet.add(id))
           thisTag['id-list'] = Array.from(tagSet)
-          console.log('new id list ', Array.from(tagSet))
         } else {       // add new
-          console.log('new tag: ', tagAdd)
           state.tags.push(tagAdd)
         }
       })
@@ -73,6 +74,26 @@ export default {
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {
       commit("applyDiff", payload);
+    },
+
+    pokeAddTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
+      return api.addTag(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
+    },
+
+    pokeRemTag({ commit, dispatch }, pokePayload: { tag: string, gorae: Array<GoraID> } ) {
+      return api.remTag(pokePayload)
+        .then((r) => {
+          return r
+        })
+        .catch((e) => {
+          throw e
+        })
     },
 
     handleSubscriptionData(

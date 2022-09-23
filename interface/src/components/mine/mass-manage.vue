@@ -12,15 +12,12 @@
         </v-tooltip>
       </v-btn>
 
-      <v-btn icon color="error">
+      <v-btn icon color="error" @click="unTagOpen = true;">
         <v-icon>
           mdi-tag-minus
         </v-icon>
         <v-tooltip activator="parent" location="top">
-          Not yet implemented
-          <!--
           Remove tag from selected
-          -->
         </v-tooltip>
       </v-btn>
 
@@ -57,6 +54,7 @@
 
     <MassBurn v-model="burnOpen" @closeDialog="burnOpen = false;" />
     <MassTag v-model="addTagOpen" @closeDialog="addTagOpen = false;" />
+    <MassUnTag v-model="unTagOpen" @closeDialog="unTagOpen = false;" />
   </div>
 </template>
 
@@ -67,6 +65,7 @@ import { mapState } from "vuex";
 // import MassSend from "@/components/mine/mass-send.vue";
 import MassBurn from "@/components/mine/mass-burn.vue";
 import MassTag from "@/components/mine/mass-tag.vue";
+import MassUnTag from "@/components/mine/mass-un-tag.vue";
 
 export default defineComponent({
   computed: {
@@ -78,12 +77,12 @@ export default defineComponent({
       // sendOpen: false,
       burnOpen: false,
       addTagOpen: false,
+      unTagOpen: false,
     };
   },
 
   components: {
-    // MassSend,
-    MassBurn, MassTag
+    MassBurn, MassTag, MassUnTag
   },
 
   methods: {

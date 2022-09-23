@@ -4,7 +4,7 @@
         <v-card-title class="tw-flex tw-justify-between">
           <div></div>
           <div>
-            Tag Gorae
+            Un-Tag Gorae
           </div>
           <div class="tw-text-right">
             <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
@@ -19,7 +19,7 @@
               <div class="tw-p-4 tw-rounded-md tw-bg-surface tw-shadow-inner tw-mb-6">
                 <div class="tw-mb-4 tw-text-center">
                   <h2 class="tw-text-error">
-                    Gorae to tag
+                    Gorae to un-tag
                   </h2>
                 </div>
                 <div class="tw-flex tw-flex-col tw-flex-grow">
@@ -35,23 +35,16 @@
 
               <div class="tw-p-4 tw-border-gora tw-mb-6 tw-rounded-sm tw-shadow-inner">
                 <v-form ref="tagForm" @submit.prevent="" >
-                  <v-autocomplete
+                  <v-select
                     :items="tags.map(t => t.tag)"
                     v-model="existingTagName"
-                    label="Add existing tag"
-                  />
-
-                  <v-text-field
-                    v-model="newTagName"
-                    placeholder="some-tag"
-                    label="Create new tag"
-                    @keyup.enter="tagGorae"
+                    label="Remove tag"
                   />
                   </v-form>
               </div>
 
               <div class="tw-flex tw-justify-end">
-                <v-btn color="success" :loading="tagPending" block :disabled="tagPending || (tagName == '' && existingTagName == '')" @click="tagGorae">Add tag</v-btn>
+                <v-btn color="success" :loading="tagPending" block :disabled="tagPending || existingTagName == ''" @click="unTagGorae">remove tag</v-btn>
               </div>
 
             </div>
@@ -117,23 +110,17 @@ export default defineComponent({
       this.$emit('closeDialog')
     },
 
-    tagGorae() {
+    unTagGorae() {
       this.tagPending = true;
 
       this.$store
-        let name;
-        if (this.newTagName !== '') {
-          name = this.newTagName
-        } else {
-          name = this.existingTagName
-        }
+        name = this.existingTagName
 
-      this.$store.dispatch("meta/pokeAddTag", { tag: name, gorae: this.goraeSelected })
+      this.$store.dispatch("meta/pokeRemTag", { tag: name, gorae: this.goraeSelected })
         .then((r) => {})
         .catch((e) => {})
         .finally(() => {
           this.tagPending = false;
-          this.newTagName = '';
           this.existingTagName = '';
         });
     },
