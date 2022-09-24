@@ -27,6 +27,19 @@
     <div class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses, goraStackClass">
       <article>
         <div class="tw-flex tw-flex-col">
+          <div style="position: relative;" v-if="thisGoraPub(goid)">
+            <v-tooltip position="left">
+              <template v-slot:activator="{ props }">
+              <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
+                mdi-eye
+              </v-icon>
+              </template>
+                  <span>
+                  Public
+                  </span>
+            </v-tooltip>
+          </div>
+
           <div>
             <router-link :to="linkTo">
               <GoraImg :gora="theGora" />
@@ -114,6 +127,7 @@ export default defineComponent({
       "outgoingTakesFor",
       "outgoingGacksFor",
     ]),
+    ...mapGetters("meta", ["thisGoraPub"]),
 
     unique(): boolean {
       return this.theGora.max === 1 && this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))

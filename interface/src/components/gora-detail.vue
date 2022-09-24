@@ -46,6 +46,14 @@
               <div class="tw-text-center tw-max-w-[250px]">
                 <h1 class="tw-text-xl">
                   <span class="tw-mr-2">{{ theGora.name }}</span>
+                  <span v-if="myStack">
+                    <v-chip color="success">
+                    (x{{ myStack.has }})
+                      <v-tooltip activator="parent">
+                        You have {{ myStack.has }} of these
+                      </v-tooltip>
+                    </v-chip>
+                  </span>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ props }">
                       <v-icon v-bind="props" color="warning" v-if="unique">
@@ -59,10 +67,30 @@
             </div>
 
             <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-2">
-              <div class="tw-text-center tw-max-w-[250px]">
+              <div class="tw-text-center tw-max-w-[250px] tw-flex tw-items-center">
                 <v-chip variant="outlined" size="small" color="info">
                   {{ theGora.host }}
                 </v-chip>
+
+                <div class="tw-ml-2">
+                  <v-btn color="info" icon v-if="thisGoraPub(goid)">
+                    <v-icon>
+                      mdi-eye
+                    </v-icon>
+                    <v-tooltip activator="parent">
+                      Public
+                    </v-tooltip>
+                  </v-btn>
+
+                  <v-btn v-else icon color="grey">
+                    <v-icon>
+                      mdi-eye-off
+                    </v-icon>
+                    <v-tooltip activator="parent">
+                      Private
+                    </v-tooltip>
+                  </v-btn>
+                </div>
               </div>
             </div>
 
@@ -165,6 +193,23 @@
           <v-spacer />
           <div class="tw-flex-grow">
             <v-expansion-panels variant="accordion">
+
+              <v-expansion-panel class="tw-bg-surface" v-if="sType">
+                <v-expansion-panel-title>
+                  <h3>Hodlers ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})</h3>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-btn
+                    class="tw-mr-2 tw-my-2"
+                    v-for="stak in theGora.stak"
+                    :key="stak"
+                    variant="flat"
+                    color="info"
+                  >
+                    <span class="tw-font-mono">{{ $filters.sigShip(stak.who) }} ({{ stak.has }})</span>
+                  </v-btn>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
 
               <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
                 <v-expansion-panel-title>
@@ -296,7 +341,14 @@ export default defineComponent({
       "outgoingGacksFor",
       "outgoingGivesFor",
     ]),
-    ...mapGetters("meta", ["thisGoraTags"]),
+    ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+
+    gType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+    },
+    sType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+    },
 
     tagsForGora() {
       return this.thisGoraTags(this.goid).map(t => t.tag)
@@ -304,6 +356,10 @@ export default defineComponent({
 
     unique(): boolean {
       return this.theGora.max === 1 && this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))
+    },
+
+    myStack(): number {
+      return this.theGora.stak.find((s) => s.who === this.$filters.sigShip(this.ourShip))
     },
 
     haveTheGora(): boolean {

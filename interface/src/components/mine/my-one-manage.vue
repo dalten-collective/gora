@@ -173,15 +173,22 @@
                   <h3>Hodlers ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <v-chip
+                  <div>
+                    Click a hodler to send another
+                  </div>
+
+                  <v-btn
                     class="tw-mr-2 tw-my-2"
                     v-for="stak in theGora.stak"
                     :key="stak"
                     variant="flat"
                     color="info"
+                    append-icon="mdi-plus"
+                    :pending="pointPending"
+                    @click="sendPoint(stak.who)"
                   >
-                    <span class="tw-font-mono">{{ $filters.sigShip(stak.who) }} x{{ stak.has }}</span>
-                  </v-chip>
+                    <span class="tw-font-mono">{{ $filters.sigShip(stak.who) }} ({{ stak.has }})</span>
+                  </v-btn>
                 </v-expansion-panel-text>
               </v-expansion-panel>
 
@@ -383,6 +390,7 @@ export default defineComponent({
       recipientAdd: '',
       offerPending: false,
       copyDone: false,
+      pointPending: false,
     };
   },
 
@@ -422,6 +430,18 @@ export default defineComponent({
   },
 
   methods: {
+    sendPoint(ship) {
+      this.pointPending = true
+      this.$store.dispatch("made/pokeGiveGora", { id: this.goid, who: [ship] })
+        .then((r) => {
+        })
+        .catch((e) => {
+        })
+        .finally(() => {
+          this.pointPending = false;
+        })
+    },
+
     updateRecipients(list) {
       this.recipients = list;
     },
