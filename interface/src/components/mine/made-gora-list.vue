@@ -1,19 +1,39 @@
 <template>
   <div v-if="haveTheGora">
+    <pre>{{ sType }}</pre>
     <div class="tw-p-3 tw-rounded-md tw-shadow-md tw-border-2 tw-border-info tw-border-opacity-25">
     <article>
       <div class="tw-flex tw-flex-col">
-        <div style="position: relative;" v-if="thisGoraPub(goid)">
-          <v-tooltip position="left">
-            <template v-slot:activator="{ props }">
-            <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
-              mdi-eye
-            </v-icon>
-            </template>
-                <span>
-                Public
-                </span>
-          </v-tooltip>
+        <div class='tw-flex tw-justify-between'>
+          <div style="position: relative;" v-if="thisGoraPub(goid)">
+            <v-tooltip position="left">
+              <template v-slot:activator="{ props }">
+              <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
+                mdi-eye
+              </v-icon>
+              </template>
+                  <span>
+                  Public
+                  </span>
+            </v-tooltip>
+          </div>
+          <div v-else>
+          </div>
+
+          <div>
+            <div style="position: relative;">
+                <v-tooltip position="left">
+                  <template v-slot:activator="{ props }">
+                  <v-icon v-if="sType" v-bind="props" style="position: absolute; top: 10px; right: 10px;" variant="outlined">
+                    mdi-circle-multiple-outline
+                  </v-icon>
+                  </template>
+                  <span>
+                    Stack
+                  </span>
+                </v-tooltip>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -137,6 +157,13 @@ export default defineComponent({
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapGetters("made", ["goraIsSelected"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+
+    gType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+    },
+    sType(): boolean {
+      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+    },
 
     tagsForGora() {
       return this.thisGoraTags(this.goid).map(t => t.tag)

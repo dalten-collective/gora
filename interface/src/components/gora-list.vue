@@ -1,43 +1,73 @@
 <template>
   <div v-if="haveTheGora">
     <!-- we don't want the buttons to animate -->
-    <div style="height: 0; position: relative; top: 220px; z-index: 100;" class='tw-flex tw-flex-row tw-justify-between tw-m-2'>
-        <ImageButton
-          img="https://picsum.photos/30/30"
-          v-if="goraOffered"
-          color="success"
-          hint="Accept this offer"
-          :loading="transactPending"
-          :disabled="transactPending"
-          @click.stop="doAcceptOffer"
-          which-icon="acceptOffer"
-        />
-        <ImageButton
-          img="https://picsum.photos/30/30"
-          v-if="goraOffered"
-          color="error"
-          hint="Ignore this offer"
-          :loading="transactPending"
-          :disabled="transactPending"
-          @click.stop="doIgnoreOffer"
-          which-icon="rejectOffer"
-        />
-      </div>
+    <div
+      style="height: 0; position: relative; top: 220px; z-index: 100"
+      class="tw-flex tw-flex-row tw-justify-between tw-m-2"
+    >
+      <ImageButton
+        img="https://picsum.photos/30/30"
+        v-if="goraOffered"
+        color="success"
+        hint="Accept this offer"
+        :loading="transactPending"
+        :disabled="transactPending"
+        @click.stop="doAcceptOffer"
+        which-icon="acceptOffer"
+      />
+      <ImageButton
+        img="https://picsum.photos/30/30"
+        v-if="goraOffered"
+        color="error"
+        hint="Ignore this offer"
+        :loading="transactPending"
+        :disabled="transactPending"
+        @click.stop="doIgnoreOffer"
+        which-icon="rejectOffer"
+      />
+    </div>
 
-    <div class="tw-p-3 tw-rounded-md tw-shadow-md" :class="goraBorderClasses, goraStackClass">
+    <pre>{{ sType }}</pre>
+    <div
+      class="tw-p-3 tw-rounded-md tw-shadow-md"
+      :class="(goraBorderClasses, goraStackClass)"
+    >
       <article>
         <div class="tw-flex tw-flex-col">
-          <div style="position: relative;" v-if="thisGoraPub(goid)">
-            <v-tooltip position="left">
-              <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
-                mdi-eye
-              </v-icon>
-              </template>
-                  <span>
-                  Public
-                  </span>
-            </v-tooltip>
+          <div class="tw-flex tw-justify-between">
+            <div style="position: relative" v-if="thisGoraPub(goid)">
+              <v-tooltip position="left">
+                <template v-slot:activator="{ props }">
+                  <v-icon
+                    v-bind="props"
+                    style="position: absolute; top: 10px; left: 10px"
+                    variant="outlined"
+                  >
+                    mdi-eye
+                  </v-icon>
+                </template>
+                <span> Public </span>
+              </v-tooltip>
+            </div>
+            <div v-else></div>
+
+            <div>
+              <div style="position: relative">
+                <v-tooltip position="left">
+                  <template v-slot:activator="{ props }">
+                    <v-icon
+                      v-if="sType"
+                      v-bind="props"
+                      style="position: absolute; top: 10px; right: 10px"
+                      variant="outlined"
+                    >
+                      mdi-circle-multiple-outline
+                    </v-icon>
+                  </template>
+                  <span> Stack </span>
+                </v-tooltip>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -48,7 +78,15 @@
 
           <div class="tw-class-flex tw-justify-space-around">
             <div class="tw-text-center tw-max-w-[250px]">
-              <h1 class="" style="white-space: nowrap; width: 250px; overflow: hidden; text-overflow: ellipsis;">
+              <h1
+                class=""
+                style="
+                  white-space: nowrap;
+                  width: 250px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
                 {{ theGora.name }}
                 <v-tooltip activator="parent" location="bottom">
                   {{ theGora.name }}
@@ -56,7 +94,6 @@
               </h1>
             </div>
           </div>
-
         </div>
 
         <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
@@ -72,13 +109,16 @@
           </div>
 
           <router-link v-if="iHostGora" :to="linkToMine">
-            <v-btn icon="mdi-pencil" variant="outline" color="info" size="x-small"/>
+            <v-btn
+              icon="mdi-pencil"
+              variant="outline"
+              color="info"
+              size="x-small"
+            />
           </router-link>
         </footer>
-
       </article>
     </div>
-
   </div>
 </template>
 
@@ -130,7 +170,10 @@ export default defineComponent({
     ...mapGetters("meta", ["thisGoraPub"]),
 
     unique(): boolean {
-      return this.theGora.max === 1 && this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))
+      return (
+        this.theGora.max === 1 &&
+        this.theGora.hodl.includes(this.$filters.sigShip(this.ourShip))
+      );
     },
 
     haveTheGora(): boolean {
@@ -190,34 +233,33 @@ export default defineComponent({
     },
 
     goraBorderClasses(): Array<string> {
-      var classes = ['tw-border', 'tw-border-2', 'tw-rounded-md']
+      var classes = ["tw-border", "tw-border-2", "tw-rounded-md"];
       if (this.goraOffered || this.requestedThisGora) {
-        classes.push('tw-border-dashed')
+        classes.push("tw-border-dashed");
       }
       if (this.iHostGora) {
-        classes.push('tw-border-info', 'tw-border-opacity-25')
+        classes.push("tw-border-info", "tw-border-opacity-25");
       }
 
       if (this.goraOffered) {
-        classes.push('tw-animate-pulse')
+        classes.push("tw-animate-pulse");
       }
 
-      return classes
+      return classes;
     },
 
     goraStackClass() {
       if (this.sType) {
-        return 'stak'
+        return "stak";
       }
     },
 
     gType(): boolean {
-      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+      return this.haveTheGora && this.theGora.hasOwnProperty("hodl");
     },
     sType(): boolean {
-      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+      return this.haveTheGora && this.theGora.hasOwnProperty("stak");
     },
-
   },
 
   methods: {
@@ -258,12 +300,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .stak {
-    /*
+.stak {
+  /*
     position: relative;
     bottom: 20px;
     right: 30px;
     color: red;
     */
-  }
+}
 </style>
