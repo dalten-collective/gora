@@ -27,7 +27,6 @@
       />
     </div>
 
-    <pre>{{ sType }}</pre>
     <div
       class="tw-p-3 tw-rounded-md tw-shadow-md"
       :class="(goraBorderClasses, goraStackClass)"
@@ -49,25 +48,7 @@
                 <span> Public </span>
               </v-tooltip>
             </div>
-            <div v-else></div>
 
-            <div>
-              <div style="position: relative">
-                <v-tooltip position="left">
-                  <template v-slot:activator="{ props }">
-                    <v-icon
-                      v-if="sType"
-                      v-bind="props"
-                      style="position: absolute; top: 10px; right: 10px"
-                      variant="outlined"
-                    >
-                      mdi-circle-multiple-outline
-                    </v-icon>
-                  </template>
-                  <span> Stack </span>
-                </v-tooltip>
-              </div>
-            </div>
           </div>
 
           <div>
@@ -77,9 +58,9 @@
           </div>
 
           <div class="tw-class-flex tw-justify-space-around">
-            <div class="tw-text-center tw-max-w-[250px]">
+            <div class="tw-max-w-[250px] tw-flex tw-justify-between">
               <h1
-                class=""
+                class="tw-text-center"
                 style="
                   white-space: nowrap;
                   width: 250px;
@@ -92,6 +73,22 @@
                   {{ theGora.name }}
                 </v-tooltip>
               </h1>
+                <div>
+                  <div v-if="sType">
+                    <v-tooltip position="left">
+                      <template v-slot:activator="{ props }">
+                        <v-icon
+                          color="warning"
+                          v-bind="props"
+                        >
+                          mdi-circle-multiple-outline
+                        </v-icon>
+                      </template>
+                      <span> Stack </span>
+                    </v-tooltip>
+                  </div>
+                </div>
+
             </div>
           </div>
         </div>

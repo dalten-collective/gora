@@ -40,10 +40,9 @@
                 </div>
                 
                 <div>
-                {{ existingGoraID }}
                   <v-select
                     label="Select Existing Gora"
-                    :items="pita"
+                    :items="pitaSansChosen"
                     item-title="name"
                     item-value="id"
                     v-model="existingGoraID"
@@ -55,7 +54,7 @@
                     <v-text-field
                       v-model="goraName"
                       placeholder="This is My Gora. There Are Many Gorae Like It, But This One Is Mine"
-                      label="Name"
+                      :label="existingGoraID === '' ? 'New Gora Name' : 'Leave Blank - Existing Gora Selected'"
                       :rules="[(v) => !!v || existingGoraID !== '' || 'Required']"
                     />
 
@@ -64,7 +63,7 @@
                     <v-text-field
                       v-model="goraPic"
                       placeholder="https://place-i-uploaded-my-image/the-image.jpg"
-                      label="Image URL"
+                      :label="existingGoraID === '' ? 'New Gora Image URL' : 'Leave Blank - Existing Gora Selected'"
                       :rules="[(v) => !!v || existingGoraID !== '' || 'Required']"
                     />
                     </v-form>
@@ -110,6 +109,12 @@ export default defineComponent({
   computed: {
     ...mapState("pita", ["pita"]),
     ...mapState("made", ["goraeSelected"]),
+    pitaSansChosen(): Array<Gora> {
+      return this.pita.filter((g: Gora) => {
+        return !this.goraeSelected.includes(g.id)
+      })
+    },
+
     burnReady(): boolean {
       if (this.existingGoraID) {
         return true

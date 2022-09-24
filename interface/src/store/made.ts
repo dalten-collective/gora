@@ -165,20 +165,6 @@ export default {
         });
     },
 
-    pokeRemTag(
-      { commit, dispatch },
-      pokePayload: { tag: string; gorae: Array<GoraID> }
-    ) {
-      return api
-        .remTag(pokePayload)
-        .then((r) => {
-          return r;
-        })
-        .catch((e) => {
-          throw e;
-        });
-    },
-
     selectGora({ commit }, goraID: GoraID) {
       commit("addGoraToSelected", goraID);
     },

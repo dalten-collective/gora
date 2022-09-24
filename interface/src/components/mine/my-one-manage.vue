@@ -143,10 +143,10 @@
 
               <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
                 <v-expansion-panel-title>
-                  <h3>Gorae in Stack ({{ theGora.nul.length }})</h3>
+                  <h3>Gorae in Stack ({{ nulStack.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <div v-for="g in theGora.nul">
+                  <div v-for="g in nulStack">
                     {{ g.name }}
                   </div>
                 </v-expansion-panel-text>
@@ -173,9 +173,7 @@
                   <h3>Hodlers ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <div>
-                    Click a hodler to send another
-                  </div>
+                  <div class="tw-my-4">
 
                   <v-btn
                     class="tw-mr-2 tw-my-2"
@@ -189,6 +187,20 @@
                   >
                     <span class="tw-font-mono">{{ $filters.sigShip(stak.who) }} ({{ stak.has }})</span>
                   </v-btn>
+
+                  <v-divider class="tw-my-4" />
+
+                    <v-form @submit.prevent="">
+                      <div class="tw-flex tw-flex-col">
+                        <div>
+                          <h3 class="tw-text-lg">Offer to...</h3>
+                        </div>
+                        <ShipList @updateList="updateRecipients" ref="offerList" />
+                      </div>
+                    </v-form>
+                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">Send Offers</v-btn>
+                  </div>
+
                 </v-expansion-panel-text>
               </v-expansion-panel>
 
@@ -226,7 +238,7 @@
                 </v-expansion-panel-text>
               </v-expansion-panel>
 
-              <v-expansion-panel class="tw-bg-surface">
+              <v-expansion-panel class="tw-bg-surface" v-if="gType">
                 <v-expansion-panel-title>
                   <h3>Offers</h3>
                 </v-expansion-panel-title>
@@ -399,6 +411,13 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+    nulStack(): Array {
+      if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
+        return this.theGora.nul
+      } else {
+        return []
+      }
+    },
 
     gType(): boolean {
       return this.haveTheGora && this.theGora.hasOwnProperty('hodl');

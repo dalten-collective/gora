@@ -1,70 +1,74 @@
 <template>
   <div v-if="haveTheGora">
-    <pre>{{ sType }}</pre>
-    <div class="tw-p-3 tw-rounded-md tw-shadow-md tw-border-2 tw-border-info tw-border-opacity-25">
-    <article>
-      <div class="tw-flex tw-flex-col">
-        <div class='tw-flex tw-justify-between'>
-          <div style="position: relative;" v-if="thisGoraPub(goid)">
-            <v-tooltip position="left">
-              <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" style="position: absolute; top: 10px; left: 10px;" variant="outlined">
-                mdi-eye
-              </v-icon>
-              </template>
-                  <span>
-                  Public
-                  </span>
-            </v-tooltip>
-          </div>
-          <div v-else>
+    <div
+      class="tw-p-3 tw-rounded-md tw-shadow-md tw-border-2 tw-border-info tw-border-opacity-25"
+    >
+      <article>
+        <div class="tw-flex tw-flex-col">
+          <div class="tw-flex tw-justify-start">
+            <div style="position: relative" v-if="thisGoraPub(goid)">
+              <v-tooltip position="left">
+                <template v-slot:activator="{ props }">
+                  <v-icon
+                    v-bind="props"
+                    style="position: absolute; top: 10px; left: 10px"
+                    variant="outlined"
+                  >
+                    mdi-eye
+                  </v-icon>
+                </template>
+                <span> Public </span>
+              </v-tooltip>
+            </div>
+
           </div>
 
           <div>
-            <div style="position: relative;">
-                <v-tooltip position="left">
-                  <template v-slot:activator="{ props }">
-                  <v-icon v-if="sType" v-bind="props" style="position: absolute; top: 10px; right: 10px;" variant="outlined">
-                    mdi-circle-multiple-outline
-                  </v-icon>
-                  </template>
-                  <span>
-                    Stack
-                  </span>
+            <router-link
+              :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
+            >
+              <GoraImg :gora="theGora" />
+            </router-link>
+          </div>
+
+          <div class="tw-class-flex tw-justify-space-around">
+            <div class="tw-max-w-[250px] tw-flex tw-justify-between">
+              <h1
+                class="tw-text-center"
+                style="
+                  white-space: nowrap;
+                  width: 250px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                {{ theGora.name }}
+                <v-tooltip activator="parent" location="bottom">
+                  {{ theGora.name }}
                 </v-tooltip>
+              </h1>
+
+                <div>
+                  <div v-if="sType">
+                    <v-tooltip position="left">
+                      <template v-slot:activator="{ props }">
+                        <v-icon
+                          color="warning"
+                          v-bind="props"
+                        >
+                          mdi-circle-multiple-outline
+                        </v-icon>
+                      </template>
+                      <span> Stack </span>
+                    </v-tooltip>
+                  </div>
+                </div>
+
             </div>
           </div>
         </div>
 
-        <div>
-          <router-link 
-          :to="{ name: 'mine-gora-detail', params: { goraID: goid } }"
-          >
-            <GoraImg :gora="theGora" />
-          </router-link>
-        </div>
-
-        <div class="tw-class-flex tw-justify-space-around">
-          <div class="tw-text-center tw-max-w-[250px]">
-            <h1
-              class=""
-              style="
-                white-space: nowrap;
-                width: 250px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              "
-            >
-              {{ theGora.name }}
-              <v-tooltip activator="parent" location="bottom">
-                {{ theGora.name }}
-              </v-tooltip>
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
+        <footer class="tw-flex tw-justify-between tw-min-h-[32px]">
           <div>
             <v-checkbox v-model="innerSelected" />
           </div>
@@ -78,23 +82,24 @@
               size="x-small"
             />
           </router-link>
+        </footer>
 
-      </footer>
-
-      <footer v-if="innerSelected">
-        <div class="tw-flex tw-flex-wrap tw-max-w-[250px]">
-          <v-chip
-            v-for="t in tagsForGora" :key="t"
-            class="tw-mr-1 tw-mb-1"
-            variant="outlined" color="info" size="small">
-              <v-icon class="tw-mr-1">
-                mdi-tag-outline
-              </v-icon>
+        <footer v-if="innerSelected">
+          <div class="tw-flex tw-flex-wrap tw-max-w-[250px]">
+            <v-chip
+              v-for="t in tagsForGora"
+              :key="t"
+              class="tw-mr-1 tw-mb-1"
+              variant="outlined"
+              color="info"
+              size="small"
+            >
+              <v-icon class="tw-mr-1"> mdi-tag-outline </v-icon>
               {{ t }}
-          </v-chip>
-        </div>
-      </footer>
-    </article>
+            </v-chip>
+          </div>
+        </footer>
+      </article>
     </div>
   </div>
 </template>
@@ -130,15 +135,15 @@ export default defineComponent({
   },
 
   mounted() {
-    this.innerSelected = this.goraIsSelected(this.goid)
+    this.innerSelected = this.goraIsSelected(this.goid);
   },
 
   watch: {
     innerSelected(val) {
       if (val) {
-        this.$store.dispatch("made/selectGora", this.goid)
+        this.$store.dispatch("made/selectGora", this.goid);
       } else {
-        this.$store.dispatch("made/deselectGora", this.goid)
+        this.$store.dispatch("made/deselectGora", this.goid);
       }
     },
 
@@ -159,18 +164,18 @@ export default defineComponent({
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
 
     gType(): boolean {
-      return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
+      return this.haveTheGora && this.theGora.hasOwnProperty("hodl");
     },
     sType(): boolean {
-      return this.haveTheGora && this.theGora.hasOwnProperty('stak');
+      return this.haveTheGora && this.theGora.hasOwnProperty("stak");
     },
 
     tagsForGora() {
-      return this.thisGoraTags(this.goid).map(t => t.tag)
+      return this.thisGoraTags(this.goid).map((t) => t.tag);
     },
 
     isSelected() {
-      return this.goraIsSelected(this.goid)
+      return this.goraIsSelected(this.goid);
     },
 
     requestsByID() {
@@ -193,7 +198,7 @@ export default defineComponent({
 
   methods: {
     boxChecked() {
-      this.$emit('boxChecked', { goraID: this.goid })
+      this.$emit("boxChecked", { goraID: this.goid });
     },
 
     addToRecipients() {

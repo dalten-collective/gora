@@ -213,10 +213,10 @@
 
               <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
                 <v-expansion-panel-title>
-                  <h3>Gorae in Stack ({{ theGora.nul.length }})</h3>
+                  <h3>Gorae in Stack ({{ nulStack.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <div v-for="g in theGora.nul">
+                  <div v-for="g in nulStack">
                     {{ g.name }}
                   </div>
                 </v-expansion-panel-text>
@@ -342,6 +342,13 @@ export default defineComponent({
       "outgoingGivesFor",
     ]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+    nulStack(): Array {
+      if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
+        return this.theGora.nul
+      } else {
+        return []
+      }
+    },
 
     gType(): boolean {
       return this.haveTheGora && this.theGora.hasOwnProperty('hodl');
