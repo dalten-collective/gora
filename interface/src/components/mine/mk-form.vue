@@ -25,14 +25,14 @@
             hide-details
             v-model="isStak"
             color="info"
-            label="Stackable"
+            label="Stakable"
           />
         </div>
         <div class="tw-ml-1 tw-mb-4">
           <v-btn icon color="secondary" variant="text" size="small">
             <v-icon> mdi-help-circle-outline </v-icon>
             <v-tooltip activator="parent" location="right">
-              Hodlers of a stackable gora will be able to accumulate X instances
+              Hodlers of a stakable gora will be able to accumulate X instances
               of the token - useful "points", "size" or "occurances".
             </v-tooltip>
           </v-btn>

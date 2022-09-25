@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-w-screen md:tw-w-[500px] tw-px-2">
+  <div class="tw-w-screen md:tw-w-[500px] tw-px-2" style="z-index: 100;">
     <div class="tw-flex tw-justify-between">
       <!-- <v-btn @click="sendOpen = true">send</v-btn> -->
 
@@ -26,10 +26,10 @@
           mdi-circle-multiple-outline
         </v-icon>
         <v-tooltip v-if="stackableSelected" activator="parent" location="top">
-          Cannot put stackable gorae into another stack
+          Cannot put stakable gorae into another stak
         </v-tooltip>
         <v-tooltip v-else activator="parent" location="top">
-          Stack selected
+          Stak selected
         </v-tooltip>
       </v-btn>
 
