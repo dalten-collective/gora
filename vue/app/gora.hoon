@@ -150,10 +150,10 @@
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
       :~  =-  [%pass /eyre/connect %arvo %e -]
-          [%disconnect [~ [%apps %gora %public ~]]]
+          [%disconnect [~ [%apps %gora ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [[~ [%apps %gora ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
@@ -1828,7 +1828,7 @@
       :-  
         :-  (mk-upd ~(key by s.ole) id.gnu gnu)
         %+  weld  caz
-        =-  (mk-coz ~ id.gnu gnu)
+        =-  (mk-coz - id.gnu gnu)
         (~(dif in new) ~(key by s.ole))
       %=    state
           pita

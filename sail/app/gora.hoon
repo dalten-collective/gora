@@ -391,6 +391,7 @@
           %offered
         :: =;  neu=(quip card _state)                      ::  json -sail-removes
         ::   [[((diff:j-web:hc state) +.neu) -.neu] +.neu] ::
+        ~&  >  "offered a gora"
         ?:  ?&  (~(has by pita) id.gora.tan)
                 =(our.bol host.gora.tan)
             ::
@@ -429,6 +430,7 @@
             ==
           ==
         ?>  =(host.gora.tan src.bowl)
+        ~&  >  "working for host"
         ?-   -.gora.tan
             %g
           =-  [(gora:subs:hc pita.-) -]
@@ -455,6 +457,7 @@
           ::
               pita
             ?^  nul.gora.tan
+              ~&  >>>  (~(put by (rm-nul:shim:hc u.nul.gora.tan)) [id.gora.tan gora.tan])
               %-  ~(put by (rm-nul:shim:hc u.nul.gora.tan))
               [id.gora.tan gora.tan]
             ?~  go=(~(get by pita) id.gora.tan)
@@ -1828,7 +1831,7 @@
       :-  
         :-  (mk-upd ~(key by s.ole) id.gnu gnu)
         %+  weld  caz
-        =-  (mk-coz ~ id.gnu gnu)
+        =-  (mk-coz - id.gnu gnu)
         (~(dif in new) ~(key by s.ole))
       %=    state
           pita
