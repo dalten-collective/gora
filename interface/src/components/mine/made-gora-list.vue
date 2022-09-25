@@ -59,7 +59,7 @@
                           mdi-circle-multiple-outline
                         </v-icon>
                       </template>
-                      <span> Stack </span>
+                      <span> Stak </span>
                     </v-tooltip>
                   </div>
                 </div>

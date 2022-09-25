@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div v-if="goraeSelected.length > 0" style="position: fixed; bottom: 0;" class="md:px-2 tw-bg-surface tw-py-4 tw-rounded-md tw-shadow-lg tw-border md:tw-right-0" >
+    <div v-if="goraeSelected.length > 0" style="position: fixed; bottom: 0; z-index: 100;" class="md:px-2 tw-bg-surface tw-py-4 tw-rounded-md tw-shadow-lg tw-border md:tw-right-0" >
       <MassManage />
     </div>
 

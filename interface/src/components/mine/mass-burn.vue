@@ -4,7 +4,7 @@
         <v-card-title class="tw-flex tw-justify-between">
           <div></div>
           <div>
-            Stack Gorae
+            Stak Gorae
           </div>
           <div class="tw-text-right">
             <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
@@ -35,7 +35,7 @@
               <div class="tw-p-4 tw-border-gora tw-mb-6 tw-rounded-sm tw-shadow-inner">
                 <div class="tw-mb-4 tw-text-center">
                   <h2 class="tw-text-success">
-                    New Stacked Gora
+                    New Staked Gora
                   </h2>
                 </div>
                 
@@ -72,7 +72,7 @@
 
               <div class="tw-mb-4">
                 <v-alert type="warning">
-                  These gorae will be burned into the new, stacked gora. Hodlers of the original gorae will end up with x{{ goraeSelected.length }} of the new gora.
+                  These gorae will be burned into the new, staked gora. Hodlers of the original gorae will end up with x{{ goraeSelected.length }} of the new gora.
                 </v-alert>
               </div>
 

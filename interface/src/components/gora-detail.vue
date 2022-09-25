@@ -213,7 +213,7 @@
 
               <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
                 <v-expansion-panel-title>
-                  <h3>Gorae in Stack ({{ nulStack.length }})</h3>
+                  <h3>Gorae in Stak ({{ nulStack.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <div v-for="g in nulStack">
