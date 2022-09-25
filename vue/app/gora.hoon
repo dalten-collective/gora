@@ -133,7 +133,7 @@
   %-  (slog leaf+"%gora -sail-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
-      [%connect [[~ [%apps %gora ~]] dap.bowl]]
+      [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
   ::
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]
       :+  %arvo  %b
