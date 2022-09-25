@@ -36,8 +36,9 @@
 ::    -  TBD
 ::
 /-  *gora
-/+  default-agent, dbug, rudder
+/+  default-agent, dbug, rudder, gossip
 /~  pages  (page:rudder tack manage-gora-2)  /app/gora
+/$  grab-hint  %noun  %gora
 ::
 |%
 ::
@@ -108,9 +109,16 @@
 +$  pita-0  (map id gora:zero)
 --
 ::
-%-  agent:dbug
 =|  state-2
 =*  state  -
+::
+%-  %+  agent:gossip
+      [2 %anybody %anybody]
+    %+  ~(put by *(map mark $-(* vase)))
+      %gora
+    |=(n=* !>((grab-hint n)))
+%-  agent:dbug
+::
 ^-  agent:gall
 =<
 ::!.
@@ -122,10 +130,10 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  %-  (slog leaf+"%gora -vue-start" ~)
+  %-  (slog leaf+"%gora -sail-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
-      [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
+      [%connect [[~ [%apps %gora ~]] dap.bowl]]
   ::
       =-  [%pass /behn/suichi/(scot %da now.bowl) -]
       :+  %arvo  %b
@@ -142,17 +150,17 @@
   =/  old=versioned-state  !<(versioned-state ole)
   =/  cards=(list card)
       :~  =-  [%pass /eyre/connect %arvo %e -]
-          [%disconnect [~ [%apps %gora ~]]]
+          [%disconnect [~ [%apps %gora %public ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora ~]] dap.bowl]]  
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
   =^  coz  old
     ?:(?=(%1 -.old) (from-1 old) [~ old])
   ?>  ?=(%2 -.old)
-  %-  (slog leaf+"%gora -vue-loaded" ~)
+  %-  (slog leaf+"%gora -sail-loaded" ~)
   :_  this(state old)
   :(welp coz caz cards (gora:subs:hc pita.old))
   ::
@@ -416,7 +424,7 @@
                   stak
                 ?~  had=(~(get by stak.gora.tan) our.bowl)
                   (~(put by stak.gora.tan) our.bowl 1)
-                (~(put by stak.gora.tan) [our.bowl +(u.had)])
+                (~(put by stak.gora.tan) [our.bowl u.had])
               ==
             ==
           ==
@@ -516,6 +524,15 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
+  ?:  =(/~/gossip/source path)
+    :_  this
+    %+  murn  ~(val by pita)
+    |=  gor=gora
+    ?.  ?&  =(our.bowl host.gor)
+            (~(has in public) id.gor)
+        ==
+      ~
+    `[%give %fact ~ %gora !>([id.gor our.bowl])]
   ?+    path  (on-watch:def path)
     [%http-response *]  `this
   ::
@@ -613,6 +630,18 @@
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)
+  ::
+    ?:  ?&  =(/~/gossip/gossip wire)
+            ?=(%fact -.sign)
+            =(%gora p.cage.sign)
+        ==
+      ~&  >  %receiving-gossip
+      =+  !<([wat=@uv who=@p] q.cage.sign)
+      ?:  (~(has by pita) wat)  `this
+      =/  pat=path
+        /gora/(scot %uv wat)/(scot %p who)
+      :_  this
+      [%pass pat %agent [who %gora] %watch /gora/(scot %uv wat)]~
   ?+    wire  (on-agent:def wire sign)
       [%updates @ ~]
     :_  this
@@ -683,7 +712,7 @@
           [%watch-ack *]
         ?~  p.sign  `this
         %.  `this
-        (slog leaf+"%gora -watch-nack-580 {<ud>} {<src.bowl>}" ~)
+        (slog leaf+"%gora -watch-nack {<ud>} {<src.bowl>}" ~)
       ::
           [%fact %gora-transact-2 *]
         =+  ole=state
@@ -708,7 +737,7 @@
       ?~  p.sign  `this
       =-  ((slog leaf+- ~) `this)
       """
-      %gora -watch-nack-601 {<id.u.gor>}
+      %gora -watch-nack {<id.u.gor>}
             -{<host.u.gor>}-version-mismatch}
       """
     ::
@@ -1291,7 +1320,17 @@
     "{(scow %uv id:(head ~(val by (~(dif by pita) ole))))}"
   ::
       %stak-em
-    ``+.state
+    ?:  ?=(%.y -.which.act)
+      =+  ole=`@uv`+.which.act
+      =^  cards  state
+        (manage act)
+      [(scot %uv ole) cards +.state]
+    =|  ole=_pita
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    "{(scow %uv id:(head ~(val by (~(dif by pita) ole))))}"
   ::
   ==
 ::
@@ -1616,6 +1655,8 @@
       %-  ~(rep in who.man)
       |=  [s=ship [p=(list card) q=_stak.u.gor r=_outgoing.logs]]
       ?~  had=(~(get by stak.u.gor) s)
+        ?:  =(our.bol s)
+          [p (~(put by q) [s 1]) r]
         =/  wir=path
           /offer/(scot %uv id.u.gor)/(scot %p s)
         :+  :_  p
@@ -1656,7 +1697,12 @@
     ^-  (quip card _state)
     ?-    -.gal
         %pub-gor
-      :-  ~
+      =/  gor=gora
+        (~(got by pita) id.gal)
+      :-  ?.  &(=(our.bol host.gor) =(%.y how.gal))
+            ~
+          ~&  >  %sending-fact-invent
+          [(invent:gossip %gora !>([id.gor our.bol]))]~
       %=    state
           public
         ?:  =(%.y how.gal)
@@ -1690,7 +1736,7 @@
 
     ::
         %set-max
-      ~_  "%gora -set-max-{<id.gal>}-failed"
+      ~_  "%gora -set-max-failed"
       =/  gor=gora
         (~(got by pita) id.gal)
       ?>  ?=(%g -.gor)

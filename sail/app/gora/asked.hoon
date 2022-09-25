@@ -376,6 +376,7 @@
       border-radius: 50%;
       padding: 10px;
       margin: 10px;
+      background-color: black;
 
       -webkit-box-shadow:
         inset 3px 5px 5px -1px rgb(255 255 255 / 50%),
@@ -396,6 +397,7 @@
       border-radius: 50%;
       padding: 10px;
       margin: 10px;
+      background-color: black;
 
       -webkit-box-shadow:
         inset 3px 3px 3px -1px rgb(255 255 255 / 50%),
