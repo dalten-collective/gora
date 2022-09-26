@@ -46,7 +46,7 @@
               <div class="tw-text-center tw-max-w-[250px]">
                 <h1 class="tw-text-xl">
                   <span class="tw-mr-2">{{ theGora.name }}</span>
-                  <span v-if="myStack">
+                  <span v-if="sType">
                     <v-chip color="success">
                     (x{{ myStack.has }})
                       <v-tooltip activator="parent">
@@ -222,7 +222,7 @@
                 </v-expansion-panel-text>
               </v-expansion-panel>
 
-              <v-expansion-panel class="tw-bg-surface">
+              <v-expansion-panel v-if="gType" class="tw-bg-surface">
                 <v-expansion-panel-title>
                   <h3>Hodlers</h3>
                 </v-expansion-panel-title>
@@ -366,7 +366,10 @@ export default defineComponent({
     },
 
     myStack(): number {
-      return this.theGora.stak.find((s) => s.who === this.$filters.sigShip(this.ourShip))
+      if (this.sType) {
+        return this.theGora.stak.find((s) => s.who === this.$filters.sigShip(this.ourShip))
+      }
+      return []
     },
 
     haveTheGora(): boolean {
