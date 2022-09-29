@@ -2,7 +2,7 @@
   title+'Gora - ピタゴラ装置'
   info+'A Proof of Attendance Protocol for Urbit'
   color+0xff.d966
-  glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v1.278te.qlbsm.t7ste.96vuc.vfcno.glob' 0v1.278te.qlbsm.t7ste.96vuc.vfcno]
+  glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v6.1hba1.25pkh.iqeio.eetdg.2g2q1.glob' 0v6.1hba1.25pkh.iqeio.eetdg.2g2q1]
   base+'gora'
   version+[0 1 3]
   website+'https://dalten.org/'
