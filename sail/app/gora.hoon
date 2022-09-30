@@ -274,17 +274,17 @@
         ^-  (unit place:rudder)
         ?~  site=(decap:rudder /apps/gora site.trail)  ~
         ?+  u.site  ~
-          ~           `[%page & %pita]                  ::  main pita
-          [%$ ~]      `[%away /apps/gora]               ::  main pita
-          [%index ~]  `[%away (snip site.trail)]        ::  main pita
-          [%asked ~]  `[%page & %asked]                 ::  she asked
-          [%plead ~]  `[%page & %plead]                 ::  begs them
-          [%maker ~]  `[%page & %maker]                 ::  make gora
-          [%voyer ~]  `[%page & %voyer]                 ::  blaq sofa
-          [%tiket ~]  `[%page & %tiket]                 ::  your logs
-          [%stakm ~]  `[%page & %stakm]                 ::  burn pile
-          [%stakd ~]  `[%page & %stakd]                 ::  the ashes
-          [%poser ~]  `[%page | %poser]                 ::  my public
+          ~            `[%page & %pita]                 ::  main pita
+          [%$ ~]       `[%away /apps/gora]              ::  main pita
+          [%index ~]   `[%away (snip site.trail)]       ::  main pita
+          [%asked ~]   `[%page & %asked]                ::  she asked
+          [%plead ~]   `[%page & %plead]                ::  begs them
+          [%maker ~]   `[%page & %maker]                ::  make gora
+          [%voyer ~]   `[%page & %voyer]                ::  blaq sofa
+          [%tiket ~]   `[%page & %tiket]                ::  your logs
+          [%stakm ~]   `[%page & %stakm]                ::  burn pile
+          [%stakd ~]   `[%page & %stakd]                ::  the ashes
+          [%public ~]  `[%page | %poser]                ::  my public
         ==
       ::
         |=  =order:rudder
@@ -491,7 +491,9 @@
             %decline  !!
           ::
               %approve
-            :-  ~
+            :-  =-  [%give %fact ~[pat] %gora-transact-2 -]~
+                !>  ^-  transact-2
+                [%diff [%add-hodler (sy ~[src.bowl])]]
             %=    state
                 policy
               ?.  ?~  max.u.gor  %.n
