@@ -2,7 +2,7 @@
   title+'ピタゴラ装置'
   info+'A Proof of Attendance Protocol for Urbit'
   color+0xff.d966
-  version+[2 0 0]
+  version+[2 0 1]
   website+'https://dalten.org/'
   license+'Get Rekt'
   site+/apps/gora
