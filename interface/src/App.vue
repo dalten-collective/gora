@@ -59,26 +59,40 @@
           <v-card class="tw-bg-white">
             <v-card-title class="tw-flex tw-justify-between">
             <div>
-            Wut
+              <h1 class="tw-text-3xl tw-mb-4">
+                Wut
+              </h1>
             </div>
             <div>
         <v-btn @click="infoOpen = false;" icon="mdi-close" variant="text"/>
         </div>
             </v-card-title>
             <v-card-text>
-              <div>
+              <div class="tw-ml-4 tw-border-l-2 tw-mb-6 tw-border-info tw-pl-4">
+                <div class="tw-mb-2">
                 Gora is a proof of presence protocol for Urbit by <a class="tw-underline" href="https://quartus.co" target="_blank">Quartus</a> and <a class="tw-underline" href="https://dalten.org" taget="_blank">The Dalten Collective</a>.
-              </div>
-              <div>
-                Use it to track attendance, give points to friends each time they make you laugh, or create secret societies.
+                </div>
+                <div>
+                  Use it to track attendance, give points to friends each time they make you laugh, or create secret societies.
+                </div>
               </div>
               <div class="tw-my-4">
+                <h2 class="tw-text-xl tw-mb-4">Lay of the Land</h2>
                 The <span class="tw-text-info">Goriverse</span> contains all the gorae you've ever seen or heard about - some of which you may also be <span class="tw-text-info">Hedl</span> by you. You can create your own gorae in <span class="tw-text-info">MINE</span> and subsequently offer them to other ships. You don't automatically hodl gorae that you create - offer them to yourself to own them.
               </div>
               <div class="tw-my-4">
+                <h2 class="tw-text-xl tw-mb-4">Staks</h2>
                 Gorae can also be made into a "stak". Create a <span class="tw-text-info">Stakable</span> gora and then <span class="tw-text-info">Burn</span> other standard gorae into it to create a stak. Having done so, you can subsequently choose to increment the number that each hodler hodls.
               </div>
               <div class="tw-my-4">
+                <h2 class="tw-text-xl tw-mb-4">Public/Private/Gossip</h2>
+                When a gora is marked <span class="tw-text-info">Public</span>,
+                it will be shared with your <span
+                class="tw-font-mono">%pals</span> over the gossip protocol.
+                Anyone who sees it in the Goriverse may choose to request it.
+              </div>
+              <div class="tw-my-4">
+                <h2 class="tw-text-xl tw-mb-4">Help</h2>
                 Find us at <span class="tw-font-mono">~mister-hilper-dozzod-dalten/quartus</span>.
               </div>
             </v-card-text>

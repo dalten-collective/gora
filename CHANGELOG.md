@@ -10,7 +10,9 @@ and this project adheres to
 
 ### Fixed
 
-- 
+- (Vue) Order stakers by amount hedl
+- (Vue) hide public/private on Goriverse
+- (Vue) Fix icons in offers
 
 ## [2.0.0] - 2022-09-30
 
