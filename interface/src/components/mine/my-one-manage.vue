@@ -223,15 +223,15 @@
                           :loading="transactPending"
                           :disabled="transactPending"
                           color="success"
-                          ><v-icon>mdi-home</v-icon>Give</v-btn
+                          ><v-icon>mdi-thumb-up-outline</v-icon>Give</v-btn
                         >
                         <v-btn
                           @click="ignoreRequest(ship)"
                           :loading="transactPending"
                           :disabled="transactPending"
                           color="error"
-                          >Ignore</v-btn
-                        >
+                          ><v-icon>mdi-thumb-down-outline</v-icon>
+                          Ignore</v-btn>
                       </div>
                     </li>
                   </ul>
