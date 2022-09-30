@@ -177,7 +177,7 @@
 
                   <v-btn
                     class="tw-mr-2 tw-my-2"
-                    v-for="stak in theGora.stak"
+                    v-for="stak in stackHodlerOrdered"
                     :key="stak"
                     variant="flat"
                     color="info"
@@ -411,6 +411,14 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+    stackHodlerOrdered() {
+      if (this.sType) {
+        return this.theGora.stak.slice().sort((h, h2) => {
+          return h2.has - h.has
+        })
+      }
+      return []
+    },
     nulStack(): Array {
       if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
         return this.theGora.nul

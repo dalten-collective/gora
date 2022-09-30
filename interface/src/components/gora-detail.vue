@@ -47,7 +47,7 @@
                 <h1 class="tw-text-xl">
                   <span class="tw-mr-2">{{ theGora.name }}</span>
                   <span v-if="sType">
-                    <v-chip color="success">
+                    <v-chip v-if="myStack && myStack.hasOwnProperty('has')" color="success">
                     (x{{ myStack.has }})
                       <v-tooltip activator="parent">
                         You have {{ myStack.has }} of these
@@ -73,7 +73,7 @@
                 </v-chip>
 
                 <div class="tw-ml-2">
-                  <v-btn color="info" icon v-if="thisGoraPub(goid)">
+                  <v-btn color="info" icon v-if="iHostGora && thisGoraPub(goid)">
                     <v-icon>
                       mdi-eye
                     </v-icon>
@@ -82,7 +82,7 @@
                     </v-tooltip>
                   </v-btn>
 
-                  <v-btn v-else icon color="grey">
+                  <v-btn icon color="grey" v-else-if="iHostGora && !thisGoraPub(goid)">
                     <v-icon>
                       mdi-eye-off
                     </v-icon>
@@ -201,7 +201,7 @@
                 <v-expansion-panel-text>
                   <v-btn
                     class="tw-mr-2 tw-my-2"
-                    v-for="stak in theGora.stak"
+                    v-for="stak in stackHodlerOrdered"
                     :key="stak"
                     variant="flat"
                     color="info"
@@ -342,6 +342,14 @@ export default defineComponent({
       "outgoingGivesFor",
     ]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+    stackHodlerOrdered() {
+      if (this.sType) {
+        return this.theGora.stak.slice().sort((h, h2) => {
+          return h2.has - h.has
+        })
+      }
+      return []
+    },
     nulStack(): Array {
       if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
         return this.theGora.nul
