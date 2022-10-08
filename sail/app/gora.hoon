@@ -1,4 +1,8 @@
 ::  /app/gora
+::  
+::    %gora now utilizes the following middleware:
+::   - %gossip - by ~paldev
+::   - %cult - by quartusco
 ::
 ::  %gora - a proof of presence protocol (sail version)
 ::    by quartus and the dalten collective
@@ -36,8 +40,13 @@
 ::    -  TBD
 ::
 /-  *gora
-/+  default-agent, dbug, rudder, gossip
+/+  default-agent, rudder, gossip
+::  CULT: added for cult                                ::  cult
+::
+/=  cult   /cult/cult
+::
 /~  pages  (page:rudder tack manage-gora-2)  /app/gora
+::
 /$  grab-hint  %noun  %gora
 ::
 |%
@@ -111,13 +120,15 @@
 ::
 =|  state-2
 =*  state  -
+::  CULT: added for cult                                ::  cult
+::
 ::
 %-  %+  agent:gossip
       [2 %anybody %anybody]
     %+  ~(put by *(map mark $-(* vase)))
       %gora
     |=(n=* !>((grab-hint n)))
-%-  agent:dbug
+%-  (agent:cult ~ ~)
 ::
 ^-  agent:gall
 =<
@@ -277,14 +288,14 @@
           ~            `[%page & %pita]                 ::  main pita
           [%$ ~]       `[%away /apps/gora]              ::  main pita
           [%index ~]   `[%away (snip site.trail)]       ::  main pita
-          [%asked ~]   `[%page & %asked]                ::  she asked
+          [%asked ~]   `[%page & %asked]                ::  they want
           [%plead ~]   `[%page & %plead]                ::  begs them
           [%maker ~]   `[%page & %maker]                ::  make gora
           [%voyer ~]   `[%page & %voyer]                ::  blaq sofa
           [%tiket ~]   `[%page & %tiket]                ::  your logs
           [%stakm ~]   `[%page & %stakm]                ::  burn pile
-          [%stakd ~]   `[%page & %stakd]                ::  the ashes
-          [%public ~]  `[%page | %poser]                ::  my public
+          [%stakd ~]   `[%page & %stakd]                ::  they live
+          [%public ~]  `[%page | %poser]                ::  show them
         ==
       ::
         |=  =order:rudder
@@ -349,6 +360,16 @@
             (~(put by policy) id.tan %decline)            
           =/  pat=path
             /gora/(scot %uv id.u.gor)
+          ::  CULT: modified for cult                   ::  cult
+          ::
+          =;  [cards=(list card) state=_state]
+            =+  gor=(~(got by pita) id.u.gor)
+            =+  hodl=?>(?=(%g -.gor) hodl.gor)
+            :_  state
+            :_  cards
+            =-  [%give %fact ~[/~/cult] %cult-easy -]
+            !>(`easy:cult`[id.gor [%pak hodl]])
+          ::
           =-  [[((diff:j-web:hc ole) +.-) -.-] +.-]
           :_  state
           =-  [%give %fact ~[pat] %gora-transact-2 -]~
@@ -377,6 +398,16 @@
             (~(del ju requests.logs) src.bowl id.u.gor)
           =/  pat=path
             /gora/(scot %uv id.u.gor)
+          ::  CULT: modified for cult                   ::  cult
+          ::
+          =;  [cards=(list card) state=_state]
+            =+  gor=(~(got by pita) id.u.gor)
+            =+  hodl=?>(?=(%s -.gor) ~(key by stak.gor))
+            :_  state
+            :_  cards
+            =-  [%give %fact ~[/~/cult] %cult-easy -]
+            !>(`easy:cult`[id.gor [%pak hodl]])
+          ::
           =-  [[((diff:j-web:hc ole) +.-) -.-] +.-]
           :_  state
           =-  [%give %fact ~[pat] %gora-transact-2 -]~
@@ -391,7 +422,6 @@
           %offered
         :: =;  neu=(quip card _state)                      ::  json -sail-removes
         ::   [[((diff:j-web:hc state) +.neu) -.neu] +.neu] ::
-        ~&  >  "offered a gora"
         ?:  ?&  (~(has by pita) id.gora.tan)
                 =(our.bol host.gora.tan)
             ::
@@ -430,7 +460,6 @@
             ==
           ==
         ?>  =(host.gora.tan src.bowl)
-        ~&  >  "working for host"
         ?-   -.gora.tan
             %g
           =-  [(gora:subs:hc pita.-) -]
@@ -457,7 +486,6 @@
           ::
               pita
             ?^  nul.gora.tan
-              ~&  >>>  (~(put by (rm-nul:shim:hc u.nul.gora.tan)) [id.gora.tan gora.tan])
               %-  ~(put by (rm-nul:shim:hc u.nul.gora.tan))
               [id.gora.tan gora.tan]
             ?~  go=(~(get by pita) id.gora.tan)
@@ -529,6 +557,23 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
+  ::  CULT: added for cult                              ::  cult
+  ::
+  ?:  =(/~/cult path)
+    :_  this
+    %+  murn  ~(val by pita)
+    |=  gor=gora
+    ?.  =(our.bowl host.gor)  ~
+    =-  `[%give %fact ~ %cult-easy -]
+    !>  ^-  easy:cult
+    ?-    -.gor
+        %g
+      [id.gor [%pak hodl.gor]]
+    ::
+        %s
+      [id.gor [%pak ~(key by stak.gor)]]
+    ==
+  ::
   ?:  =(/~/gossip/source path)
     :_  this
     %+  murn  ~(val by pita)
@@ -640,7 +685,6 @@
             ?=(%fact -.sign)
             =(%gora p.cage.sign)
         ==
-      ~&  >  %receiving-gossip
       =+  !<([wat=@uv who=@p] q.cage.sign)
       ?:  (~(has by pita) wat)  `this
       =/  pat=path
@@ -788,7 +832,7 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+    path  (on-peek:def path)
-       [%y %slam ~]
+      [%y %slam ~]
     =-  ``noun+!>(`(list [@t @t @p])`-)
     %-  ~(rep by pita)
     |=  [[@uv g=gora] l=(list [@t @t @p])]
@@ -1549,6 +1593,16 @@
       ==
     ?-  -.u.gor
         %g
+      ::  CULT: modified for cult                       ::  cult
+      ::
+      =;  [cards=(list card) state=_state]
+        =+  gor=(~(got by pita) id.u.gor)
+        =+  hodl=?>(?=(%g -.gor) hodl.gor)
+        :_  state
+        :_  cards
+        =-  [%give %fact ~[/~/cult] %cult-easy -]
+        !>(`easy:cult`[id.gor [%pak hodl]])
+      ::
       ?~  max.u.gor
         =/  pat=path
           /gora/(scot %uv id.u.gor)
@@ -1595,6 +1649,16 @@
       ==
     ::
         %s
+      ::  CULT: modified for cult                       ::  cult
+      ::
+      =;  [cards=(list card) state=_state]
+        =+  gor=(~(got by pita) id.u.gor)
+        =+  hodl=?>(?=(%s -.gor) ~(key by stak.gor))
+        :_  state
+        :_  cards
+        =-  [%give %fact ~[/~/cult] %cult-easy -]
+        !>(`easy:cult`[id.gor [%pak hodl]])
+      ::
       =/  sats=@ud
         ?~  had=(~(get by stak.u.gor) ship.man)
         1  +(u.had)
@@ -1621,6 +1685,16 @@
     ?:  =(~ who.man)  !!
     ?-    -.u.gor
         %g
+      ::  CULT: modified for cult                       ::  cult
+      ::
+      =;  [cards=(list card) state=_state]
+        =+  gor=(~(got by pita) id.u.gor)
+        =+  hodl=?>(?=(%g -.gor) hodl.gor)
+        :_  state
+        :_  cards
+        =-  [%give %fact ~[/~/cult] %cult-easy -]
+        !>(`easy:cult`[id.gor [%pak hodl]])
+      ::
       =;  [offers=(list card) legs=_outgoing.logs]
         :_  state(outgoing.logs legs)
         ?~  (~(dif in who.man) hodl.u.gor)
@@ -1645,6 +1719,16 @@
       !>(`transact-2`[%offered u.gor])
     ::
         %s
+      ::  CULT: modified for cult                       ::  cult
+      ::
+      =;  [cards=(list card) state=_state]
+        =+  gor=(~(got by pita) id.u.gor)
+        =+  hodl=?>(?=(%s -.gor) ~(key by stak.gor))
+        :_  state
+        :_  cards
+        =-  [%give %fact ~[/~/cult] %cult-easy -]
+        !>(`easy:cult`[id.gor [%pak hodl]])
+      ::
       =;  [offers=(list card) stik=stak legs=_outgoing.logs]
         :-  :_  offers
             =-  [%give %fact ~[/gora/(scot %uv id.u.gor)] -]
@@ -1706,7 +1790,6 @@
         (~(got by pita) id.gal)
       :-  ?.  &(=(our.bol host.gor) =(%.y how.gal))
             ~
-          ~&  >  %sending-fact-invent
           [(invent:gossip %gora !>([id.gor our.bol]))]~
       %=    state
           public
@@ -1806,7 +1889,15 @@
           :+  -.p.which.gal  our.bol 
           [+.p.which.gal [stik `goz] now.bol]
           ::
-
+        ::  CULT: modified for cult                     ::  cult
+        ::
+        =;  [cards=(list card) state=_state]
+          =+  hodl=~(key by stak.new)
+          :_  state
+          :_  cards
+          =-  [%give %fact ~[/~/cult] %cult-easy -]
+          !>(`easy:cult`[id.new [%pak hodl]])
+        ::
         :-  (weld caz (mk-coz ~(key by stak.new) id.new new))
         %=  state
           pita           (~(put by (rm-nul:shim goz)) id.new new)
@@ -1830,6 +1921,15 @@
             nul
           ?~(nul.g.ole [~ goz] `(weld u.nul.g.ole goz))
         ==
+      ::  CULT: modified for cult                       ::  cult
+      ::
+      =;  [cards=(list card) state=_state]
+        =+  hodl=~(key by stak.gnu)
+        :_  state
+        :_  cards
+        =-  [%give %fact ~[/~/cult] %cult-easy -]
+        !>(`easy:cult`[id.gnu [%pak hodl]])
+      ::
       :-  
         :-  (mk-upd ~(key by s.ole) id.gnu gnu)
         %+  weld  caz
