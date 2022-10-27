@@ -194,6 +194,17 @@
   ++  helps
     |_  [dish=bowl:gall cargo=cargo-0]
     +*  dis  .
+    ::  +look: handle being watched
+    ::
+    ++  look
+      |=  pol=(pole knot)
+      ?+    pol  dis
+          [%~.~ %web-ui ~]
+        ?^  crow
+          ~(all omen u.crow)
+        (frond:enjs:format err+s/'no crow present')
+      ==
+    ::
     ++  hear
       ^-  card
       =-  [%pass /~/cthulhu %agent -]
@@ -202,15 +213,23 @@
       =,  enjs:format
       |_  lock=$-(* json)
       ++  del
-        |=  key=*
+        |=  kex=*
         =-  [%give %fact [/~/augury]~ json+!>(-)]~
-        (frond del+(frond key+(lock key)))
+        (frond del+(frond key+(lock kex)))
       ++  add
-        |=  [key=* vault=@tas]
+        |=  [kex=* vault=@tas]
         =-  [%give %fact [/~/augury]~ json+!>(-)]~
         %+  frond  %add
         %-  pairs
-        ~[key+(lock key) vault+s/(scot %tas vault)]
+        ~[key+(lock kex) vault+s/(scot %tas vault)]
+      ++  all
+        =-  [%give %fact ~ json+!>(-)]
+        %+  frond  %set
+        :-  %a
+        %+  turn  ~(tap by club)
+        |=  [kex=* vault=term]
+        %-  pairs
+        ~[key+(lock kex) vault+s/(scot %tas vault)]
       --
     ::       +go - roll ur own cults
     ::
