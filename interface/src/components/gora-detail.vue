@@ -63,6 +63,12 @@
                     <span>Unique gora! You are the only hodler.</span>
                   </v-tooltip>
                 </h1>
+                <span v-if="outstandingRequest" class="tw-text-warning tw-animate-pulse">
+                  (You've requested this. No response yet...)
+                </span>
+                <span v-if="goraOffered" class="tw-text-warning tw-animate-pulse">
+                  (You've been offered this gora. Accept or ignore above.)
+                </span>
               </div>
             </div>
 
@@ -340,6 +346,7 @@ export default defineComponent({
       "outgoingTakesFor",
       "outgoingGacksFor",
       "outgoingGivesFor",
+      "goraInRequests",
     ]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
     stackHodlerOrdered() {
@@ -349,6 +356,12 @@ export default defineComponent({
         })
       }
       return []
+    },
+    outstandingRequest() {
+      if (this.goraInRequests(this.goid) && this.goraNotOwned(this.goid)) {
+        return true
+      }
+      return false
     },
     nulStack(): Array {
       if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
