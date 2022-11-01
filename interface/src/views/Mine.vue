@@ -47,7 +47,7 @@
     </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in made" :key="goid" style="position: relative;">
+      <div v-for="goid in orderedMade" :key="goid" style="position: relative;">
           <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: absolute; left: 99%; top: 5px;">
           </v-badge>
           <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine" />
@@ -90,6 +90,10 @@
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 
+import {
+  GoraID
+} from "@/types"
+
 import MkForm from "@/components/mine/mk-form.vue"
 import MadeGoraList from "@/components/mine/made-gora-list.vue"
 import MyOneManage from "@/components/mine/my-one-manage.vue"
@@ -110,6 +114,14 @@ export default defineComponent({
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapState("meta", ["tags"]),
+    orderedMade() {
+      return this.made.sort((a: GoraID, b: GoraID) => {
+        if (this.goraHasNotifs(a)) {
+          return -1
+        }
+        return 1
+      })
+    },
   },
 
   mounted() {

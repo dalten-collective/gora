@@ -46,7 +46,7 @@
     </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in pitaIDs" :key="goid" >
+      <div v-for="goid in orderedIDs" :key="goid" >
         <GoraList :goid="goid" class="tw-mb-4"/>
       </div>
       <div v-if="pitaIDs.length === 0">
@@ -87,12 +87,40 @@ import GoraList from "@/components/gora-list.vue"
 import RequestForm from "@/components/owned/request-form.vue"
 
 import {
-  Gora
+  Gora,
+  GoraID,
 } from '@/types'
 
 export default defineComponent({
   computed: {
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
+    ...mapGetters("logs", ["goraInOffers", "goraInRequests"]),
+    ...mapGetters("owned", ["goraNotOwned"]),
+    orderedIDs() {
+      const offers = []
+      const normal = []
+      const requests = []
+      this.pitaIDs.forEach((id: GoraID) => {
+        if (this.goraInOffers(id)) {
+          offers.push(id)
+        } else if (this.outstandingRequest(id)) {
+          requests.push(id)
+        } else {
+          normal.push(id)
+        }
+      })
+      return offers.concat(normal).concat(requests)
+
+      return this.pitaIDs.sort((a: GoraID, b: GoraID) => {
+        if (this.goraInOffers(a) && !this.goraInOffers(b)) {
+          return -1
+        }
+        if (this.outstandingRequest(a) && !this.outstandingRequest(b)) {
+          return 1;
+        }
+        return 0;
+      })
+    },
   },
 
   data() {
@@ -143,6 +171,13 @@ export default defineComponent({
   },
 
   methods: {
+    outstandingRequest(goraID: GoraID) {
+      if (this.goraInRequests(goraID) && this.goraNotOwned(goraID)) {
+        return true
+      }
+      return false
+    },
+
     idDetailable(goraID) {
       if (goraID && this.haveTheGora(goraID)) {
         return true
