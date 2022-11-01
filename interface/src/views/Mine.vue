@@ -6,6 +6,7 @@
       </div>
       <div class="tw-flex-1 tw-text-center">
         Gorae I've Made
+        <v-btn @click="getAllCults">Get cults</v-btn>
       </div>
 
       <div class="tw-flex-1 tw-text-right">
@@ -89,6 +90,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
+import cultAPI from "@/api"
 
 import {
   GoraID
@@ -162,6 +164,10 @@ export default defineComponent({
   },
 
   methods: {
+    getAllCults() {
+      cultAPI.getCults()
+    },
+
     goraHasNotifs(goraID) {
       return this.requestsForID(goraID).length > 0
     },
