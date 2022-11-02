@@ -44,7 +44,7 @@ export default defineComponent({
       this.requestPending = true;
       const payload: { id: GoraID, host: Ship } = {
         id: this.goraID,
-        host: this.host
+        host: this.$filters.sigShip(this.host)
       }
       this.$store.dispatch("owned/pokeSendPlea", payload)
         .then((r) => {
