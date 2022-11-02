@@ -11,6 +11,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Pita,
   },
   {
+    path: "/offers",
+    name: "offers",
+    component: Pita,
+  },
+  {
     path: "/:goraID",
     name: "pita-gora-detail",
     component: Pita,
