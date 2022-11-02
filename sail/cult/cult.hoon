@@ -120,6 +120,9 @@
     ++  on-watch
       |=  path
       ^-  (quip card _this)
+      ?:  ?=([%~.~ %augury ~] +<)
+        ?~  crow  `this
+        [~(all omen:ho u.crow) this]
       =^  cards  inner  (on-watch:og +<)
       [cards this]
     ::
@@ -194,17 +197,6 @@
   ++  helps
     |_  [dish=bowl:gall cargo=cargo-0]
     +*  dis  .
-    ::  +look: handle being watched
-    ::
-    ++  look
-      |=  pol=(pole knot)
-      ?+    pol  dis
-          [%~.~ %web-ui ~]
-        ?^  crow
-          ~(all omen u.crow)
-        (frond:enjs:format err+s/'no crow present')
-      ==
-    ::
     ++  hear
       ^-  card
       =-  [%pass /~/cthulhu %agent -]
@@ -213,23 +205,23 @@
       =,  enjs:format
       |_  lock=$-(* json)
       ++  del
-        |=  kex=*
+        |=  key=*
         =-  [%give %fact [/~/augury]~ json+!>(-)]~
-        (frond del+(frond key+(lock kex)))
+        (frond del+(frond key+(lock key)))
       ++  add
-        |=  [kex=* vault=@tas]
+        |=  [key=* vault=@tas]
         =-  [%give %fact [/~/augury]~ json+!>(-)]~
         %+  frond  %add
         %-  pairs
-        ~[key+(lock kex) vault+s/(scot %tas vault)]
+        ~[key+(lock key) vault+s/(scot %tas vault)]
       ++  all
-        =-  [%give %fact ~ json+!>(-)]
-        %+  frond  %set
-        :-  %a
-        %+  turn  ~(tap by club)
-        |=  [kex=* vault=term]
-        %-  pairs
-        ~[key+(lock kex) vault+s/(scot %tas vault)]
+      =-  [%give %fact [/~/augury]~ json+!>(-)]~
+      %+  frond  %set
+      :-  %a
+      %+  turn  ~(tap by clique.cargo)
+      |=  [kex=* vault=term]
+      %-  pairs
+      ~[key+(lock kex) vault+s/(scot %tas vault)]
       --
     ::       +go - roll ur own cults
     ::
