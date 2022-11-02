@@ -12,6 +12,7 @@ and this project adheres to
 
 - (Vue) Filters on Goriverse and Hedl
 - (Vue) Request button on gora detail
+- (Vue) Show staked gorae images in stak
 
 ### Fixed
 

@@ -240,8 +240,16 @@
                   <h3>Gorae in Stak ({{ nulStack.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <div v-for="g in nulStack">
-                    {{ g.name }}
+                  <div class="tw-flex tw-flex-col">
+                    <div v-for="g in nulStack" :key="g.id" class="tw-border tw-bg-white tw-shadow-inner tw-rounded-md tw-mb-2 tw-px-4 tw-py-2">
+                      <div class="tw-flex tw-items-center"> 
+                        {{ g.name }}
+                        <div class="tw-w-32">
+                          <GoraImg :url-direct="g.pic" thumbnail />
+                        </div>
+                      </div> 
+
+                    </div>
                   </div>
                 </v-expansion-panel-text>
               </v-expansion-panel>
