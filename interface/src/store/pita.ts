@@ -4,6 +4,7 @@ import {
   GoraID,
   PokeRmGora,
   DiffResponse,
+  PokeRmGoraPayload,
 } from "@/types";
 
 import _ from 'lodash'
@@ -76,7 +77,7 @@ export default {
       commit('applyDiff', payload)
     },
 
-    pokeRmGora({ commit, dispatch }, pokePayload: PokeRmGora) {
+  pokeRmGora({ commit, dispatch }, pokePayload: PokeRmGoraPayload) {
       console.log(pokePayload)
       return manageAPI.rmGora(pokePayload)
         .then((r) => {
