@@ -28,8 +28,8 @@
     </div>
 
     <div
-      class="tw-p-3 tw-rounded-md tw-shadow-md"
-      :class="(goraBorderClasses, goraStackClass)"
+      class="tw-p-3 tw-rounded-md"
+      :class="(goraBorderClasses)"
     >
       <article>
         <div class="tw-flex tw-flex-col">
@@ -163,6 +163,7 @@ export default defineComponent({
       "outgoingFor",
       "outgoingTakesFor",
       "outgoingGacksFor",
+      "goraInRequests",
     ]),
     ...mapGetters("meta", ["thisGoraPub"]),
 
@@ -195,6 +196,17 @@ export default defineComponent({
 
     goraOffered(): boolean {
       return this.goraInOffers(this.goid);
+    },
+
+    goraOwned(): boolean {
+      return !this.goraNotOwned(this.goid)
+    },
+
+    outstandingRequest() {
+      if (this.goraInRequests(this.goid) && this.goraNotOwned(this.goid)) {
+        return true
+      }
+      return false
     },
 
     requestedThisGora(): boolean {
@@ -230,12 +242,20 @@ export default defineComponent({
     },
 
     goraBorderClasses(): Array<string> {
-      var classes = ["tw-border", "tw-border-2", "tw-rounded-md"];
-      if (this.goraOffered || this.requestedThisGora) {
-        classes.push("tw-border-dashed");
+      var classes = ["tw-border-2", "tw-rounded-md"];
+      if (this.goraOwned && !this.iHostGora) {
+        classes.push("tw-border-gray-400")
+        classes.push("tw-shadow-md")
       }
+
+      if (this.outstandingRequest || this.goraOffered) {
+        classes.push("tw-border-dashed");
+        classes.push("tw-shadow-none")
+      }
+
       if (this.iHostGora) {
-        classes.push("tw-border-info", "tw-border-opacity-25");
+        classes.push("tw-border-info", "tw-border-opacity-40");
+        classes.push("tw-shadow-md")
       }
 
       if (this.goraOffered) {
@@ -243,12 +263,6 @@ export default defineComponent({
       }
 
       return classes;
-    },
-
-    goraStackClass() {
-      if (this.sType) {
-        return "stak";
-      }
     },
 
     gType(): boolean {

@@ -47,7 +47,7 @@
     </header>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in made" :key="goid" style="position: relative;">
+      <div v-for="goid in orderedMade" :key="goid" style="position: relative;">
           <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: absolute; left: 99%; top: 5px;">
           </v-badge>
           <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine" />
@@ -63,7 +63,7 @@
       <MassManage />
     </div>
 
-    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
+    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable max-width="700">
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
         <v-card-text>
@@ -74,8 +74,8 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="notFoundOpen" scrollable>
-      <v-card class="tw-bg-white">
+    <v-dialog v-model="notFoundOpen" scrollable max-width="700">
+      <v-card class="tw-bg-white tw-p-4">
         <v-card-title>Not Found</v-card-title>
         <v-card-text>
           Check that gora id...
@@ -89,6 +89,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
+
+import {
+  GoraID
+} from "@/types"
 
 import MkForm from "@/components/mine/mk-form.vue"
 import MadeGoraList from "@/components/mine/made-gora-list.vue"
@@ -110,6 +114,14 @@ export default defineComponent({
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapState("meta", ["tags"]),
+    orderedMade() {
+      return this.made.sort((a: GoraID, b: GoraID) => {
+        if (this.goraHasNotifs(a)) {
+          return -1
+        }
+        return 1
+      })
+    },
   },
 
   mounted() {
