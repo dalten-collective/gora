@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
+    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable max-width="700">
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
         <v-card-text>
@@ -58,8 +58,8 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="notFoundOpen" scrollable>
-      <v-card class="tw-bg-white">
+    <v-dialog v-model="notFoundOpen" scrollable max-width="700">
+      <v-card class="tw-bg-white tw-p-4">
         <v-card-title>Not Found</v-card-title>
         <v-card-text>
           Check that gora id...

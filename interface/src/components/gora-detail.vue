@@ -215,7 +215,7 @@
 
         <div class="tw-flex tw-flex-row">
           <v-spacer />
-          <div class="tw-flex-grow">
+          <div class="tw-flex-grow tw-w-full">
             <v-expansion-panels variant="accordion">
 
               <v-expansion-panel class="tw-bg-surface" v-if="sType">

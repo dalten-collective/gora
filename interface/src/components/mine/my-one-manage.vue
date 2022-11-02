@@ -138,7 +138,7 @@
 
         <div class="tw-flex tw-flex-row">
           <v-spacer />
-          <div class="tw-flex-grow">
+          <div class="tw-flex-grow tw-w-full">
             <v-expansion-panels variant="accordion">
 
               <v-expansion-panel v-if="theGora.type === 's'" class="tw-bg-surface">
