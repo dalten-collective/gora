@@ -6,6 +6,14 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 
+import { nextTick } from "vue"
+const DEFAULT_TITLE = "Gora"
+router.afterEach((to) => {
+  nextTick(() => {
+    document.title = to.meta.title || DEFAULT_TITLE;
+  })
+})
+
 import ImageButton from "./components/image-button.vue";
 
 loadFonts();

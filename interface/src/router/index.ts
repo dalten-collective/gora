@@ -9,36 +9,37 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "pita",
     component: Pita,
-  },
-  {
-    path: "/offers",
-    name: "offers",
-    component: Pita,
+    meta: { title: 'Gora | Goriverse' }
   },
   {
     path: "/:goraID",
     name: "pita-gora-detail",
     component: Pita,
+    meta: { title: `Gora | Detail` }
   },
   {
     path: "/hedl",
     name: "hedl",
     component: Owned,
+    meta: { title: 'Gora | Hedl' }
   },
   {
     path: "/hedl/:goraID",
     name: "hedl-gora-detail",
     component: Owned,
+    meta: { title: 'Gora | Hedl' }
   },
   {
     path: "/mine",
     name: "mine",
     component: Mine,
+    meta: { title: 'Gora | Mine' }
   },
   {
     path: "/mine/:goraID",
     name: "mine-gora-detail",
     component: Mine,
+    meta: { title: 'Gora | Mine' }
   },
   //{
   //path: "/about",
