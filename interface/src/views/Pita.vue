@@ -1,52 +1,143 @@
 <template>
   <div>
-    <header class="tw-mb-6 tw-mt-10 tw-text-xl tw-flex-col tw-flex md:tw-flex-row tw-px-2 md:tw-px-0">
-      <div class="tw-flex-1 tw-text-left">
-      </div>
-      <div class="tw-flex-1 tw-text-center">
-        Gorae I Know About
-      </div>
-      <div class="tw-flex-1 tw-text-right">
-        <v-dialog v-model="requesting" scrim scrollable>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="tw-hidden md:tw-block" color="success" variant="outlined" @click="requesting = true;">
-              <v-icon>
-                mdi-plus
-              </v-icon>
-              <v-tooltip activator="parent" location="left">
-                Request a gora
-              </v-tooltip>
-            </v-btn>
+    <div class="tw-flex tw-flex-col">
+      <header class="tw-mb-6 tw-mt-10 tw-text-xl tw-flex-col tw-flex md:tw-flex-row tw-px-2 md:tw-px-0">
+        <div class="tw-flex-1 tw-text-left">
+        </div>
+        <div class="tw-flex-1 tw-text-center">
+          Gorae I Know About
+        </div>
+        <div class="tw-flex-1 tw-text-right">
+          <v-dialog v-model="requesting" scrim scrollable>
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" class="tw-hidden md:tw-block" color="success" variant="outlined" @click="requesting = true;">
+                <v-icon>
+                  mdi-plus
+                </v-icon>
+                <v-tooltip activator="parent" location="left">
+                  Request a gora
+                </v-tooltip>
+              </v-btn>
 
-            <v-btn block v-bind="props" class="tw-mt-2 tw-block md:tw-hidden" color="success" variant="outlined" @click="requesting = true;">
-              <v-icon>
-                mdi-plus
-              </v-icon>
-              <v-tooltip activator="parent" location="bottom">
-                Request a gora
-              </v-tooltip>
-            </v-btn>
+              <v-btn block v-bind="props" class="tw-mt-2 tw-block md:tw-hidden" color="success" variant="outlined" @click="requesting = true;">
+                <v-icon>
+                  mdi-plus
+                </v-icon>
+                <v-tooltip activator="parent" location="bottom">
+                  Request a gora
+                </v-tooltip>
+              </v-btn>
 
-          </template>
-          <v-card class="tw-bg-white tw-p-4">
-            <v-card-title class="tw-flex tw-justify-between">
-              <div>
-                Request Gora
-              </div>
-              <div>
-                <span @click="requesting = false;" class="tw-underline tw-cursor-pointer">Close</span>
-              </div>
-            </v-card-title>
-            <v-card-text>
-              <RequestForm />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
+            </template>
+            <v-card class="tw-bg-white tw-p-4">
+              <v-card-title class="tw-flex tw-justify-between">
+                <div>
+                  Request Gora
+                </div>
+                <div>
+                  <span @click="requesting = false;" class="tw-underline tw-cursor-pointer">Close</span>
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <RequestForm />
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </div>
+      </header>
+
+      <div class="tw-mb-6 tw-mt-4 tw-flex-col tw-justify-around tw-text-center md:tw-text-left tw-flex md:tw-flex-row tw-px-2 md:tw-px-0 md:tw-justify-between">
+
+        <div class="tw-flex">
+          <div class="tw-flex tw-flex-wrap">
+            <div class="tw-mr-2">
+              <v-tooltip activator="parent" location="top">
+                Requests you've made
+              </v-tooltip>
+              <v-btn variant='outlined' color="info" v-if="filtering !== 'requested'" @click="filtering = 'requested'">
+                Requests
+              </v-btn>
+              <v-btn variant='tonal' color="info" v-if="filtering === 'requested'" @click="filtering = ''" class="tw-shadow-md">
+                Requests
+              </v-btn>
+            </div>
+
+            <div class="tw-mr-2">
+              <v-tooltip activator="parent" location="top">
+                Offers you can accept
+              </v-tooltip>
+              <v-btn variant='outlined' color="info" v-if="filtering !== 'offered'" @click="filtering = 'offered'">
+                Offers
+              </v-btn>
+              <v-btn variant='tonal' color="info" v-if="filtering === 'offered'" @click="filtering = ''" class="tw-shadow-md">
+                Offers
+              </v-btn>
+            </div>
+
+            <div>
+              <v-tooltip activator="parent" location="top">
+                Gorae in pals gossip network
+              </v-tooltip>
+              <v-btn variant='outlined' color="info" v-if="filtering !== 'gossip'" @click="filtering = 'gossip'">
+                Whispers
+              </v-btn>
+              <v-btn variant='tonal' color="info" v-if="filtering === 'gossip'" @click="filtering = ''" class="tw-shadow-md">
+                Whispers
+              </v-btn>
+            </div>
+          </div>
+        </div>
+
+        <div class="tw-mt-4 md:tw-mt-0">
+          <div class="md:tw-w-[25em]">
+            <v-select
+              color="info"
+              :items="hostShips"
+              v-model="hostFilter"
+              label="Host"
+              append-icon="mdi-close"
+              @click:append="hostFilter = 'All'"
+            />
+          </div>
+        </div>
       </div>
-    </header>
+    </div>
+
+    <div class="tw-text-center tw-opacity-50">
+      <div v-if="hostFilter !== 'All'">
+        Gorae hosted by {{ hostFilter }}
+      </div>
+
+      <div v-if="filtering === 'offered'">
+        <div v-if="filteredOrderedIDs.length === 0">
+          No outstanding offers <span v-if="hostFilter !== 'All'">with {{ hostFilter }}</span>
+        </div>
+        <div v-else>
+          Outstanding offers <span v-if="hostFilter !== 'All'">with {{ hostFilter }}</span>
+        </div>
+      </div>
+
+      <div v-if="filtering === 'requested'">
+        <div v-if="filteredOrderedIDs.length === 0">
+          No outstanding requests <span v-if="hostFilter !== 'All'">with {{ hostFilter }}</span>
+        </div>
+        <div v-else>
+          Outstanding requests <span v-if="hostFilter !== 'All'">with {{ hostFilter }}</span>
+        </div>
+      </div>
+
+      <div v-if="filtering === 'gossip'">
+        <div v-if="filteredOrderedIDs.length === 0">
+          No gorae in your gossip network <span v-if="hostFilter !== 'All'">from {{ hostFilter }}.</span><span v-else>. Find some pals!</span>
+        </div>
+        <div v-else>
+          All gorae in your gossip network <span v-if="hostFilter !== 'All'">from {{ hostFilter }}</span>
+        </div>
+      </div>
+    </div>
 
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in orderedIDs" :key="goid" >
+      <div v-for="goid in filteredOrderedIDs" :key="goid" >
         <GoraList :goid="goid" class="tw-mb-4"/>
       </div>
       <div v-if="pitaIDs.length === 0">
@@ -96,6 +187,35 @@ export default defineComponent({
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
     ...mapGetters("logs", ["goraInOffers", "goraInRequests"]),
     ...mapGetters("owned", ["goraNotOwned"]),
+    filteredOrderedIDs() {
+      var filtered = this.orderedIDs
+      if (this.hostFilter !== 'All') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.$filters.sigShip(this.goraByID(id).host) === this.hostFilter
+        })
+      }
+
+      if (this.filtering === 'gossip') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.goraGossiped(id)
+        })
+      }
+
+      if (this.filtering === 'offered') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.goraInOffers(id)
+        })
+      }
+
+      if (this.filtering === 'requested') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.goraInRequests(id)
+        })
+      }
+
+      return filtered
+    },
+
     orderedIDs() {
       const offers = []
       const normal = []
@@ -110,16 +230,18 @@ export default defineComponent({
         }
       })
       return offers.concat(normal).concat(requests)
+    },
 
-      return this.pitaIDs.sort((a: GoraID, b: GoraID) => {
-        if (this.goraInOffers(a) && !this.goraInOffers(b)) {
-          return -1
-        }
-        if (this.outstandingRequest(a) && !this.outstandingRequest(b)) {
-          return 1;
-        }
-        return 0;
-      })
+    hostShips() {
+      const hostOptions = ['All']
+      const ships = Array.from(
+        new Set(
+          this.pitaIDs.map((id: GoraID) => {
+            return this.goraByID(id).host
+          })
+        )
+      )
+      return hostOptions.concat(ships)
     },
   },
 
@@ -129,6 +251,8 @@ export default defineComponent({
       detailOpen: false,
       notFoundOpen: false,
       detailedID: null as string | null,
+      filtering: '',
+      hostFilter: 'All',
     }
   },
 
@@ -176,6 +300,22 @@ export default defineComponent({
         return true
       }
       return false
+    },
+
+    goraGossiped(goraID) {
+      if (
+        !this.goraInRequests(goraID) &&
+        !this.goraInOffers(goraID) &&
+        this.goraNotOwned(goraID) &&
+        !this.iHostGora(goraID)
+      ) {
+        return true
+      }
+      return false
+    },
+
+    iHostGora(goraID): boolean {
+      return this.goraByID(goraID).host === this.$filters.sigShip(this.ourShip);
     },
 
     idDetailable(goraID) {

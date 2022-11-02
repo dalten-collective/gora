@@ -28,7 +28,7 @@
     </div>
 
     <div
-      class="tw-p-3 tw-rounded-md tw-shadow-md"
+      class="tw-p-3 tw-rounded-md"
       :class="(goraBorderClasses)"
     >
       <article>
@@ -198,6 +198,10 @@ export default defineComponent({
       return this.goraInOffers(this.goid);
     },
 
+    goraOwned(): boolean {
+      return !this.goraNotOwned(this.goid)
+    },
+
     outstandingRequest() {
       if (this.goraInRequests(this.goid) && this.goraNotOwned(this.goid)) {
         return true
@@ -238,13 +242,20 @@ export default defineComponent({
     },
 
     goraBorderClasses(): Array<string> {
-      var classes = ["tw-border", "tw-border-2", "tw-rounded-md"];
+      var classes = ["tw-border-2", "tw-rounded-md"];
+      if (this.goraOwned && !this.iHostGora) {
+        classes.push("tw-border-gray-400")
+        classes.push("tw-shadow-md")
+      }
+
       if (this.outstandingRequest || this.goraOffered) {
         classes.push("tw-border-dashed");
         classes.push("tw-shadow-none")
       }
+
       if (this.iHostGora) {
         classes.push("tw-border-info", "tw-border-opacity-40");
+        classes.push("tw-shadow-md")
       }
 
       if (this.goraOffered) {
