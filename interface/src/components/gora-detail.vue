@@ -77,6 +77,24 @@
                 <v-chip variant="outlined" size="small" color="info">
                   {{ theGora.host }}
                 </v-chip>
+                <div v-if="requestable" class="tw-ml-2">
+                  <v-btn
+                    size="small"
+                    color="success"
+                    :loading="transactPending"
+                    :disabled="transactPending"
+                    @click="doPlea"
+                    >
+                      <span v-if="goraInRequests(goid)">
+                        Request again!
+                      </span>
+                      <span v-else>
+                        Request Gora
+                      </span>
+                    </v-btn
+                  >
+                </div>
+
 
                 <div class="tw-ml-2">
                   <v-btn color="info" icon v-if="iHostGora && thisGoraPub(goid)">
@@ -288,18 +306,6 @@
       </div>
       <!-- main column -->
 
-      <!--
-      <div v-if="requestable">
-        {{ transactPending }}
-        <v-btn
-          color="success"
-          :loading="transactPending"
-          :disabled="transactPending"
-          @click="doPlea"
-          >Request Gora</v-btn
-        >
-      </div>
-      -->
     </article>
   </div>
 </template>
@@ -416,7 +422,7 @@ export default defineComponent({
 
     requestable(): boolean {
       return (
-        this.goraNotOwned(this.goid) && !this.iHostGora && !this.goraOffered
+        this.goraNotOwned(this.goid) && !this.iHostGora
       );
     },
 
