@@ -16,6 +16,7 @@ and this project adheres to
 ### Fixed
 
 - (Vue) Wired up 'delete gora' button
+- (Vue) Add sig to request form host if necessary
 
 ## [2.0.1] - 2022-09-30
 
