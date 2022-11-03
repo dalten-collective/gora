@@ -104,6 +104,39 @@
                       </div>
                     </div>
 
+                    <div class="tw-row-span-2 tw-border tw-border-gora">
+                      <div class="tw-text-center tw-p-1">
+                        <v-tooltip location="bottom">
+                          <template v-slot:activator="{ props }">
+                            <v-icon v-bind="props" @click="culting = !culting">
+                              mdi-castle
+                            </v-icon>
+                          </template>
+                          <span v-if="cultsAroundGora(goid).length > 0">Cult details</span>
+                          <span v-else>Start a cult</span>
+                        </v-tooltip>
+                      </div>
+                      <div v-if="cultsAroundGora(goid).length > 0 || culting" class="tw-text-center tw-bg-surface tw-p-2">
+                        <div v-if="cultsAroundGora(goid).length > 0">
+                          Ritualizing... <a class="tw-font-mono tw-underline tw-text-blue-500" :href="`/apps/groups/groups/${ $filters.sigShip(ourShip) }/${ cultsAroundGora(goid)[0].vault }/activity`" target="_blank">Worship here</a>
+                          <div class="tw-mt-4">
+                            <v-btn size="small" color="error" @click="removeCult" :loading="cultUpdating" :disabled="cultUpdating">Dissolve cult</v-btn>
+                          </div>
+                        </div>
+                        <div v-else>
+                          <v-form ref="cultNameForm" v-model="cultFormValid" class="tw-w-full">
+                            <v-text-field
+                              label="Cult Identifier"
+                              v-model="newCultName"
+                              hint="You can change the cult display name later"
+                              :rules="cultNameRules"
+                            />
+                            <v-btn color="success" size="small" @click="makeCult" :loading="cultUpdating" :disabled="cultUpdating">Perform Sacrifice</v-btn>
+                          </v-form>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
 
                   <div class="tw-grid-cols-12 tw-gap-2 tw-border tw-rounded-gora tw-p-4 tw-hidden md:tw-grid">
@@ -128,6 +161,43 @@
                     <div class="tw-col-span-10 tw-text-left tw-bg-surface tw-p-2">
                       <MaxDisplayEdit :goid="goid" />
                     </div>
+
+                    <div class="tw-col-span-2 tw-text-right tw-p-2">
+                        <v-tooltip location="bottom">
+                          <template v-slot:activator="{ props }">
+                            <v-icon v-bind="props" @click="culting = !culting">
+                              mdi-castle
+                            </v-icon>
+                          </template>
+                        <span v-if="cultsAroundGora(goid).length > 0">Cult details</span>
+                        <span v-else>Start a cult (read the info page first!)</span>
+                      </v-tooltip>
+                    </div>
+                    <div v-if="cultsAroundGora(goid).length > 0 || culting" class="tw-col-span-10 tw-text-left tw-bg-surface tw-p-2">
+                      <div v-if="cultsAroundGora(goid).length > 0" class="tw-flex tw-justify-between">
+                        <div>
+                          Ritualizing... <a class="tw-font-mono tw-underline tw-text-blue-500" :href="`/apps/groups/groups/${ $filters.sigShip(ourShip) }/${ cultsAroundGora(goid)[0].vault }/activity`" target="_blank">Worship here</a>
+                        </div>
+                        <v-btn class="tw-ml-2" size="small" color="error" @click="removeCult" :loading="cultUpdating" :disabled="cultUpdating">Dissolve cult</v-btn>
+                      </div>
+                      <div v-else>
+                        <div class="tw-flex tw-items-center">
+                          <v-form ref="cultNameForm" v-model="cultFormValid" class="tw-w-full tw-flex tw-flex-col">
+                            <v-text-field
+                              label="Cult Identifier"
+                              v-model="newCultName"
+                              :rules="cultNameRules"
+                              hint="You can change the cult display name later"
+                            />
+                            <div class="tw-ml-2 tw-text-right">
+                              <v-btn color="success" size="small" @click="makeCult" :loading="cultUpdating" :disabled="cultUpdating" >Perform Sacrifice</v-btn>
+                            </div>
+                          </v-form>
+                        </div>
+                      </div>
+                    </div>
+
+
                   </div>
 
                 </div>
@@ -154,7 +224,14 @@
 
               <v-expansion-panel class="tw-bg-surface" v-if="gType">
                 <v-expansion-panel-title>
-                  <h3>Hodlers ({{ theGora.hodl.length === 0 ? 'None' : theGora.hodl.length }})</h3>
+                  <h3>
+                  <span v-if="cultsAroundGora(goid).length > 0">
+                    Devotees
+                  </span>
+                  <span v-else>
+                    Hodlers
+                  </span>
+                  ({{ theGora.hodl.length === 0 ? 'None' : theGora.hodl.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <v-chip
@@ -170,7 +247,15 @@
               </v-expansion-panel>
               <v-expansion-panel class="tw-bg-surface" v-if="sType">
                 <v-expansion-panel-title>
-                  <h3>Hodlers ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})</h3>
+                  <h3>
+                    <span v-if="cultsAroundGora(goid).length > 0">
+                      Devotees
+                    </span>
+                    <span v-else>
+                      Hodlers
+                    </span>
+                    ({{ theGora.stak.length === 0 ? 'None' : theGora.stak.length }})
+                  </h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <div class="tw-my-4">
@@ -193,12 +278,27 @@
                     <v-form @submit.prevent="">
                       <div class="tw-flex tw-flex-col">
                         <div>
-                          <h3 class="tw-text-lg">Offer to...</h3>
+                          <h3 class="tw-text-lg">
+                          <span v-if="cultsAroundGora(goid).length > 0">
+                            Brainwash
+                            (These ships will be invited to your cult)
+                          </span>
+                          <span v-else>
+                            Offer to
+                          </span>
+                          ...</h3>
                         </div>
                         <ShipList @updateList="updateRecipients" ref="offerList" />
                       </div>
                     </v-form>
-                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">Send Offers</v-btn>
+                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">
+                      <span v-if="cultsAroundGora(goid).length > 0">
+                        Hypnotize
+                      </span>
+                      <span v-else>
+                        Send Offers
+                      </span>
+                    </v-btn>
                   </div>
 
                 </v-expansion-panel-text>
@@ -206,7 +306,14 @@
 
               <v-expansion-panel v-if="requestsByID.length > 0" class="tw-bg-surface">
                 <v-expansion-panel-title>
-                  <h3>Requests</h3>
+                  <h3>
+                    <span v-if="cultsAroundGora(goid).length > 0">
+                      Initiates
+                    </span>
+                    <span v-else>
+                      Requests
+                    </span>
+                  </h3>
                   <v-badge color="info" :content="requestsByID.length" inline class="tw-animate-pulse">
                   </v-badge>
                 </v-expansion-panel-title>
@@ -223,7 +330,14 @@
                           :loading="transactPending"
                           :disabled="transactPending"
                           color="success"
-                          ><v-icon>mdi-thumb-up-outline</v-icon>Give</v-btn
+                          ><v-icon>mdi-thumb-up-outline</v-icon>
+                            <span v-if="cultsAroundGora(goid).length > 0">
+                              Embrace
+                            </span>
+                            <span v-else>
+                              Give
+                            </span>
+                          </v-btn
                         >
                         <v-btn
                           @click="ignoreRequest(ship)"
@@ -231,7 +345,13 @@
                           :disabled="transactPending"
                           color="error"
                           ><v-icon>mdi-thumb-down-outline</v-icon>
-                          Ignore</v-btn>
+                            <span v-if="cultsAroundGora(goid).length > 0">
+                              Shun
+                            </span>
+                            <span v-else>
+                              Ignore
+                            </span>
+                          </v-btn>
                       </div>
                     </li>
                   </ul>
@@ -240,19 +360,41 @@
 
               <v-expansion-panel class="tw-bg-surface" v-if="gType">
                 <v-expansion-panel-title>
-                  <h3>Offers</h3>
+                  <h3>
+                    <span v-if="cultsAroundGora(goid).length > 0">
+                      Propaganda Targets
+                    </span>
+                    <span v-else>
+                      Offers
+                    </span>
+                  </h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <div class="tw-my-4">
                     <v-form @submit.prevent="">
                       <div class="tw-flex tw-flex-col">
                         <div>
-                          <h3 class="tw-text-lg">Offer to...</h3>
+                          <h3 class="tw-text-lg">
+                          <span v-if="cultsAroundGora(goid).length > 0">
+                            Brainwash
+                            (These ships will be invited to your cult)
+                          </span>
+                          <span v-else>
+                            Offer to
+                          </span>
+                          ...</h3>
                         </div>
                         <ShipList @updateList="updateRecipients" ref="offerList" />
                       </div>
                     </v-form>
-                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">Send Offers</v-btn>
+                    <v-btn block color="success" @click="doOffer" :disabled="recipients.length === 0 || offerPending" :loading="offerPending">
+                      <span v-if="cultsAroundGora(goid).length > 0">
+                        Hypnotize
+                      </span>
+                      <span v-else>
+                        Send Offers
+                      </span>
+                    </v-btn>
                   </div>
 
                   <v-divider class="tw-my-4" />
@@ -280,7 +422,7 @@
                     <ul>
                       <li
                         class="tw-mb-2"
-                        v-for="take in outgoingTakesByID"
+                        v-for="take in outgoingTakesFor(goid)"
                         :key="[take.id, take.act, take.status]"
                       >
                         <Take :take="take" />
@@ -318,7 +460,7 @@
                   <ul>
                     <li
                       class="tw-mb-2"
-                      v-for="take in outgoingTakesByID"
+                      v-for="take in outgoingTakesFor(goid)"
                       :key="[take.id, take.act, take.status]"
                     >
                       <Take :take="take" />
@@ -403,13 +545,27 @@ export default defineComponent({
       offerPending: false,
       copyDone: false,
       pointPending: false,
+      newCultName: '',
+      culting: false,
+      cultFormValid: false,
+      cultNameRules: [
+        (v) => !!v || 'Required',
+        (v: string) =>
+          (!v || /^[\w-]+$/.test(v)) ||
+          "Must use kebab-case-for-name; no special characters",
+        (v: string) =>
+          (!v || /^[a-zA-Z].*$/.test(v)) || "First character must be a letter",
+      ],
+      cultUpdating: false,
     };
   },
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
     ...mapState("logs", ["requests", "outgoing"]),
-    ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
+    ...mapState("cult", ["cults"]),
+    ...mapGetters("cult", ["cultsAroundGora"]),
+    ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesFor", "outgoingGivesFor"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
     stackHodlerOrdered() {
       if (this.sType) {
@@ -457,6 +613,37 @@ export default defineComponent({
   },
 
   methods: {
+    validateCultForm() {
+      this.$refs.cultNameForm.validate()
+    },
+
+    makeCult() {
+      this.validateCultForm()
+      if (!this.cultFormValid) {
+        return;
+      }
+
+      this.cultUpdating = true
+      this.$store.dispatch("cult/pokeMkCult", {
+        id: this.goid,
+        groupName: this.newCultName,
+      })
+      .finally(() => {
+        this.newCultName = ''
+        this.cultUpdating = false
+      })
+    },
+
+    removeCult() {
+      this.cultUpdating = true
+      this.$store.dispatch("cult/pokeRmCult", {
+        id: this.goid,
+      })
+      .finally(() => {
+        this.cultUpdating = false
+      })
+    },
+
     sendPoint(ship) {
       this.pointPending = true
       this.$store.dispatch("made/pokeGiveGora", { id: this.goid, who: [ship] })

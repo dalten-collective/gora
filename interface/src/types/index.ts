@@ -72,6 +72,13 @@ export interface Outgoing {
   status: UrbNull | boolean;
 }
 
+export type GroupTas = string;
+
+export interface Cult {
+  key: GoraID;
+  vault: GroupTas;
+}
+
 export type Tag = string;
 export interface Tagged {
   tag: Tag;

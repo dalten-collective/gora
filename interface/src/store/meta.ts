@@ -46,12 +46,9 @@ export default {
           return existTag.tag === tagRem.tag
         })
         if (thisTag) {
-          console.log('removing for ', thisTag.tag)
-          console.log('prev ids', thisTag['id-list'])
           const newList = thisTag['id-list'].filter((id: GoraID) => {
             return !tagRem['id-list'].includes(id)
           })
-          console.log('after ids', newList)
           thisTag['id-list'] = newList
         }
       })
@@ -134,8 +131,6 @@ export default {
         tags: TagsState;
       }
     ) {
-      console.log("in meta ", payload);
-
       commit("setPublic", payload.public);
       commit("setPolicy", payload.policy);
       commit("setTags", payload.tags);

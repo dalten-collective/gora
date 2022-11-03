@@ -128,7 +128,9 @@
     %+  ~(put by *(map mark $-(* vase)))
       %gora
     |=(n=* !>((grab-hint n)))
-%-  (agent:cult ~ ~)
+%-  %^  agent:cult
+      ~  ~
+    `|=(kex=* s/(scot %uv ;;(@uv kex)))
 ::
 ^-  agent:gall
 =<

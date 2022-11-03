@@ -128,7 +128,9 @@
     %+  ~(put by *(map mark $-(* vase)))
       %gora
     |=(n=* !>((grab-hint n)))
-%-  (agent:cult ~ ~)
+%-  %^  agent:cult
+      ~  ~
+    `|=(kex=* s/(scot %uv ;;(@uv kex)))
 ::
 ^-  agent:gall
 =<
@@ -141,7 +143,7 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  %-  (slog leaf+"%gora -sail-start" ~)
+  %-  (slog leaf+"%gora -vue-start" ~)
   :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
       [%connect [[~ [%apps %gora ~]] dap.bowl]]
@@ -171,7 +173,7 @@
   =^  coz  old
     ?:(?=(%1 -.old) (from-1 old) [~ old])
   ?>  ?=(%2 -.old)
-  %-  (slog leaf+"%gora -sail-loaded" ~)
+  %-  (slog leaf+"%gora -vue-loaded" ~)
   :_  this(state old)
   :(welp coz caz cards (gora:subs:hc pita.old))
   ::

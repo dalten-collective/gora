@@ -65,8 +65,6 @@ export default {
 
   actions: {
     handleSubscriptionData({ commit, dispatch }, payload: MadeState) {
-      console.log("in made ", payload);
-
       commit("setMade", payload);
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {

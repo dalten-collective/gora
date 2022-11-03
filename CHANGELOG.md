@@ -10,9 +10,10 @@ and this project adheres to
 
 ### Added
 
-- (Vue) Filters on Goriverse and Hedl
+- (Vue) Filters on Goriverse, Hedl and Mine
 - (Vue) Request button on gora detail
 - (Vue) Show staked gorae images in stak
+- (Vue) Cult activities
 
 ### Fixed
 
