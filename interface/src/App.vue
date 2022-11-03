@@ -92,6 +92,27 @@
                 Anyone who sees it in the Goriverse may choose to request it.
               </div>
               <div class="tw-my-4">
+                <h2 class="tw-text-xl tw-mb-4 tw-underline">
+                  ??
+                  <v-icon @click="cultInfo = !cultInfo">mdi-castle</v-icon>
+                  ??
+                </h2>
+                <div v-if="cultInfo">
+                  <div>
+                    You can start a <span class="tw-text-info">Cult</span> around a gora. This will create a secret group accessible only to the hodlers of this gora.
+                  </div>
+                  <div>
+                    Cult groups are created in the "New Groups" system, which <span class="tw-underline">you</span> and any hodlers will <span class="tw-font-bold tw-underline">need to have installed</span>. At the time of this writing, New Groups is alpha software and no claims are made regarding its stability. Search for <span class="tw-font-mono">~marnec-dozzod-marzod</span> in the app search bar and install <span class="tw-font-mono">Groups</span>.
+                  </div>
+                  <div class="tw-mt-2">
+                    Remember, if you don't hodl the gora (haven't offered it to yourself), you won't be in your own cult...
+                  </div>
+                  <div class="tw-mt-2">
+                    We've received many requests about gora-gated groups and other integrations. <span class="tw-italic">We hear you</span>. The best is yet to come.
+                  </div>
+                </div>
+              </div>
+              <div class="tw-my-4">
                 <h2 class="tw-text-xl tw-mb-4">Help</h2>
                 Find us at <span class="tw-font-mono">~mister-hilper-dozzod-dalten/quartus</span>.
               </div>
@@ -129,12 +150,14 @@ export default defineComponent({
   data() {
     return {
       infoOpen: false,
+      cultInfo: false,
     }
   },
 
   methods: {
     startAirlock(deskname) {
       this.$store.dispatch("ship/openAirlockToAgent", deskname);
+      this.$store.dispatch("cult/openCultlock");
     },
     closeAirlocks() {
       this.$store.dispatch("ship/closeAgentAirlocks");

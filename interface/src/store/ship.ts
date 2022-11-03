@@ -38,9 +38,6 @@ export default {
         agentName,
         (data) => {
           commit("haveSubscription")
-          console.log("agentName ", agentName);
-          console.log("response ", data);
-
           if (data.hasOwnProperty('diff')) {
              dispatch("made/handleDiff", data, { root: true })
              dispatch("pita/handleDiff", data, { root: true })
@@ -49,7 +46,6 @@ export default {
              dispatch("meta/handleDiff", data, { root: true })
           } else {
             // initial response
-            console.log('got an init')
             dispatch("pita/handleSubscriptionData", data.pita, { root: true })
               .then(() => commit('pita/havePita', {}, { root: true }));
             dispatch("owned/handleSubscriptionData", data.owned, { root: true });
@@ -65,7 +61,6 @@ export default {
           }
         },
         (subscriptionNumber: number) => {
-          console.log("got subscription number ", subscriptionNumber);
           dispatch("addSubscription", {
             agentName,
             subscriptionNumber,

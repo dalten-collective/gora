@@ -31,7 +31,25 @@ export function mkGora(payload: PokeMkGoraPayload): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
+
+export function rmGora(payload: PokeRmGoraPayload): Promise<any> {
+  const json: PokeRmGora = {
+    "rm-gora": payload
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
       return r;
     })
     .catch((e) => {
@@ -51,7 +69,6 @@ export function setMax(payload: { id: GoraID, max: UrbNull | number }): Promise<
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -75,7 +92,6 @@ export function stakEm(payload: {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -95,7 +111,6 @@ export function sendGive(payload: { id: GoraID, who: Array<Ship> }): Promise<any
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -115,7 +130,6 @@ export function addTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -135,7 +149,6 @@ export function remTag(payload: { tag: string, gorae: Array<GoraID> }): Promise<
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -155,7 +168,6 @@ export function pubMod(payload: { id: GoraID, how: boolean }): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {

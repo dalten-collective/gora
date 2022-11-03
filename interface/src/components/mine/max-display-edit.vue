@@ -48,9 +48,7 @@ export default defineComponent({
 
   watch: {
     haveTheGora(val, oldVal) {
-      console.log('watch triggered')
       if (val) {
-        console.log('got hav')
         this.newMax = this.theGora.max
       }
     },

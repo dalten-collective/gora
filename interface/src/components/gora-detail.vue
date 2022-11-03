@@ -63,6 +63,12 @@
                     <span>Unique gora! You are the only hodler.</span>
                   </v-tooltip>
                 </h1>
+                <span v-if="outstandingRequest" class="tw-text-warning tw-animate-pulse">
+                  (You've requested this. No response yet...)
+                </span>
+                <span v-if="goraOffered" class="tw-text-warning tw-animate-pulse">
+                  (You've been offered this gora. Accept or ignore above.)
+                </span>
               </div>
             </div>
 
@@ -71,6 +77,24 @@
                 <v-chip variant="outlined" size="small" color="info">
                   {{ theGora.host }}
                 </v-chip>
+                <div v-if="requestable" class="tw-ml-2">
+                  <v-btn
+                    size="small"
+                    color="success"
+                    :loading="transactPending"
+                    :disabled="transactPending"
+                    @click="doPlea"
+                    >
+                      <span v-if="goraInRequests(goid)">
+                        Request again!
+                      </span>
+                      <span v-else>
+                        Request Gora
+                      </span>
+                    </v-btn
+                  >
+                </div>
+
 
                 <div class="tw-ml-2">
                   <v-btn color="info" icon v-if="iHostGora && thisGoraPub(goid)">
@@ -191,7 +215,7 @@
 
         <div class="tw-flex tw-flex-row">
           <v-spacer />
-          <div class="tw-flex-grow">
+          <div class="tw-flex-grow tw-w-full">
             <v-expansion-panels variant="accordion">
 
               <v-expansion-panel class="tw-bg-surface" v-if="sType">
@@ -216,8 +240,16 @@
                   <h3>Gorae in Stak ({{ nulStack.length }})</h3>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <div v-for="g in nulStack">
-                    {{ g.name }}
+                  <div class="tw-flex tw-flex-col">
+                    <div v-for="g in nulStack" :key="g.id" class="tw-border tw-bg-white tw-shadow-inner tw-rounded-md tw-mb-2 tw-px-4 tw-py-2">
+                      <div class="tw-flex tw-items-center"> 
+                        {{ g.name }}
+                        <div class="tw-w-32">
+                          <GoraImg :url-direct="g.pic" thumbnail />
+                        </div>
+                      </div> 
+
+                    </div>
                   </div>
                 </v-expansion-panel-text>
               </v-expansion-panel>
@@ -282,18 +314,6 @@
       </div>
       <!-- main column -->
 
-      <!--
-      <div v-if="requestable">
-        {{ transactPending }}
-        <v-btn
-          color="success"
-          :loading="transactPending"
-          :disabled="transactPending"
-          @click="doPlea"
-          >Request Gora</v-btn
-        >
-      </div>
-      -->
     </article>
   </div>
 </template>
@@ -334,12 +354,14 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
+    ...mapGetters("cult", ["cultsAroundGora"]),
     ...mapGetters("owned", ["goraNotOwned"]),
     ...mapGetters("logs", [
       "goraInOffers",
       "outgoingTakesFor",
       "outgoingGacksFor",
       "outgoingGivesFor",
+      "goraInRequests",
     ]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
     stackHodlerOrdered() {
@@ -349,6 +371,12 @@ export default defineComponent({
         })
       }
       return []
+    },
+    outstandingRequest() {
+      if (this.goraInRequests(this.goid) && this.goraNotOwned(this.goid)) {
+        return true
+      }
+      return false
     },
     nulStack(): Array {
       if (this.theGora.hasOwnProperty('nul') && this.theGora.nul !== null) {
@@ -403,7 +431,7 @@ export default defineComponent({
 
     requestable(): boolean {
       return (
-        this.goraNotOwned(this.goid) && !this.iHostGora && !this.goraOffered
+        this.goraNotOwned(this.goid) && !this.iHostGora
       );
     },
 

@@ -46,8 +46,54 @@
       </div>
     </header>
 
+    <div class="tw-mb-6 tw-mt-4 tw-flex-col tw-justify-around tw-text-center md:tw-text-left tw-flex md:tw-flex-row tw-px-2 md:tw-px-0 md:tw-justify-between">
+
+      <div class="tw-flex">
+        <div class="tw-flex tw-flex-wrap">
+          <div class="tw-mr-2">
+            <v-tooltip activator="parent" location="top">
+              Stakable Gorae
+            </v-tooltip>
+            <v-btn variant='outlined' color="info" v-if="filter !== 'stak'" @click="filter = 'stak'">
+              Staks
+            </v-btn>
+            <v-btn variant='tonal' color="info" v-if="filter === 'stak'" @click="filter = ''" class="tw-shadow-md">
+              Staks
+            </v-btn>
+          </div>
+
+          <div class="tw-mr-2">
+            <v-tooltip activator="parent" location="top">
+              Gorae with cults
+            </v-tooltip>
+            <v-btn variant='outlined' color="info" v-if="filter !== 'cult'" @click="filter = 'cult'">
+              Cults
+            </v-btn>
+            <v-btn variant='tonal' color="info" v-if="filter === 'cult'" @click="filter = ''" class="tw-shadow-md">
+              Cults
+            </v-btn>
+          </div>
+
+          <div>
+            <v-tooltip activator="parent" location="top">
+              Gorae in pals gossip network (public)
+            </v-tooltip>
+            <v-btn variant='outlined' color="info" v-if="filter !== 'gossip'" @click="filter = 'gossip'">
+              Whispered
+            </v-btn>
+            <v-btn variant='tonal' color="info" v-if="filter === 'gossip'" @click="filter = ''" class="tw-shadow-md">
+              Whispered
+            </v-btn>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-mt-4 md:tw-mt-0">
+      </div>
+    </div>
+
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in made" :key="goid" style="position: relative;">
+      <div v-for="goid in filteredOrderedMade" :key="goid" style="position: relative;">
           <v-badge v-if="goraHasNotifs(goid)" color="info" class="tw-animate-pulse" style="position: absolute; left: 99%; top: 5px;">
           </v-badge>
           <MadeGoraList :goid="goid" class="tw-mb-4" from-page="mine" />
@@ -63,7 +109,7 @@
       <MassManage />
     </div>
 
-    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
+    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable max-width="700">
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
         <v-card-text>
@@ -74,8 +120,8 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="notFoundOpen" scrollable>
-      <v-card class="tw-bg-white">
+    <v-dialog v-model="notFoundOpen" scrollable max-width="700">
+      <v-card class="tw-bg-white tw-p-4">
         <v-card-title>Not Found</v-card-title>
         <v-card-text>
           Check that gora id...
@@ -89,6 +135,15 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
+import cultAPI from "@/api"
+
+import {
+  GoraID
+} from "@/types"
+
+import {
+  GoraID
+} from "@/types"
 
 import MkForm from "@/components/mine/mk-form.vue"
 import MadeGoraList from "@/components/mine/made-gora-list.vue"
@@ -102,6 +157,7 @@ export default defineComponent({
       detailOpen: false,
       notFoundOpen: false,
       detailedID: null as string | null,
+      filter: '',
     }
   },
 
@@ -110,6 +166,39 @@ export default defineComponent({
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapState("meta", ["tags"]),
+    ...mapGetters("meta", ["thisGoraPub"]),
+    ...mapGetters("cult", ["cultsAroundGora"]),
+
+    filteredOrderedMade() {
+      var filtered = this.made
+
+      if (this.filter === 'stak') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.theGora(id).type === 's'
+        })
+      }
+
+      if (this.filter === 'cult') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.cultsAroundGora(id).length > 0
+        })
+      }
+
+      if (this.filter === 'gossip') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.thisGoraPub(id)
+        })
+      }
+
+      filtered = filtered.sort((a: GoraID, b: GoraID) => {
+        if (this.goraHasNotifs(a)) {
+          return -1
+        }
+        return 1
+      })
+
+      return filtered
+    },
   },
 
   mounted() {

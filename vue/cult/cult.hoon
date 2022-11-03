@@ -35,6 +35,7 @@
 +$  clique  (map * term)
 +$  ritual  (map mark $-(vase (unit easy)))
 +$  relics  (map @da cage)
++$  augury  (unit $-(* json))
 ::
 ::    $cow - cult-dead mark
 ::  [%del *]       ::  removes a key from clique
@@ -71,6 +72,7 @@
 ++  agent
   |=  $:  club=clique    ::  just a social club
           babe=ritual    ::  a babe-lon working
+          crow=augury    ::  divine divinations
       ==
   ^-  $-(agent:gall agent:gall)
   |^  agent
@@ -118,6 +120,9 @@
     ++  on-watch
       |=  path
       ^-  (quip card _this)
+      ?:  ?=([%~.~ %augury ~] +<)
+        ?~  crow  `this
+        [~(all omen:ho u.crow) this]
       =^  cards  inner  (on-watch:og +<)
       [cards this]
     ::
@@ -176,11 +181,13 @@
       ?-    -.calf
           %del
         ~&  [%cult-remove +.calf]
-        `this(clique (~(del by clique) +.calf))
+        :_  this(clique (~(del by clique) +.calf))
+        ?~(crow ~ (~(del omen:ho u.crow) +.calf))
       ::
           %add
         ~&  [%cult-form +>.calf %for +<.calf]
-        `this(clique (~(put by clique) +.calf))
+        :_  this(clique (~(put by clique) +.calf))
+        ?~(crow ~ (~(add omen:ho u.crow) +.calf))
       ::
           %kik  `this  ::  TODO: make functional
           %kil  `this  ::  TODO: make functional
@@ -194,6 +201,28 @@
       ^-  card
       =-  [%pass /~/cthulhu %agent -]
       [[our.dish dap.dish] [%watch /~/cult]]
+    ++  omen
+      =,  enjs:format
+      |_  lock=$-(* json)
+      ++  del
+        |=  key=*
+        =-  [%give %fact [/~/augury]~ json+!>(-)]~
+        (frond del+(frond key+(lock key)))
+      ++  add
+        |=  [key=* vault=@tas]
+        =-  [%give %fact [/~/augury]~ json+!>(-)]~
+        %+  frond  %add
+        %-  pairs
+        ~[key+(lock key) vault+s/(scot %tas vault)]
+      ++  all
+      =-  [%give %fact [/~/augury]~ json+!>(-)]~
+      %+  frond  %set
+      :-  %a
+      %+  turn  ~(tap by clique.cargo)
+      |=  [kex=* vault=term]
+      %-  pairs
+      ~[key+(lock kex) vault+s/(scot %tas vault)]
+      --
     ::       +go - roll ur own cults
     ::
     ::  +go-emit - add card to cards

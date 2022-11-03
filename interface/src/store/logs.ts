@@ -17,10 +17,23 @@ export default {
     goraInOffers: (state) => (goraID: GoraID): boolean => {
       return state.offers.includes(goraID);
     },
+    // goraInOutgoing: (state) => (goraID: GoraID): boolean => {
+    //   return state.offers.includes(goraID);
+    // },
     goraInRequests: (state) => (goraID: GoraID): boolean => {
-      // TODO: this wrong
-      return false
-      //return state.offers.includes(goraID);
+      return state.outgoing.filter((req: {
+        act: string;
+        id: GoraID;
+        status: boolean;
+        when: number
+      }) => {
+        if (
+          req.act === 'take' && req.id === goraID
+        ) {
+          return true
+        }
+        return false
+      }).length > 0
     },
 
     goraInShipsRequests: (state, getters) => (args: { goraID: GoraID, ship: Ship}): boolean => {
@@ -216,8 +229,6 @@ export default {
         requests: Array<Outgoing>;
       }
     ) {
-      console.log("in logs ", payload);
-
       commit("setOffers", payload.offers);
       commit("setOutgoing", payload.outgoing);
       commit("setRequests", payload.requests);

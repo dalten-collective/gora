@@ -11,8 +11,33 @@
       </div>
     </header>
 
+    <div class="tw-mb-6 tw-mt-4 tw-flex-col tw-justify-around tw-text-center md:tw-text-left tw-flex md:tw-flex-row tw-px-2 md:tw-px-0 md:tw-justify-between">
+
+      <div class="tw-flex">
+      </div>
+
+      <div class="tw-mt-4 md:tw-mt-0">
+        <div class="md:tw-w-[25em]">
+          <v-select
+            color="info"
+            :items="hostShips"
+            v-model="hostFilter"
+            label="Host"
+            append-icon="mdi-close"
+            @click:append="hostFilter = 'All'"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="tw-text-center tw-opacity-50">
+      <div v-if="hostFilter !== 'All'">
+        Gorae hosted by {{ hostFilter }}
+      </div>
+    </div>
+
     <div class="tw-flex tw-justify-around tw-flex-wrap">
-      <div v-for="goid in owned" :key="goid">
+      <div v-for="goid in filteredOwned" :key="goid">
         <GoraList :goid="goid" class="tw-mb-4" from-page="hedl" />
       </div>
       <div v-if="owned.length === 0">
@@ -22,7 +47,7 @@
       </div>
     </div>
 
-    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable>
+    <v-dialog v-if="idDetailable(detailedID)" v-model="detailOpen" scrollable max-width="700">
       <v-card class="tw-bg-white">
         <v-card-title></v-card-title>
         <v-card-text>
@@ -33,8 +58,8 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="notFoundOpen" scrollable>
-      <v-card class="tw-bg-white">
+    <v-dialog v-model="notFoundOpen" scrollable max-width="700">
+      <v-card class="tw-bg-white tw-p-4">
         <v-card-title>Not Found</v-card-title>
         <v-card-text>
           Check that gora id...
@@ -51,12 +76,17 @@ import { mapState, mapGetters } from "vuex";
 import GoraDetail from "@/components/gora-detail.vue"
 import GoraList from "@/components/gora-list.vue"
 
+import {
+  GoraID
+} from "@/types";
+
 export default defineComponent({
   data() {
     return {
       detailOpen: false,
       notFoundOpen: false,
       detailedID: null as string | null,
+      hostFilter: 'All',
     }
   },
 
@@ -64,6 +94,27 @@ export default defineComponent({
     ...mapState("owned", ["owned"]),
     ...mapState("logs", ["offers"]),
     ...mapGetters("pita", ["pitaIDs", "goraByID"]),
+    hostShips() {
+      const hostOptions = ['All']
+      const ships = Array.from(
+        new Set(
+          this.pitaIDs.map((id: GoraID) => {
+            return this.goraByID(id).host
+          })
+        )
+      )
+      return hostOptions.concat(ships)
+    },
+
+    filteredOwned() {
+      var filtered = this.owned
+      if (this.hostFilter !== 'All') {
+        filtered = filtered.filter((id: GoraID) => {
+          return this.$filters.sigShip(this.goraByID(id).host) === this.hostFilter
+        })
+      }
+      return filtered
+    }
   },
 
   mounted() {
