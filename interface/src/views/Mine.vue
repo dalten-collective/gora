@@ -141,6 +141,10 @@ import {
   GoraID
 } from "@/types"
 
+import {
+  GoraID
+} from "@/types"
+
 import MkForm from "@/components/mine/mk-form.vue"
 import MadeGoraList from "@/components/mine/made-gora-list.vue"
 import MyOneManage from "@/components/mine/my-one-manage.vue"

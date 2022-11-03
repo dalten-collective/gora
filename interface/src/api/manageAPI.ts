@@ -58,6 +58,26 @@ export function rmGora(payload: PokeRmGoraPayload): Promise<any> {
     });
 }
 
+export function rmGora(payload: PokeRmGoraPayload): Promise<any> {
+  const json: PokeRmGora = {
+    "rm-gora": payload
+  };
+  return urbitAPI
+    .poke({
+      app: "gora",
+      mark: manMark,
+      json,
+    })
+    .then((r) => {
+      console.log("res ", r);
+      return r;
+    })
+    .catch((e) => {
+      console.log("err ", e);
+      throw e;
+    });
+}
+
 export function setMax(payload: { id: GoraID, max: UrbNull | number }): Promise<any> {
   const json: PokeSetMax = {
     "set-max": payload,
