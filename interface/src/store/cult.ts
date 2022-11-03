@@ -39,15 +39,10 @@ export default {
       state.cults = state.cults.filter((c: Cult) => c.key !== payload.key)
     },
     addCult(state, payload: Cult) {
-      console.log('keys ', state.cults.map((c: Cult) => { c.key }))
-      console.log('payload key ', payload.key)
-
       if (state.cults.map((c: Cult) => c.key).includes(payload.key)) {
-        console.log('found cult with key ', payload.key)
         // Already have it? replace it
         state.cults = state.cults.filter((c: Cult) => c.key !== payload.key)
       }
-      console.log('adding cult', payload.key)
       // don't have it (maybe we just removed it), push it
       state.cults.push(payload)
     },
@@ -57,22 +52,17 @@ export default {
     openCultlock(context) {
       cultAPI.openCultlock(
         (data) => {
-          console.log('cult ', data)
           if ('set' in data) {
-            console.log('cult setting ', data.set as Array<Cult>)
             context.commit('setCults', data.set as Array<Cult>)
           }
           if ('add' in data) {
-            console.log('cult adding ', data.add as Cult)
             context.commit('addCult', data.add)
           }
           if ('del' in data) {
-            console.log('cult deling ', data.del as { key: string; })
             context.commit('removeCult', data.del)
           }
         },
         (sub) => {
-          console.log('cult sub ', sub)
         }
       )
     },

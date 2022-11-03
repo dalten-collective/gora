@@ -25,7 +25,6 @@ export function acceptGive(payload: { id: GoraID }): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -45,7 +44,6 @@ export function ignoreGive(payload: { id: GoraID }): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -65,7 +63,6 @@ export function sendPlea(payload: { id: GoraID, host: Ship }): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -85,7 +82,6 @@ export function acceptRequest(payload: GoraIDShip): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -105,7 +101,6 @@ export function ignoreRequest(payload: GoraIDShip): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {

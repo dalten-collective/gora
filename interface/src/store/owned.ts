@@ -33,8 +33,6 @@ export default {
 
   actions: {
     handleSubscriptionData({ commit, dispatch }, payload: OwnedState) {
-      console.log('in owned ', payload)
-
       commit('setOwned', payload)
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {

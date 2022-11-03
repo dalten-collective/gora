@@ -229,8 +229,6 @@ export default {
         requests: Array<Outgoing>;
       }
     ) {
-      console.log("in logs ", payload);
-
       commit("setOffers", payload.offers);
       commit("setOutgoing", payload.outgoing);
       commit("setRequests", payload.requests);

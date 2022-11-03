@@ -269,7 +269,6 @@ export default defineComponent({
   watch: {
     '$route' (to, from) {
       const goraID = to.params.goraID
-      console.log('na', goraID)
       if (goraID && this.haveTheGora(goraID)) {
         this.detailOpen = true;
         this.detailedID = goraID;

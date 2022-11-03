@@ -12,7 +12,6 @@ export function getCults(): Promise<any> {
       path: "/~/cult/state",
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -54,7 +53,6 @@ export function mkCult(payload: { id: GoraID, groupName: string }): Promise<any>
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {
@@ -78,7 +76,6 @@ export function rmCult(payload: { id: GoraID }): Promise<any> {
       json,
     })
     .then((r) => {
-      console.log("res ", r);
       return r;
     })
     .catch((e) => {

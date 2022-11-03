@@ -69,8 +69,6 @@ export default {
     },
 
     handleSubscriptionData({ commit, dispatch }, payload: PitaState) {
-      console.log('in pita ', payload)
-
       commit('setPita', payload)
     },
     handleDiff({ commit, dispatch }, payload: DiffResponse) {
@@ -78,7 +76,6 @@ export default {
     },
 
   pokeRmGora({ commit, dispatch }, pokePayload: PokeRmGoraPayload) {
-      console.log(pokePayload)
       return manageAPI.rmGora(pokePayload)
         .then((r) => {
           return r
