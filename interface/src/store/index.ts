@@ -6,6 +6,7 @@ import owned from "./owned";
 import made from "./made";
 import meta from "./meta";
 import logs from "./logs";
+import cult from "./cult";
 
 const store = createStore({
   modules: {
@@ -15,6 +16,7 @@ const store = createStore({
     made,
     meta,
     logs,
+    cult,
   },
 });
 

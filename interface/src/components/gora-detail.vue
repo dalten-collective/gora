@@ -354,6 +354,7 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("pita", ["goraByID"]),
+    ...mapGetters("cult", ["cultsAroundGora"]),
     ...mapGetters("owned", ["goraNotOwned"]),
     ...mapGetters("logs", [
       "goraInOffers",

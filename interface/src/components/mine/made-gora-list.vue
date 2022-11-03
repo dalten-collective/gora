@@ -32,7 +32,23 @@
           </div>
 
           <div class="tw-class-flex tw-justify-space-around">
-            <div class="tw-max-w-[250px] tw-flex tw-justify-between">
+            <div class="tw-max-w-[250px] tw-flex tw-justify-between tw-mt-1">
+                <div>
+                  <div v-if="cultsAroundGora(goid).length > 0">
+                    <v-tooltip location="bottom">
+                      <template v-slot:activator="{ props }">
+                        <v-icon
+                          color="gray"
+                          v-bind="props"
+                        >
+                          mdi-castle
+                        </v-icon>
+                      </template>
+                      <span> Has a cult </span>
+                    </v-tooltip>
+                  </div>
+                </div>
+
               <h1
                 class="tw-text-center"
                 style="
@@ -50,7 +66,7 @@
 
                 <div>
                   <div v-if="sType">
-                    <v-tooltip position="left">
+                    <v-tooltip location="bottom">
                       <template v-slot:activator="{ props }">
                         <v-icon
                           color="warning"
@@ -162,6 +178,7 @@ export default defineComponent({
     ...mapGetters("logs", ["requestsForID", "outgoingFor"]),
     ...mapGetters("made", ["goraIsSelected"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
+    ...mapGetters("cult", ["cultsAroundGora"]),
 
     gType(): boolean {
       return this.haveTheGora && this.theGora.hasOwnProperty("hodl");
