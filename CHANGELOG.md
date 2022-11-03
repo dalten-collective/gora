@@ -14,6 +14,7 @@ and this project adheres to
 - (Vue) Request button on gora detail
 - (Vue) Show staked gorae images in stak
 - (Vue) Cult activities
+- Integration of Cult library with Gora
 
 ### Fixed
 
