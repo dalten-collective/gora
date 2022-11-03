@@ -422,7 +422,7 @@
                     <ul>
                       <li
                         class="tw-mb-2"
-                        v-for="take in outgoingTakesByID"
+                        v-for="take in outgoingTakesFor(goid)"
                         :key="[take.id, take.act, take.status]"
                       >
                         <Take :take="take" />
@@ -460,7 +460,7 @@
                   <ul>
                     <li
                       class="tw-mb-2"
-                      v-for="take in outgoingTakesByID"
+                      v-for="take in outgoingTakesFor(goid)"
                       :key="[take.id, take.act, take.status]"
                     >
                       <Take :take="take" />
@@ -565,7 +565,7 @@ export default defineComponent({
     ...mapState("logs", ["requests", "outgoing"]),
     ...mapState("cult", ["cults"]),
     ...mapGetters("cult", ["cultsAroundGora"]),
-    ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesByID", "outgoingGivesFor"]),
+    ...mapGetters("logs", ["requestsForID", "outgoingFor", "outgoingTakesFor", "outgoingGivesFor"]),
     ...mapGetters("meta", ["thisGoraTags", "thisGoraPub"]),
     stackHodlerOrdered() {
       if (this.sType) {

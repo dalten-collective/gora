@@ -209,12 +209,6 @@ export default defineComponent({
       return false
     },
 
-    requestedThisGora(): boolean {
-      return this.outgoingTakesByID
-        .map((o: Outgoing) => o.id)
-        .includes(this.goid);
-    },
-
     iHostGora(): boolean {
       return this.theGora.host === this.$filters.sigShip(this.ourShip);
     },
