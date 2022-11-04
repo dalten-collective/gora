@@ -238,6 +238,7 @@
               real=?
               door=(unit cordon:gup)
               team=(set ship)
+              cord=[pend=(set ship) act=(set ship)]
               cards=(list card)
           ==
       +*  now  (scot %da now.dish)
@@ -295,6 +296,9 @@
         ::
             team
           (~(del in ~(key by fleet.u.gup)) our.dish)
+        ::
+            cord
+          [pend.cordon.u.gup ask.cordon.u.gup]
         ==
       ::
       ++  go-form
@@ -315,21 +319,32 @@
         ?-    -.d
             %pak
           =;  punch=$-(action:gup card)
-            =+  pip=`(set ship)`(~(dif in team) +.d)
-            =+  pit=`(set ship)`(~(dif in +.d) team)
+            =/  pip=(set ship)  (~(dif in team) +.d)    ::  ships to kick
+            =/  pil=(set ship)                          ::  pends to cancel
+              (~(dif in pend.cord) +.d)
+            =/  pit=(set ship)                          ::  invites to send
+              %.  (sy ~[our.dish])
+              ~(dif in (~(dif in +.d) team))
+            =|  caz=(list card)
             %-  go-emil
-            :~
+            =?    caz
+                ?=(^ pit)
+              :_  caz
               %-  punch
               :+  flag  now.dish
               [%cordon [%shut [%add-ships %pending pit]]]
-            ::
+            =?    caz
+                ?=(^ pil)
+              :_  caz
               %-  punch
               :+  flag  now.dish
-              [%cordon [%shut [%del-ships %pending pip]]]
-            ::
+              [%cordon [%shut [%del-ships %pending pil]]]
+            =?    caz
+                ?=(^ pip)
+              :_  caz
               %-  punch
               [flag [now.dish [%fleet pip [%del ~]]]]
-            ==
+            caz
           |=  a=action:gup
           :^  %pass  /gnosis/[now]  %agent
           [[our.dish %groups] %poke %group-action !>(a)]
