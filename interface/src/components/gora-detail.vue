@@ -73,11 +73,11 @@
             </div>
 
             <div class="tw-class-flex tw-justify-space-around tw-m-auto tw-mb-2">
-              <div class="tw-text-center tw-max-w-[250px] tw-flex tw-items-center">
+              <div class="tw-text-center tw-max-w-[250px] tw-flex tw-flex-col tw-items-center">
                 <v-chip variant="outlined" size="small" color="info">
                   {{ theGora.host }}
                 </v-chip>
-                <div v-if="requestable" class="tw-ml-2">
+                <div v-if="requestable" class="tw-ml-2 tw-mt-2">
                   <v-btn
                     size="small"
                     color="success"

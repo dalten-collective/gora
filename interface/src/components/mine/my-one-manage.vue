@@ -631,6 +631,7 @@ export default defineComponent({
       .finally(() => {
         this.newCultName = ''
         this.cultUpdating = false
+        this.sendToMe()
       })
     },
 
@@ -709,6 +710,19 @@ export default defineComponent({
         .finally(() => {
           this.offerPending = false;
           this.resetOffer()
+        })
+    },
+
+    sendToMe() {
+      this.offerPending = true;
+      console.log('sending to me, too ', this.$filters.sigShip(this.ourShip))
+      this.$store.dispatch("made/pokeGiveGora", { id: this.goid, who: [this.$filters.sigShip(this.ourShip)] })
+        .then((r) => {
+        })
+        .catch((e) => {
+        })
+        .finally(() => {
+          this.offerPending = false;
         })
     },
 
