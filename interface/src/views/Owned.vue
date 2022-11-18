@@ -18,7 +18,7 @@
 
       <div class="tw-mt-4 md:tw-mt-0">
         <div class="md:tw-w-[25em]">
-          <v-select
+          <v-autocomplete
             color="info"
             :items="hostShips"
             v-model="hostFilter"
