@@ -28,6 +28,7 @@
       ::
         [%send-gora (ot ~[id+(se %uv) who+(as (se %p))])]
         [%send-plea (ot ~[id+(se %uv) host+(se %p)])]
+        [%claim-gora-qr (ot ~[code+so])]
       ::
         [%rm-gora (ot ~[id+(se %uv)])]
         [%set-max (ot ~[id+(se %uv) max+(mu ni)])]
@@ -35,6 +36,7 @@
         [%add-tag (ot ~[tag+so gorae+(as (se %uv))])]
         [%rem-tag (ot ~[tag+so gorae+(as (se %uv))])]
         [%set-pol (ot ~[id+(se %uv) pol+(mu so)])]
+        [%create-gora-qr (ot ~[id+(se %uv) hours-valid+ni])]
       ::
         :-  %mk-gora
         %-  ot
