@@ -284,7 +284,7 @@
                             (These ships will be invited to your cult)
                           </span>
                           <span v-else>
-                            Offer to
+                            Offer to 123
                           </span>
                           ...</h3>
                         </div>
@@ -380,7 +380,7 @@
                             (These ships will be invited to your cult)
                           </span>
                           <span v-else>
-                            Offer to
+                            Offer to 321
                           </span>
                           ...</h3>
                         </div>
@@ -392,7 +392,7 @@
                         Hypnotize
                       </span>
                       <span v-else>
-                        Send Offers
+                        Send Offers 
                       </span>
                     </v-btn>
                   </div>

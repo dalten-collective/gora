@@ -5,6 +5,11 @@
 /+  *mip
 ::
 |%
+:: gora-qr Addition (v3)
++$  gora-qr    
+  [=pw =made =duration-hrs data-dim=@ud data-svg=tape]
++$  pw   @uvH
++$  duration-hrs  @ud
 :: defining gora (v2)
 ::
 +$  id    @uv
@@ -41,6 +46,7 @@
 ::  [%accept-request @uv @p]       accept pleas for gora
 ::  [%send-gora @uv (set ship)]    give a gora to people
 ::  [%send-plea @uv @p]            ask ship for gora @uv
+::  [%claim-gora-qr code=@t]       scanning gives you qr
 ::  [%kick ~]                      maybe gora is naughty
 ::
 +$  manage-gora-2
@@ -53,6 +59,8 @@
     ::
       [%send-gora =id who=(set ship)]
       [%send-plea =id =host]
+
+      [%claim-gora-qr code=@t]
     ::
       [%kick ~]
   ==
@@ -65,6 +73,7 @@
 ::  [%stak-em (set id) @t @t]                    convert a set gorae into a stak
 ::  [%set-pol @uv u?(%approve %decline)]         (un)set a gora's request policy
 ::  [%mk-gora @t @t ?([%g hodl max] [%s stak])]  start a new gora with hodl/stak
+::  [%create-gora-qr =id hours-valid=@ud]        generate a qr for others to get
 ::
 +$  gora-handle
   $%  [%rm-gora =id]
@@ -75,6 +84,7 @@
       [%set-pol =id pol=(unit ?(%approve %decline))]
       [%mk-gora =name =pic type=(each [=hodl =max] =stak)]
       [%stak-em dez=(set id) which=(each id [=name =pic])]
+      [%create-gora-qr =id hours-valid=@ud]
   ==
 :: agent actions
 ::
@@ -82,6 +92,7 @@
   $%  [%gack =id]
       [%diff =diff]
       [%request =id]
+      [%claim =id =pw from=ship]
       [%offered =gora]
   ==
 +$  diff
@@ -110,6 +121,7 @@
   ::
     tags=(jug @tas id)
     blacklist=(set id)
+    gora-qrs=(jar id gora-qr)
   ==
 ::
 :: old state actions, objects
