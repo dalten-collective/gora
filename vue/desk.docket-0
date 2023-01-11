@@ -4,7 +4,7 @@
   color+0xff.d966
   glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v5.vckjd.jc35a.qmsba.ujfkv.vu0p1.glob' 0v5.vckjd.jc35a.qmsba.ujfkv.vu0p1]
   base+'gora'
-  version+[3 0 1]
+  version+[3 0 2]
   website+'https://dalten.org/'
   license+'Get Rekt'
 ==
