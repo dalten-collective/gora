@@ -309,9 +309,12 @@
           [%pass /gnosis/[now] %agent [our.dish %groups] %poke cag]
         :-  %group-create
         !>  ^-  create:gup
-        :^  q.flag  'a cult'  'keep it secret, sorta'
-        :^  'https://bit.ly/3Czi3GK'  '#ffd966'  [%shut ~ ~]
-        (~(put ju *(jug ship term)) our.dish %admin)
+        :*  q.flag
+            'a cult'
+            'keep it secret, sorta'
+            'https://freedom-club.sfo2.digitaloceanspaces.com/props/quartus/long-logo/ab_Quartus-05_only.png'
+            ['#bb2649' [%shut ~ ~] ~ %|]
+        ==
       ::
       ++  go-diff
         |=  d=diff
@@ -331,18 +334,21 @@
                 ?=(^ pit)
               :_  caz
               %-  punch
+              ^-  action:gup
               :+  flag  now.dish
               [%cordon [%shut [%add-ships %pending pit]]]
             =?    caz
                 ?=(^ pil)
               :_  caz
               %-  punch
+              ^-  action:gup
               :+  flag  now.dish
               [%cordon [%shut [%del-ships %pending pil]]]
             =?    caz
                 ?=(^ pip)
               :_  caz
               %-  punch
+              ^-  action:gup
               [flag [now.dish [%fleet pip [%del ~]]]]
             caz
           |=  a=action:gup
