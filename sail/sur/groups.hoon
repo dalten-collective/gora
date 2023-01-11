@@ -1,4 +1,7 @@
-/-  meta
+/-  meta, e=epic
+/-  old=group
+/-  grp=group-store
+/-  metadata-store
 |%
 ::  $flag: ID for a group
 ::
@@ -128,7 +131,9 @@
       zone-ord=(list zone)
       =bloc
       =channels:channel
+      imported=(set nest)
       =cordon
+      secret=?
       meta=data:meta
   ==
 ::
@@ -237,6 +242,7 @@
       [%cordon p=diff:cordon]
       [%zone p=diff:zone]
       [%meta p=data:meta]
+      [%secret p=?]
       [%create p=group]
       [%del ~]
   ==
@@ -261,12 +267,15 @@
       cover=cord
       =cordon
       members=(jug ship sect)
+      secret=?
   ==
 ::
 +$  init  [=time =group]
 ::
 +$  groups
   (map flag group)
++$  net-groups
+  (map flag [net group])
 ::
 ::  $log: a time ordered map of all modifications to groups
 ::
@@ -281,8 +290,7 @@
 +$  net
   $~  [%pub ~]
   $%  [%pub p=log]
-      [%sub p=time]
-      [%load ~]
+      [%sub p=time load=_| =saga:e]
   ==
 ::
 ::  $join: a join request, can elect to join all channels
@@ -315,6 +323,7 @@
       meta=data:meta
       =cordon
       =time
+      secret=?
   ==
 ::
 +$  previews  (map flag preview)
@@ -332,4 +341,9 @@
   ==
 ::
 +$  gangs  (map flag gang)
+++  met     metadata-store
+::
++$  import  [self=association:met chan=(map flag =association:met) roles=(set flag) =group:old]
+::
++$  imports  (map flag import)
 --
