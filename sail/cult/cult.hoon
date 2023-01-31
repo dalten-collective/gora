@@ -202,7 +202,7 @@
     --
   ::
   ++  helps
-    |_  [dish=bowl:gall cargo=cargo-0]
+    |_  [dish=bowl:gall cargo=cargo-1]
     +*  dis  .
     ++  hear
       ^-  card
