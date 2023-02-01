@@ -147,7 +147,7 @@
       =+  !<([[%cult old=versioned-cargo] oil=vase] ole)
       ?-    -.old
           %0
-        =.  cargo  [clique relics]:old
+        =.  cargo  [%1 clique relics]:old
         =^  cards  inner  (on-load:og oil)
         [[hear:ho cards] this]
           %1
