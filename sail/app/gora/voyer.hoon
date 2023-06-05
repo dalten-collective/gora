@@ -71,6 +71,14 @@
       %ignore-give
     ?.  (~(has by args) 'gor')  'ゴラが必要'
     [%ignore-give (slav %uv (~(got by args) 'gor'))]
+  ::
+      %create-gora-qr
+    ?.  (~(has by args) 'expiration')  '有効期限を時間単位で入力してください'
+    ?.  (~(has by args) 'gor')  'ゴラが必要'
+    =/  gor-id  (slav %uv (~(got by args) 'gor'))
+    =/  expiration  
+      (scan (trip (~(got by args) 'expiration')) dem)
+    [%create-gora-qr gor-id expiration]
   ==
 ::
 ++  build
@@ -78,9 +86,37 @@
           msgs=(unit [gud=? txt=@])
       ==
   ^-  reply:rudder
+
+  =/  arglist  (malt args)
+  =/  gor-id=@uv
+    :: TODO: @reviewers I replaced this with !! to avoid unwrapping
+    :: all the time. This should be safe, right?
+    ?~  g=(~(get by arglist) 'gora')  !!
+    (slav %uv u.g)
+
   =/  gor=(unit gora)
-    ?~  g=(~(get by (malt args)) 'gora')  ~
-    (~(get by pita.sat) (slav %uv u.g))
+    (~(get by pita.sat) gor-id)
+
+  =/  qr-list  
+    (flop (~(get ja gora-qrs.sat) gor-id))
+
+  =/  qr-idx
+    ?:  (~(has by arglist) 'qr')
+      (slav %ud (~(got by arglist) 'qr'))
+    ?:  =((lent qr-list) 0)
+      0
+    (sub (lent qr-list) 1) 
+  
+  =/  gora-qr-unit=(unit gora-qr) 
+    ?:  =((lent qr-list) 0)
+      ~
+    (some (snag qr-idx qr-list))
+
+  =/  qr-data 
+    %+  bind
+      gora-qr-unit
+    |=  g=gora-qr 
+    [data-dim.g data-svg.g]
     ::
   |^  [%page page]
   ++  make
@@ -513,20 +549,105 @@
           ==
         ::
           ;div(class "details-container")
-            ;div(class "name-container")
-              ;+  name:make
-            ==
-            ;div(class "host-container")
-              ;+  host:make
-            ==
-            ;div(class "tots-container")
-              ;+  hedl:make
-            ==
-            ;div(class "made-container")
-              ;+  made:make
-            ==
-            ;div(class "iden-container")
-              ;+  iden:make
+            ;div(class "horizontal-container")
+              ;div(class "left-container")
+                ;div(class "name-container")
+                  ;+  name:make
+                ==
+                ;div(class "host-container")
+                  ;+  host:make
+                ==
+                ;div(class "tots-container")
+                  ;+  hedl:make
+                ==
+                ;div(class "made-container")
+                  ;+  made:make
+                ==
+                ;div(class "iden-container")
+                  ;+  iden:make
+                ==
+              ==
+              ;+  ?~  gor  ;div;
+                  ?:  =(our.bol host.u.gor)
+                    =/  qr-idx-minus-1=(unit @ud)
+                      ?:  =(qr-idx 0)
+                        ~
+                      (some (sub qr-idx 1))
+                    =/  qr-idx-plus-1=(unit @ud)
+                      ?:  (gte (add qr-idx 1) (lent qr-list))
+                        ~
+                      (some (add qr-idx 1))
+                    ;div(class "right-container")
+                      ;form(method "post", style "display: flex; justify-content: center; align-items: center;")
+                        ;div(class "form-container")
+                          ;input(name "expiration", id "expiration", type "number", placeholder "hrs valid(0=inf)", required "", style "width: 10vw; z-index: 101");
+                          ;input(name "gor", type "text", value "{(scow %uv id.u.gor)}", style "display: none;");
+                          ;input(name "act", value "create-gora-qr", type "text", style "display: none;");
+                          ;button(class "go-button", id "start-button", style "width: 10vw; z-index: 101"):"Generate QR"
+                        ==
+                      ==
+                      ;+  ?:  =((lent qr-list) 0)  ;div;
+                      ;div(class "qr-container")
+                        ;+  
+                          ?~  qr-idx-minus-1  
+                            ;div(class "qr-indicator-container")
+                              ;div(class "made")
+                                ;p(style "font-size: 1.4em"):"<"
+                              ==
+                            ==
+                          ;a(href "./voyer?gora={(scow %uv id.u.gor)}&qr={<u.qr-idx-minus-1>}")
+                            ;div(class "qr-indicator-container")
+                              ;div(class "made")
+                                ;p(style "font-size: 1.4em"):"<"
+                              ==
+                            ==
+                          ==
+                        ;+  ?~  qr-data   ;div;
+                        ;div(style "padding: 1.66em")
+                          ;div(style "background-color:white; padding: 8px")
+                            ;svg(xmlns "http://www.w3.org/2000/svg", height "{<-:u.qr-data>}", width "{<-:u.qr-data>}", style "background-color:white")
+                              ;path(fill "#000000", d "{+:u.qr-data}");
+                            ==
+                          ==
+                        ==
+                        ;+  
+                          ?~  qr-idx-plus-1  
+                            ;div(class "qr-indicator-container")
+                              ;div(class "made")
+                                ;p(style "font-size: 1.4em"):">"
+                              ==
+                            ==
+                          ;a(href "./voyer?gora={(scow %uv id.u.gor)}&qr={<u.qr-idx-plus-1>}")
+                            ;div(class "qr-indicator-container")
+                              ;div(class "made")
+                                ;p(style "font-size: 1.4em"):">"
+                              ==
+                            ==
+                          ==
+                      ==
+                      ;+  ?:  =((lent qr-list) 0)  ;div;
+                      ;div(class "qr-indicator-container")
+                        ;div(class "right-container")
+                          ;div(class "made")
+                            ;p(style "font-size: 0.9em"):"{<(add 1 qr-idx)>}/{<(lent qr-list)>}"
+                          ==
+                          ;+  ?~  gora-qr-unit  ;div;
+
+                          =/  expiration-text
+                            ?:  =(duration-hrs.u.gora-qr-unit 0)
+                              "Doesn't expire"
+                            =/  dur=@dr      (mul duration-hrs.u.gora-qr-unit ~h1)
+                            =/  elapsed=@dr  (sub now.bol made.u.gora-qr-unit)
+                            ?:  (lte dur elapsed)
+                              "expired"
+                            "Expires in {<`@dr`(sub dur elapsed)>}"
+                          ;div(class "made", style "padding: 1.5em")
+                            ;p(style "font-size: 0.4em"):"{expiration-text}"
+                          ==
+                        ==
+                      ==
+                    ==
+                  ;div;
             ==
             ;div(class "xtra-container")
               ;div(class "indicators-container")
@@ -1028,6 +1149,20 @@
         margin: 0;
       }
 
+      .qr-indicator-container {
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
       .made-container {
         height: 3vh;
 
@@ -1146,6 +1281,26 @@
                 align-items: center;
       }
 
+      .horizontal-container {
+        width: 90vw;
+
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
       .button-top-row {
         width: 85vw;
         height: 15vw;
@@ -1179,6 +1334,25 @@
         -webkit-box-direction: normal;
             -ms-flex-direction: row;
                 flex-direction: row;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .qr-container {
+
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
         -webkit-box-pack: center;
             -ms-flex-pack: center;
                 justify-content: center;
@@ -1803,9 +1977,43 @@
         }
       }
 
+      .form-container {
+        width: 30vw;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
       .indicators-container {
         width: 30vw;
         height: 20vh;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .left-container {
+        width: 30vw;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -1865,6 +2073,27 @@
         -webkit-box-pack: right;
             -ms-flex-pack: right;
                 justify-content: right;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .right-container {
+        z-index: 100;
+
+        width: 30vw;
+        display: -webkit-box;
+        
+        display: -ms-flexbox;
+        
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
         -webkit-box-align: center;
             -ms-flex-align: center;
                 align-items: center;
@@ -2960,9 +3189,43 @@
         }
       }
 
+      .form-container {
+        width: 10vw;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+      
       .indicators-container {
         width: 10vw;
         height: 25vh;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .left-container {
+        width: 10vw;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -3019,6 +3282,25 @@
         display: -ms-flexbox;
         
         display: flex;
+        -webkit-box-pack: right;
+            -ms-flex-pack: right;
+                justify-content: right;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .right-container {
+        width: 30vw;
+        display: -webkit-box;
+        
+        display: -ms-flexbox;
+        
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
         -webkit-box-pack: right;
             -ms-flex-pack: right;
                 justify-content: right;
@@ -3280,6 +3562,20 @@
         margin: 0;
       }
 
+      .qr-indicator-container {
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
       .made-container {
         height: 5vh;
 
@@ -3391,6 +3687,23 @@
                 align-items: center;
       }
 
+      .horizontal-container {
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
 
       .button-top-row {
         height: 15vw;
@@ -3423,6 +3736,24 @@
         -webkit-box-direction: normal;
             -ms-flex-direction: column;
                 flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
+
+      .qr-container {
+        display: -webkit-box;
+
+        display: -ms-flexbox;
+
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
         -webkit-box-pack: center;
             -ms-flex-pack: center;
                 justify-content: center;

@@ -14,6 +14,12 @@
   ?>  authenticated.odo
   =/  args=(map @t @t)
     ?~(body ~ (frisk:rudder q.u.body))
+  ?:  ?&  (~(has by args) 'code')
+          (~(has by args) 'act')
+          =(%claim-gora-qr (~(got by args) 'act'))
+      ==
+    =/  code  (~(got by args) 'code')
+    :-  %claim-gora-qr  (~(got by args) 'code')
   ?.  ?&  (~(has by args) 'act')
           (~(has by args) 'id')
           (~(has by args) 'who')
@@ -64,17 +70,43 @@
         ::
           ;div(class "main")
             ;div(class "request-container")
-              ;form(method "post", class "requ-form")
-                ;label:'ゴラ リクエスト'
-                ;input(name "id", id "ident", type "text", placeholder "0v1.23456.78910", required "");
-                ;label(for "ident"):"ゴラ ID"
-                ;input(name "who", id "who", type "text", placeholder "~mister-dozzod-dalten", required "");
-                ;label(for "who"):"ホスト"
-                ;input(name "act", value "send-plea", style "display: none;");
-                ;div(class "go-button")
-                  ;button
-                    ;svg(xmlns "http://www.w3.org/2000/svg", height "40", width "40")
-                      ;path(fill "#12de12", d "M18.5 28.458h3.208v-6.75h6.75v-3.166h-6.75v-7H18.5v7h-6.958v3.166H18.5Zm1.5 9.084q-3.667 0-6.854-1.375-3.188-1.375-5.563-3.75-2.375-2.375-3.75-5.563Q2.458 23.667 2.458 20q0-3.667 1.375-6.875t3.75-5.583q2.375-2.375 5.563-3.75Q16.333 2.417 20 2.417q3.667 0 6.875 1.375t5.583 3.75q2.375 2.375 3.75 5.583T37.583 20q0 3.667-1.375 6.854-1.375 3.188-3.75 5.563-2.375 2.375-5.583 3.75T20 37.542Zm0-4.209q5.583 0 9.458-3.875T33.333 20q0-5.583-3.875-9.458T20 6.667q-5.583 0-9.458 3.875T6.667 20q0 5.583 3.875 9.458T20 33.333ZM20 20Z");
+              ;div(class "request-container-vertical")
+                ;form(method "post", class "requ-form")
+                  ;label:'ゴラ リクエスト'
+                  ;input(name "id", id "ident", type "text", placeholder "0v1.23456.78910", required "");
+                  ;label(for "ident"):"ゴラ ID"
+                  ;input(name "who", id "who", type "text", placeholder "~mister-dozzod-dalten", required "");
+                  ;label(for "who"):"ホスト"
+                  ;input(name "act", value "send-plea", style "display: none;");
+                  ;div(class "go-button")
+                    ;button
+                      ;svg(xmlns "http://www.w3.org/2000/svg", height "40", width "40")
+                        ;path(fill "#12de12", d "M18.5 28.458h3.208v-6.75h6.75v-3.166h-6.75v-7H18.5v7h-6.958v3.166H18.5Zm1.5 9.084q-3.667 0-6.854-1.375-3.188-1.375-5.563-3.75-2.375-2.375-3.75-5.563Q2.458 23.667 2.458 20q0-3.667 1.375-6.875t3.75-5.583q2.375-2.375 5.563-3.75Q16.333 2.417 20 2.417q3.667 0 6.875 1.375t5.583 3.75q2.375 2.375 3.75 5.583T37.583 20q0 3.667-1.375 6.854-1.375 3.188-3.75 5.563-2.375 2.375-5.583 3.75T20 37.542Zm0-4.209q5.583 0 9.458-3.875T33.333 20q0-5.583-3.875-9.458T20 6.667q-5.583 0-9.458 3.875T6.667 20q0 5.583 3.875 9.458T20 33.333ZM20 20Z");
+                      ==
+                    ==
+                  ==
+                ==
+              ==
+              ;div(class "request-container-vertical")
+                ;div(class "Scan QR")
+                  ;div(class "Buttons")
+                    ;button(class "go-button", id "start-button"):"Scan QR"
+                    ;button(class "go-button", id "reset-button"):"Reset QR Scanner"
+                  ==
+                  ;form(method "post", class "requ-form")
+                    ;div(class "Video")
+                      ;video(id "qr-video", width "150", height "150");
+                      ;script(type "text/javascript", src "https://unpkg.com/@zxing/library@latest");
+                      ;input(name "act", type "text", value "claim-gora-qr", style "display: none;");
+                      ;input(id "qr-result-input", name "code", value "", style "display: none;");
+                      ;code(id "qr-result", value "");
+                    ==
+                    ;div(class "go-button")
+                      ;button
+                        ;svg(xmlns "http://www.w3.org/2000/svg", height "40", width "40")
+                          ;path(fill "#12de12", d "M18.5 28.458h3.208v-6.75h6.75v-3.166h-6.75v-7H18.5v7h-6.958v3.166H18.5Zm1.5 9.084q-3.667 0-6.854-1.375-3.188-1.375-5.563-3.75-2.375-2.375-3.75-5.563Q2.458 23.667 2.458 20q0-3.667 1.375-6.875t3.75-5.583q2.375-2.375 5.563-3.75Q16.333 2.417 20 2.417q3.667 0 6.875 1.375t5.583 3.75q2.375 2.375 3.75 5.583T37.583 20q0 3.667-1.375 6.854-1.375 3.188-3.75 5.563-2.375 2.375-5.583 3.75T20 37.542Zm0-4.209q5.583 0 9.458-3.875T33.333 20q0-5.583-3.875-9.458T20 6.667q-5.583 0-9.458 3.875T6.667 20q0 5.583 3.875 9.458T20 33.333ZM20 20Z");
+                        ==
+                      ==
                     ==
                   ==
                 ==
@@ -173,6 +205,55 @@
         succs.style.display = "none";
       }
     };
+
+    window.addEventListener('load', function () {
+        let selectedDeviceId;
+        const codeReader = new ZXing.BrowserMultiFormatReader()
+        codeReader.getVideoInputDevices()
+            .then((videoInputDevices) => {
+                const sourceSelect = document.getElementById('sourceSelect')
+                selectedDeviceId = videoInputDevices[0].deviceId
+                if (videoInputDevices.length > 1) {
+                    videoInputDevices.forEach((element) => {
+                        const sourceOption = document.createElement('option')
+                        sourceOption.text = element.label
+                        sourceOption.value = element.deviceId
+                        sourceSelect.appendChild(sourceOption)
+                    })
+
+                    sourceSelect.onchange = () => {
+                        selectedDeviceId = sourceSelect.value;
+                    }
+
+                    const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+                    sourceSelectPanel.style.display = 'block'
+                }
+
+                document.getElementById('start-button').addEventListener('click', () => {
+                    codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'qr-video').then((result) => {
+                        console.log(result)
+                        document.getElementById('qr-result').textContent = result.text
+                        document.getElementById('qr-result-input').value = result.text
+                    }).catch((err) => {
+                        console.error(err)
+                        document.getElementById('qr-result').textContent = err
+                        document.getElementById('qr-result-input').value = err
+                    })
+                    console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
+                })
+
+                document.getElementById('reset-button').addEventListener('click', () => {
+                    document.getElementById('qr-result').textContent = '';
+                    document.getElementById('qr-result-input').value = '';
+                    codeReader.reset();
+                    console.log('Reset.')
+                })
+
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+    })
     '''
   ::
   ++  style
@@ -615,10 +696,10 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        -webkit-box-orient: vertical;
+        -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
+            -ms-flex-direction: row;
+                flex-direction: row;
         -webkit-box-pack: center;
             -ms-flex-pack: center;
                 justify-content: center;
@@ -635,6 +716,23 @@
                 box-shadow: 0px 0px 24px 4px #ffe500,
                     inset 0px 0px 500px 15px #ffe258,
                     inset 0px 0px 1000px 20px #fff;
+      }
+
+      .request-container-vertical {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+
       }
 
       .requ-form {
@@ -1016,10 +1114,10 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        -webkit-box-orient: vertical;
+        -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
+            -ms-flex-direction: row;
+                flex-direction: row;
         -webkit-box-pack: center;
             -ms-flex-pack: center;
                 justify-content: center;
@@ -1036,6 +1134,23 @@
                 box-shadow: 0px 0px 24px 4px #ffe500,
                     inset 0px 0px 500px 15px #ffe258,
                     inset 0px 0px 1000px 20px #fff;
+      }
+
+      .request-container-vertical {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+
       }
 
       .requ-form {
@@ -1418,10 +1533,10 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        -webkit-box-orient: vertical;
+        -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
+            -ms-flex-direction: row;
+                flex-direction: row;
         -webkit-box-pack: center;
             -ms-flex-pack: center;
                 justify-content: center;
@@ -1438,6 +1553,23 @@
                 box-shadow: 0px 0px 24px 4px #ffe500,
                     inset 0px 0px 500px 15px #ffe258,
                     inset 0px 0px 1000px 20px #fff;
+      }
+
+      .request-container-vertical {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+
       }
 
       .requ-form {

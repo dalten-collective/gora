@@ -23,6 +23,8 @@
 ::  [%accept-request @uv @p]       accept pleas for gora
 ::  [%send-gora @uv (set ship)]    give a gora to people
 ::  [%send-plea @uv @p]            ask ship for gora @uv
+::  [%claim-gora-qr code=@t]       claim a qr code
+
 ::  [%kick ~]                      maybe gora is naughty
 ::
 ::    making & changing gorae:
@@ -33,6 +35,7 @@
 ::  [%stak-em (set id) @t @t]                    convert a set gorae into a stak
 ::  [%set-pol @uv u?(%approve %decline)]         (un)set a gora's request policy
 ::  [%mk-gora @t @t ?([%g hodl max] [%s stak])]  start a new gora with hodl/stak
+::  [%create-gora-qr =id hours-valid=@ud]        generate qr for people to claim
 ::
 ::  %gora's scry endpoints include:
 ::    -  [%y %slam ~]
@@ -40,7 +43,7 @@
 ::    -  TBD
 ::
 /-  *gora
-/+  default-agent, rudder, gossip
+/+  default-agent, rudder, gossip, qr
 ::  CULT: added for cult                                ::  cult
 ::
 /=  cult   /cult/cult
@@ -55,10 +58,24 @@
 +$  eyre-id  @ta
 ::
 +$  versioned-state
-  $%  state-2
+  $%  state-3
+      state-2
       state-1
       state-0
   ==
+:: state-3 structures
+::
++$  state-3
+  $:  %3
+      =pita                                             ::  known gorae
+      =public                                           ::  public gorae
+      =policy                                           ::  gorae policies
+      =logs                                             ::  logging information
+      =tags                                             ::  tagging information
+      =blacklist                                        ::  blocked gorae
+      =gora-qrs                                              ::  hosted gora-qrs that can be claimed 
+  ==
++$  gora-qrs        (jar id gora-qr)
 :: state-2 structures
 ::
 +$  state-2
@@ -118,7 +135,7 @@
 +$  pita-0  (map id gora:zero)
 --
 ::
-=|  state-2
+=|  state-3
 =*  state  -
 ::  CULT: added for cult                                ::  cult
 ::
@@ -144,7 +161,7 @@
 ++  on-init
   ^-  (quip card _this)
   %-  (slog leaf+"%gora -vue-start" ~)
-  :_  this(state [%2 ~ ~ ~ [~ ~ ~] ~ ~])
+  :_  this(state [%3 ~ ~ ~ [~ ~ ~] ~ ~ ~])
   :~  =-  [%pass /eyre/connect %arvo %e -]
       [%connect [[~ [%apps %gora ~]] dap.bowl]]
   ::
@@ -166,16 +183,18 @@
           [%disconnect [~ [%apps %gora ~]]]
         ::
           =-  [%pass /eyre/connect %arvo %e -]
-          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]  
+          [%connect [[~ [%apps %gora %public ~]] dap.bowl]]
       ==
   =^  caz  old
     ?:(?=(%0 -.old) (from-0 old) [~ old])
   =^  coz  old
     ?:(?=(%1 -.old) (from-1 old) [~ old])
-  ?>  ?=(%2 -.old)
+  =^  cez  old
+    ?:(?=(%2 -.old) (from-2 old) [~ old])
+  ?>  ?=(%3 -.old)
   %-  (slog leaf+"%gora -vue-loaded" ~)
   :_  this(state old)
-  :(welp coz caz cards (gora:subs:hc pita.old))
+  :(welp cez coz caz cards (gora:subs:hc pita.old))
   ::
   ++  from-0
     |=  sta=state-0
@@ -206,6 +225,20 @@
         [offer-log.sta request-log.sta (mk-logs pend.sta)]
         tags.sta
         blacklist.sta
+    ==
+  ::
+  ++  from-2
+    |=  sta=state-2
+    ^-  (quip card state-3)
+    :-  ~
+    :*  %3
+        pita.sta
+        public.sta
+        policy.sta
+        logs.sta
+        tags.sta
+        blacklist.sta
+        *(jar id gora-qr)
     ==
   ::
   ++  mk-gora2
@@ -277,8 +310,9 @@
         ::  we get back a regular ole (quip card _state)
         ::  we handle like this, not tisket bcuz reasons
         ::
-        [-.out [%2 +.out]]
+        [-.out [%3 +.out]]
       ::
+      :: [brief:rudder (list card) tack]
       %.  [bowl !<(order:rudder vase) +.state]
       %:  (steer:rudder tack manage-gora-2)
         pages
@@ -313,7 +347,7 @@
         %gora-man-2
       ?>  =(our.bowl src.bowl)
       (manage:hc !<(manage-gora-2 vase))
-    ::    %gora-transact-2, handle %gack, %offered, %request
+    ::    %gora-transact-2, handle %gack, %offered, %request, %claim
     ::
         %gora-transact-2
       =/  tan=transact-2  !<(transact-2 vase)
@@ -505,6 +539,7 @@
         =/  pat=path
           /gora/(scot %uv id.tan)/(scot %p host.u.gor)
         ?-    -.u.gor
+        ::
             %g
           ?~  pol=(~(get by policy) id.tan)
             ?:  (~(has in hodl.u.gor) src.bowl)
@@ -552,6 +587,48 @@
           !>  ^-  transact-2
           [%diff [%give-staks (my [src.bowl u.had]~)]]
         ==
+      ::
+          %claim
+        :: Does the gora even exist in our pita?
+        ?.  (~(has by pita) id.tan)  
+          ~&  ["No gora found for id" id.tan]
+          [~ state]
+        ::  What are the qrs for a pita? 
+        =/  lora-qr=(list gora-qr)
+          (~(get ja gora-qrs) id.tan)
+        :: Fail if there are no qrs for that pita
+        ?:  =((lent lora-qr) 0)
+          ~&  ["No qrs found for id" id.tan]
+          [~ state]
+        :: Extract all qrs that aren't expired yet
+        =/  remaining-qrs=(list gora-qr)
+          %+  skip  lora-qr
+          |=  a=gora-qr
+          ?:  =(duration-hrs.a 0)
+            %.n  :: Never elapse if duration 0
+          =/  dur=@dr
+            (mul duration-hrs.a ~h1)
+          =/  elapsed=@dr
+            (sub now.bowl made.a)
+          (lte dur elapsed)
+        =/  separated
+          %+  skid  remaining-qrs
+          |=  a=gora-qr
+          =(pw.tan pw.a)
+        :: If we don't have exactly 1 match, we fail
+        ?.  =((lent p.separated) 1)
+          ~&  ["There were exactly" (lent p.separated) "but we need 1"]
+          [~ state]
+        =.  remaining-qrs 
+          q.separated
+        =^  new-cards  state
+          %-  manage:hc
+          [%send-gora id.tan `(set ship)`(silt [from.tan ~])]
+        :-  new-cards
+        %=    state
+            gora-qrs
+          (~(put by gora-qrs) id.tan remaining-qrs)
+        ==  
       ==
     ==
   [cards this]
@@ -1090,8 +1167,8 @@
     --
   ::
   ++  diff                                              ::  %-  %-  diff:j-web
-    |=  stol=state-2                                    ::    old-state
-    |=  stew=state-2                                    ::  new-state
+    |=  stol=state-3                                    ::    old-state
+    |=  stew=state-3                                    ::  new-state
     |^
     %-  rap
     %-  pairs
@@ -1313,6 +1390,17 @@
     ❗Do the needful: wait❗
     """
   ::
+      %claim-gora-qr
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    """
+    ❗アラート: Asynchronous Operation❗
+    ❗あなたは待たなければなりません❗
+    ❗Do the needful: wait❗
+    """
+  ::
       %kick
     ``+.state
   ::
@@ -1370,6 +1458,13 @@
     %-  crip
     "{(scow %uv id:(head ~(val by (~(dif by pita) ole))))}"
   ::
+      %create-gora-qr
+    =^  cards  state
+      (manage act)
+    =-  [- cards +.state]
+    %-  crip
+    "Success"
+  :: 
       %stak-em
     ?:  ?=(%.y -.which.act)
       =+  ole=`@uv`+.which.act
@@ -1527,6 +1622,7 @@
           %stak-em
           %set-pol
           %mk-gora
+          %create-gora-qr
       ==
     (g-hand man)
   ::
@@ -1777,6 +1873,34 @@
       =-  [%pass [%gora +.wir] %agent -]
       [[host.man %gora] %watch /gora/(scot %uv id.man)]
     ==
+  ::
+      %claim-gora-qr
+    =/  code-tape  (trip code.man)
+    =/  sep-idxs  (fand ~['|'] code-tape)
+    ?>  =((lent sep-idxs) 2)
+    =/  gor-id=@uv
+      =/  gor-id-tape
+        (swag [0 (snag 0 sep-idxs)] code-tape)
+      `@uv`(scan (slag 2 gor-id-tape) viz:ag)
+    =/  host=ship
+      =/  length  
+        (sub (sub (snag 1 sep-idxs) (snag 0 sep-idxs)) 1) 
+      =/  host-tape
+        (swag [(add (snag 0 sep-idxs) 1) length] code-tape)
+      `ship`(scan (slag 1 host-tape) fed:ag)
+    =/  pw=@uvH       
+      =/  pw-tape
+        (slag (add (snag 1 sep-idxs) 1) code-tape)
+      `@uvH`(scan (slag 2 pw-tape) viz:ag)
+    =/  wir=path
+      /claim/(scot %uv gor-id)/(scot %p host)
+    :-  
+      :~ 
+        =-  [%pass wir %agent [host %gora] %poke -]
+        =-  [%gora-transact-2 !>(`transact-2`-)]
+        [%claim gor-id pw our.bol]
+      ==
+    state
   ::
       %kick
     %-  (slog leaf+"%gora -ouch" ~)
@@ -2092,6 +2216,15 @@
           [%gora-transact-2 !>(`transact-2`[%offered g])]
         (~(put bi r) [id.g [sip %give] [now.bol ~]])
       --
+    ::
+        %create-gora-qr
+      =/  key  id.gal
+      =/  pw   (sham eny.bol)
+      =/  qr-data 
+        =/  res  "{<key>}|{<our.bol>}|{<pw>}" 
+        (main:qr:qr res %l)
+      =/  val  [pw now.bol hours-valid.gal qr-data]
+      [~ state(gora-qrs (~(add ja gora-qrs) key val))]
     ==
   --
 --
