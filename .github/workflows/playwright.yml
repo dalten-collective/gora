@@ -14,17 +14,14 @@ jobs:
       with:
         node-version: 18
     - name: Install dependencies
-      run: |
-        cd interface
-        npm ci
+      run: npm ci
+      working-directory: ./interface
     - name: Install Playwright Browsers
-      run: |
-        cd interface
-        npx playwright install --with-deps
+      run: npx playwright install --with-deps
+      working-directory: ./interface
     - name: Run Playwright tests
-      run: |
-        cd interface
-        npx playwright test
+      run: npx playwright test
+      working-directory: ./interface
     - uses: actions/upload-artifact@v3
       if: always()
       with:
