@@ -39,7 +39,7 @@
     :-  :-  http-status
         %+  weld  headers
         ['content-type'^'application/json']~
-    `(as-octt:mimes:html (en-json:html j.resource))
+    `(as-octt:mimes:html (trip (en:json:html j.resource)))
     ::
       %login-redirect
     =+  %^  cat  3
