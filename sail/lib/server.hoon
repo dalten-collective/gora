@@ -19,7 +19,7 @@
 ++  json-to-octs
   |=  jon=json
   ^-  octs
-  (as-octt:mimes:html (en-json:html jon))
+  (as-octt:mimes:html (trip (en:json:html jon)))
 ::
 ++  app
   |%
